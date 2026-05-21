@@ -52,6 +52,74 @@ function BinoMark({ className = "w-9 h-9" }: { className?: string }) {
   );
 }
 
+/* ---------- Cute SVG illustrations ---------- */
+
+function CuteCloud({ className = "", color = "#FFFFFF" }: { className?: string; color?: string }) {
+  return (
+    <svg viewBox="0 0 120 80" className={className} aria-hidden>
+      <g>
+        <ellipse cx="40" cy="50" rx="28" ry="22" fill={color} />
+        <ellipse cx="72" cy="42" rx="32" ry="26" fill={color} />
+        <ellipse cx="92" cy="55" rx="22" ry="18" fill={color} />
+        <ellipse cx="58" cy="60" rx="34" ry="18" fill={color} />
+        {/* Smile */}
+        <circle cx="52" cy="48" r="2.4" fill="#4B5563" />
+        <circle cx="74" cy="48" r="2.4" fill="#4B5563" />
+        <path d="M55 56 Q63 63 71 56" stroke="#4B5563" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+        {/* Blush */}
+        <circle cx="46" cy="56" r="2.8" fill="#FFCAD4" opacity="0.85" />
+        <circle cx="78" cy="56" r="2.8" fill="#FFCAD4" opacity="0.85" />
+      </g>
+    </svg>
+  );
+}
+
+function CuteStar({ className = "", color = "#FFF3B0" }: { className?: string; color?: string }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <path
+        d="M32 6 L39 24 L58 26 L43 38 L48 56 L32 46 L16 56 L21 38 L6 26 L25 24 Z"
+        fill={color}
+        stroke="#4B5563"
+        strokeOpacity="0.15"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <circle cx="26" cy="32" r="1.8" fill="#4B5563" />
+      <circle cx="38" cy="32" r="1.8" fill="#4B5563" />
+      <path d="M28 38 Q32 41 36 38" stroke="#4B5563" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CuteBear({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 140 140" className={className} aria-hidden>
+      {/* Ears */}
+      <circle cx="40" cy="42" r="16" fill="#FFD3B6" />
+      <circle cx="100" cy="42" r="16" fill="#FFD3B6" />
+      <circle cx="40" cy="42" r="8" fill="#FFEBDC" />
+      <circle cx="100" cy="42" r="8" fill="#FFEBDC" />
+      {/* Head */}
+      <circle cx="70" cy="78" r="44" fill="#FFD3B6" />
+      {/* Snout */}
+      <ellipse cx="70" cy="92" rx="22" ry="16" fill="#FFEBDC" />
+      {/* Eyes */}
+      <circle cx="56" cy="74" r="4" fill="#4B5563" />
+      <circle cx="84" cy="74" r="4" fill="#4B5563" />
+      <circle cx="57.5" cy="72.5" r="1.2" fill="#FFFFFF" />
+      <circle cx="85.5" cy="72.5" r="1.2" fill="#FFFFFF" />
+      {/* Nose */}
+      <ellipse cx="70" cy="88" rx="4" ry="3" fill="#4B5563" />
+      {/* Smile */}
+      <path d="M62 96 Q70 104 78 96" stroke="#4B5563" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      {/* Blush */}
+      <circle cx="48" cy="88" r="5" fill="#FFCAD4" opacity="0.7" />
+      <circle cx="92" cy="88" r="5" fill="#FFCAD4" opacity="0.7" />
+    </svg>
+  );
+}
+
 /* ---------- Navbar ---------- */
 
 function Navbar() {
