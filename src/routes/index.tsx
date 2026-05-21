@@ -11,7 +11,6 @@ import {
   Check,
   Menu,
   X,
-  Leaf,
   Brain,
   Palette,
   MessageCircle,
@@ -19,8 +18,8 @@ import {
   Compass,
   Star,
   Calendar,
-  Shield,
   Sun,
+  Cloud,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -31,11 +30,29 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Bino là hệ sinh thái AI hỗ trợ cha mẹ và giáo viên xây dựng lộ trình học tập cá nhân hóa cho trẻ có nhu cầu đặc biệt.",
+          "Bino là hệ sinh thái AI dịu dàng, giúp cha mẹ và giáo viên xây dựng lộ trình học cá nhân hóa cho trẻ có nhu cầu đặc biệt.",
       },
     ],
   }),
 });
+
+/* ---------- Reusable bits ---------- */
+
+function BinoMark({ className = "w-9 h-9" }: { className?: string }) {
+  return (
+    <span
+      className={`${className} rounded-3xl grid place-items-center shadow-sm shadow-brand-blue/40`}
+      style={{
+        background:
+          "linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-mint) 100%)",
+      }}
+    >
+      <Heart className="w-5 h-5 text-white" strokeWidth={2.5} />
+    </span>
+  );
+}
+
+/* ---------- Navbar ---------- */
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -47,20 +64,18 @@ function Navbar() {
     { label: "Bảng giá", href: "#pricing" },
   ];
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-emerald-100/60">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-2">
-          <span className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 grid place-items-center shadow-sm">
-            <Leaf className="w-5 h-5 text-white" />
-          </span>
-          <span className="text-xl font-bold text-slate-800 tracking-tight">Bino</span>
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-white">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
+        <a href="#home" className="flex items-center gap-2.5">
+          <BinoMark />
+          <span className="text-xl font-bold text-ink tracking-tight">Bino</span>
         </a>
         <ul className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors"
+                className="text-sm font-medium text-ink/70 hover:text-ink transition-colors"
               >
                 {l.label}
               </a>
@@ -68,38 +83,44 @@ function Navbar() {
           ))}
         </ul>
         <div className="hidden md:flex items-center gap-2">
-          <button className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-emerald-600 transition-colors rounded-full">
+          <button className="px-5 py-2.5 text-sm font-medium text-ink hover:bg-white/60 rounded-full transition-colors">
             Đăng nhập
           </button>
-          <button className="px-5 py-2.5 text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-full shadow-sm shadow-emerald-200 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+          <button
+            className="px-5 py-2.5 text-sm font-semibold text-ink rounded-full shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md"
+            style={{ background: "var(--brand-mint)" }}
+          >
             Dùng thử miễn phí
           </button>
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
-          className="md:hidden w-10 h-10 grid place-items-center rounded-full hover:bg-emerald-50 text-slate-700"
+          className="md:hidden w-10 h-10 grid place-items-center rounded-full bg-white/70 text-ink"
           aria-label="Mở menu"
         >
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </nav>
       {open && (
-        <div className="md:hidden border-t border-emerald-100/60 bg-white/90 backdrop-blur-md px-4 py-4 space-y-2">
+        <div className="md:hidden border-t border-white bg-white/90 backdrop-blur-md px-4 py-4 space-y-1.5">
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="block px-3 py-2 rounded-xl text-slate-700 hover:bg-emerald-50"
+              className="block px-4 py-2.5 rounded-2xl text-ink hover:bg-brand-blue-soft"
             >
               {l.label}
             </a>
           ))}
           <div className="pt-2 flex gap-2">
-            <button className="flex-1 px-4 py-2 text-sm rounded-full border border-slate-200 text-slate-700">
+            <button className="flex-1 px-4 py-2.5 text-sm rounded-full border border-ink/10 text-ink">
               Đăng nhập
             </button>
-            <button className="flex-1 px-4 py-2 text-sm rounded-full bg-emerald-500 text-white">
+            <button
+              className="flex-1 px-4 py-2.5 text-sm rounded-full text-ink font-semibold"
+              style={{ background: "var(--brand-mint)" }}
+            >
               Dùng thử
             </button>
           </div>
@@ -109,89 +130,195 @@ function Navbar() {
   );
 }
 
+/* ---------- Hero ---------- */
+
+function FloatingShape({
+  className,
+  color,
+}: {
+  className: string;
+  color: string;
+}) {
+  return (
+    <div
+      className={`absolute rounded-full blur-3xl ${className}`}
+      style={{ backgroundColor: color, opacity: 0.55 }}
+    />
+  );
+}
+
 function Hero() {
   return (
     <section id="home" className="relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 -left-24 w-96 h-96 rounded-full bg-emerald-100/60 blur-3xl" />
-        <div className="absolute -top-10 right-0 w-96 h-96 rounded-full bg-amber-100/60 blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 w-96 h-96 rounded-full bg-sky-100/50 blur-3xl" />
-      </div>
+      <FloatingShape className="top-10 -left-20 w-96 h-96" color="#DCEFFB" />
+      <FloatingShape className="-top-10 right-0 w-96 h-96" color="#FFEBDC" />
+      <FloatingShape className="bottom-10 left-1/3 w-80 h-80" color="#E2F6EC" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div>
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-medium">
-            <Sparkles className="w-4 h-4" />
-            AI đồng hành can thiệp sớm
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur text-ink text-sm font-medium shadow-sm">
+            <Sparkles className="w-4 h-4" style={{ color: "var(--brand-blue)" }} />
+            AI dịu dàng đồng hành can thiệp sớm
           </span>
-          <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 leading-tight tracking-tight">
-            Mỗi đứa trẻ đều lớn lên theo một <span className="text-emerald-600">cách riêng</span>
+          <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-ink leading-[1.15] tracking-tight">
+            Mỗi đứa trẻ đều lớn lên theo một{" "}
+            <span className="relative inline-block">
+              <span
+                className="absolute inset-x-0 bottom-2 h-4 rounded-full -z-10"
+                style={{ backgroundColor: "var(--brand-yellow)" }}
+              />
+              cách riêng
+            </span>
           </h1>
-          <p className="mt-6 text-lg text-slate-600 leading-relaxed max-w-xl">
-            Bino đồng hành cùng cha mẹ và thầy cô xây dựng lộ trình cá nhân hóa, cung cấp học liệu
-            chuyên biệt dưới sự hỗ trợ của Trí tuệ nhân tạo (AI).
+          <p className="mt-6 text-lg text-ink/70 leading-relaxed max-w-xl">
+            Bino đồng hành cùng cha mẹ và thầy cô xây dựng lộ trình cá nhân hóa,
+            cung cấp học liệu chuyên biệt dưới sự hỗ trợ dịu dàng của Trí tuệ
+            nhân tạo.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <button className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-emerald-500 text-white font-semibold shadow-md shadow-emerald-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:bg-emerald-600">
+            <button
+              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-ink font-semibold shadow-md shadow-brand-blue/30 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
+              style={{ background: "var(--brand-blue)" }}
+            >
               Bắt đầu miễn phí
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border-2 border-emerald-200 text-emerald-700 font-semibold hover:bg-emerald-50 transition-all duration-300 hover:-translate-y-1">
+            <button className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-ink font-semibold shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md">
               Khám phá học liệu
             </button>
           </div>
-          <div className="mt-10 flex items-center gap-6 text-sm text-slate-500">
+          <div className="mt-10 flex flex-wrap items-center gap-6 text-sm text-ink/60">
             <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-emerald-500" />
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ background: "var(--brand-mint)" }}
+              />
               An toàn cho trẻ
             </div>
             <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-amber-500" />
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ background: "var(--brand-peach)" }}
+              />
               Thiết kế bởi chuyên gia
+            </div>
+            <div className="flex items-center gap-2">
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ background: "var(--brand-pink)" }}
+              />
+              Hơn 12k gia đình tin dùng
             </div>
           </div>
         </div>
+
+        {/* Illustration card */}
         <div className="relative">
-          <div className="relative aspect-square max-w-lg mx-auto">
-            <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-emerald-100 via-amber-50 to-sky-100 rotate-3" />
-            <div className="absolute inset-3 rounded-[3rem] bg-white shadow-xl shadow-emerald-100/50 p-8 flex flex-col gap-4">
-              <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-50">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500 grid place-items-center text-white">
-                  <Brain className="w-6 h-6" />
+          <div className="relative max-w-lg mx-auto">
+            {/* Background blobs */}
+            <div
+              className="absolute -top-8 -right-8 w-32 h-32 rounded-full"
+              style={{ background: "var(--brand-yellow-soft)" }}
+            />
+            <div
+              className="absolute -bottom-10 -left-8 w-40 h-40 rounded-full"
+              style={{ background: "var(--brand-pink-soft)" }}
+            />
+
+            {/* Main card */}
+            <div className="relative rounded-[2.5rem] bg-white p-6 sm:p-8 shadow-xl shadow-brand-blue/10 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-12 h-12 rounded-2xl grid place-items-center"
+                    style={{ background: "var(--brand-blue-soft)" }}
+                  >
+                    <Smile className="w-6 h-6" style={{ color: "#3D8FC0" }} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-ink">Bé Minh An</p>
+                    <p className="text-xs text-ink/60">Lộ trình tuần này</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-slate-800">Lộ trình tuần của Minh An</p>
-                  <p className="text-xs text-slate-500">AI cá nhân hóa · 5 hoạt động</p>
-                </div>
+                <span
+                  className="px-3 py-1 rounded-full text-xs font-semibold text-ink"
+                  style={{ background: "var(--brand-mint-soft)" }}
+                >
+                  Tuần 4
+                </span>
               </div>
+
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-4 rounded-2xl bg-amber-50 hover:-translate-y-1 transition-transform duration-300">
-                  <Smile className="w-6 h-6 text-amber-500" />
-                  <p className="mt-2 text-sm font-semibold text-slate-800">Cảm xúc</p>
-                  <p className="text-xs text-slate-500">Nhận biết 4 cảm xúc cơ bản</p>
-                </div>
-                <div className="p-4 rounded-2xl bg-sky-50 hover:-translate-y-1 transition-transform duration-300">
-                  <MessageCircle className="w-6 h-6 text-sky-500" />
-                  <p className="mt-2 text-sm font-semibold text-slate-800">Giao tiếp</p>
-                  <p className="text-xs text-slate-500">Học 12 từ mới tuần này</p>
-                </div>
-                <div className="p-4 rounded-2xl bg-emerald-50 hover:-translate-y-1 transition-transform duration-300">
-                  <BookOpen className="w-6 h-6 text-emerald-600" />
-                  <p className="mt-2 text-sm font-semibold text-slate-800">Flashcard</p>
-                  <p className="text-xs text-slate-500">24 thẻ trực quan</p>
-                </div>
-                <div className="p-4 rounded-2xl bg-rose-50 hover:-translate-y-1 transition-transform duration-300">
-                  <BarChart2 className="w-6 h-6 text-rose-400" />
-                  <p className="mt-2 text-sm font-semibold text-slate-800">Tiến bộ</p>
-                  <p className="text-xs text-slate-500">+18% tương tác</p>
-                </div>
+                {[
+                  {
+                    icon: MessageCircle,
+                    title: "Giao tiếp",
+                    sub: "12 từ mới",
+                    bg: "var(--brand-blue-soft)",
+                    color: "#3D8FC0",
+                  },
+                  {
+                    icon: Heart,
+                    title: "Cảm xúc",
+                    sub: "4 cảm xúc",
+                    bg: "var(--brand-pink-soft)",
+                    color: "#D67B8B",
+                  },
+                  {
+                    icon: BookOpen,
+                    title: "Flashcard",
+                    sub: "24 thẻ",
+                    bg: "var(--brand-mint-soft)",
+                    color: "#4FA37F",
+                  },
+                  {
+                    icon: Star,
+                    title: "Vận động",
+                    sub: "5 hoạt động",
+                    bg: "var(--brand-peach-soft)",
+                    color: "#C9794B",
+                  },
+                ].map((it) => {
+                  const Icon = it.icon;
+                  return (
+                    <div
+                      key={it.title}
+                      className="p-4 rounded-2xl transition-all duration-300 ease-out hover:-translate-y-1"
+                      style={{ background: it.bg }}
+                    >
+                      <Icon className="w-5 h-5" style={{ color: it.color }} />
+                      <p className="mt-2 text-sm font-semibold text-ink">
+                        {it.title}
+                      </p>
+                      <p className="text-xs text-ink/60">{it.sub}</p>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="mt-auto p-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white flex items-center gap-3">
-                <Sparkles className="w-5 h-5" />
-                <p className="text-sm">"Hôm nay con đã chủ động vẫy tay chào mẹ!"</p>
+
+              <div
+                className="p-4 rounded-2xl flex items-center gap-3"
+                style={{ background: "var(--brand-yellow-soft)" }}
+              >
+                <Sun className="w-5 h-5" style={{ color: "#C99A2E" }} />
+                <p className="text-sm text-ink">
+                  "Hôm nay con đã chủ động vẫy tay chào mẹ!"
+                </p>
               </div>
             </div>
-            <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full bg-amber-200/70 blur-xl" />
-            <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-emerald-200/70 blur-xl" />
+
+            {/* Floating chips */}
+            <div
+              className="absolute -top-4 -left-6 px-4 py-2.5 rounded-2xl bg-white shadow-md flex items-center gap-2 rotate-[-6deg]"
+              style={{ animation: "none" }}
+            >
+              <Sparkles className="w-4 h-4" style={{ color: "#3D8FC0" }} />
+              <span className="text-xs font-semibold text-ink">AI đề xuất</span>
+            </div>
+            <div className="absolute -bottom-4 right-4 px-4 py-2.5 rounded-2xl bg-white shadow-md flex items-center gap-2 rotate-[5deg]">
+              <Cloud className="w-4 h-4" style={{ color: "#4FA37F" }} />
+              <span className="text-xs font-semibold text-ink">Tiến bộ +18%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -199,58 +326,76 @@ function Hero() {
   );
 }
 
+/* ---------- Problems ---------- */
+
 function Problems() {
   const items = [
     {
       icon: Compass,
       title: "Cha mẹ hoang mang",
       desc: "Không biết bắt đầu từ đâu, thông tin trên mạng rời rạc và mâu thuẫn.",
-      color: "bg-amber-50 text-amber-600",
+      bg: "var(--brand-peach-soft)",
+      iconBg: "var(--brand-peach)",
     },
     {
       icon: BookOpen,
       title: "Học liệu phân mảnh",
-      desc: "Khó tìm kiếm flashcard, storyboard trực quan phù hợp với con.",
-      color: "bg-sky-50 text-sky-600",
+      desc: "Khó tìm flashcard, storyboard trực quan phù hợp với con.",
+      bg: "var(--brand-blue-soft)",
+      iconBg: "var(--brand-blue)",
     },
     {
       icon: GraduationCap,
       title: "Áp lực giáo án",
-      desc: "Giáo viên mất quá nhiều thời gian thiết kế tài liệu cá nhân hóa cho từng trẻ.",
-      color: "bg-rose-50 text-rose-500",
+      desc: "Giáo viên mất quá nhiều thời gian thiết kế tài liệu cá nhân hóa.",
+      bg: "var(--brand-pink-soft)",
+      iconBg: "var(--brand-pink)",
     },
     {
       icon: Users,
       title: "Cảm giác cô lập",
       desc: "Thiếu một cộng đồng thấu cảm và mạng lưới chuyên gia dẫn dắt.",
-      color: "bg-emerald-50 text-emerald-600",
+      bg: "var(--brand-mint-soft)",
+      iconBg: "var(--brand-mint)",
     },
   ];
   return (
-    <section className="py-20 sm:py-28 bg-white/60">
+    <section className="py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center">
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-amber-50 text-amber-600 text-sm font-medium">
+          <span
+            className="inline-flex px-4 py-1.5 rounded-full text-ink text-sm font-medium"
+            style={{ background: "var(--brand-peach-soft)" }}
+          >
             Thấu cảm
           </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-slate-800 leading-tight">
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-ink leading-tight">
             Những khó khăn trên hành trình đồng hành cùng con
           </h2>
-          <p className="mt-4 text-slate-600 leading-relaxed">
-            Bạn không hề đơn độc. Đây là những điều rất nhiều cha mẹ và thầy cô đang cùng trải qua.
+          <p className="mt-4 text-ink/70 leading-relaxed">
+            Bạn không hề đơn độc. Đây là điều rất nhiều cha mẹ và thầy cô đang
+            cùng trải qua.
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {items.map(({ icon: Icon, title, desc, color }) => (
+          {items.map(({ icon: Icon, title, desc, bg, iconBg }) => (
             <div
               key={title}
-              className="group p-6 rounded-3xl bg-white border border-slate-100 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md hover:shadow-emerald-100/50"
+              className="p-6 rounded-3xl bg-white transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md shadow-sm"
             >
-              <div className={`w-12 h-12 rounded-2xl grid place-items-center ${color}`}>
-                <Icon className="w-6 h-6" />
+              <div
+                className="w-14 h-14 rounded-2xl grid place-items-center"
+                style={{ background: bg }}
+              >
+                <div
+                  className="w-9 h-9 rounded-xl grid place-items-center"
+                  style={{ background: iconBg }}
+                >
+                  <Icon className="w-5 h-5 text-white" strokeWidth={2.4} />
+                </div>
               </div>
-              <h3 className="mt-5 text-lg font-semibold text-slate-800">{title}</h3>
-              <p className="mt-2 text-sm text-slate-600 leading-relaxed">{desc}</p>
+              <h3 className="mt-5 text-lg font-semibold text-ink">{title}</h3>
+              <p className="mt-2 text-sm text-ink/70 leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
@@ -259,79 +404,93 @@ function Problems() {
   );
 }
 
+/* ---------- Features ---------- */
+
 function Features() {
   const features = [
     {
       icon: Brain,
       title: "Trợ lý AI",
-      desc: "AI xây dựng lộ trình tuần thích ứng theo biểu hiện và mục tiêu của con.",
-      bg: "bg-emerald-50",
-      iconColor: "text-emerald-600",
+      desc: "AI dịu dàng xây dựng lộ trình tuần thích ứng theo biểu hiện và mục tiêu của con.",
+      bg: "var(--brand-blue-soft)",
+      accent: "var(--brand-blue)",
     },
     {
       icon: BookOpen,
       title: "Kho học liệu",
-      desc: "Flashcard, PECS communication cards, worksheet đa dạng — chọn lọc kỹ.",
-      bg: "bg-amber-50",
-      iconColor: "text-amber-600",
+      desc: "Flashcard, PECS, worksheet đa dạng — được chuyên gia chọn lọc kỹ.",
+      bg: "var(--brand-mint-soft)",
+      accent: "var(--brand-mint)",
     },
     {
       icon: Palette,
-      title: "Lesson Builder Studio",
+      title: "Lesson Builder",
       desc: "Công cụ kéo thả phong cách Canva tạo giáo án cá nhân hóa trong vài phút.",
-      bg: "bg-sky-50",
-      iconColor: "text-sky-600",
+      bg: "var(--brand-peach-soft)",
+      accent: "var(--brand-peach)",
     },
     {
       icon: BarChart2,
       title: "Progress Tracker",
-      desc: "Biểu đồ theo dõi hành vi, từ mới và mức độ tương tác của trẻ theo thời gian.",
-      bg: "bg-rose-50",
-      iconColor: "text-rose-500",
+      desc: "Biểu đồ theo dõi hành vi, từ mới và mức độ tương tác theo thời gian.",
+      bg: "var(--brand-yellow-soft)",
+      accent: "var(--brand-yellow)",
     },
     {
       icon: Users,
       title: "Cộng đồng phụ huynh",
-      desc: "Nơi kết nối, chia sẻ kinh nghiệm với các nhóm phụ huynh đồng cảnh ngộ.",
-      bg: "bg-violet-50",
-      iconColor: "text-violet-500",
+      desc: "Kết nối, chia sẻ kinh nghiệm với nhóm phụ huynh đồng cảnh ngộ.",
+      bg: "var(--brand-pink-soft)",
+      accent: "var(--brand-pink)",
     },
     {
       icon: GraduationCap,
       title: "Mạng lưới chuyên gia",
-      desc: "Đặt lịch với chuyên gia giáo dục đặc biệt & tâm lý đã được kiểm duyệt.",
-      bg: "bg-teal-50",
-      iconColor: "text-teal-600",
+      desc: "Đặt lịch với chuyên gia giáo dục đặc biệt & tâm lý đã kiểm duyệt.",
+      bg: "var(--brand-mint-soft)",
+      accent: "var(--brand-mint)",
     },
   ];
   return (
     <section id="features" className="py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center">
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-medium">
-            Giải pháp
+          <span
+            className="inline-flex px-4 py-1.5 rounded-full text-ink text-sm font-medium"
+            style={{ background: "var(--brand-blue-soft)" }}
+          >
+            Hệ sinh thái
           </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-slate-800 leading-tight">
-            Hệ sinh thái thông minh của Bino
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-ink leading-tight">
+            Mọi thứ Bino có cho hành trình của con
           </h2>
-          <p className="mt-4 text-slate-600 leading-relaxed">
-            Sáu công cụ được thiết kế để cùng nhau hỗ trợ trẻ, cha mẹ và thầy cô.
+          <p className="mt-4 text-ink/70 leading-relaxed">
+            Sáu công cụ được thiết kế để dịu dàng hỗ trợ trẻ, cha mẹ và thầy cô.
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map(({ icon: Icon, title, desc, bg, iconColor }) => (
+          {features.map(({ icon: Icon, title, desc, bg, accent }) => (
             <div
               key={title}
-              className={`group p-7 rounded-3xl ${bg} transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/60`}
+              className="group p-7 rounded-3xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg shadow-sm"
+              style={{ background: bg }}
             >
-              <div className={`w-14 h-14 rounded-2xl bg-white grid place-items-center shadow-sm ${iconColor}`}>
-                <Icon className="w-7 h-7" />
+              <div
+                className="w-14 h-14 rounded-2xl grid place-items-center bg-white shadow-sm"
+                style={{ color: "var(--ink)" }}
+              >
+                <div
+                  className="w-9 h-9 rounded-xl grid place-items-center"
+                  style={{ background: accent }}
+                >
+                  <Icon className="w-5 h-5 text-white" strokeWidth={2.4} />
+                </div>
               </div>
-              <h3 className="mt-6 text-xl font-semibold text-slate-800">{title}</h3>
-              <p className="mt-3 text-slate-600 leading-relaxed">{desc}</p>
+              <h3 className="mt-6 text-xl font-semibold text-ink">{title}</h3>
+              <p className="mt-3 text-ink/70 leading-relaxed">{desc}</p>
               <a
                 href="#"
-                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-700 group-hover:gap-2.5 transition-all"
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:gap-2.5 transition-all"
               >
                 Tìm hiểu <ArrowRight className="w-4 h-4" />
               </a>
@@ -343,56 +502,188 @@ function Features() {
   );
 }
 
+/* ---------- How it works ---------- */
+
 function HowItWorks() {
   const steps = [
     {
       n: "01",
       title: "Nhập hồ sơ của trẻ",
-      desc: "Tuổi, mức độ tương tác, mục tiêu can thiệp và những điều con yêu thích.",
+      desc: "Tuổi, mức độ tương tác, mục tiêu và những điều con yêu thích.",
       icon: Smile,
+      bg: "var(--brand-blue-soft)",
+      dot: "var(--brand-blue)",
     },
     {
       n: "02",
       title: "AI thiết kế lộ trình",
-      desc: "Bino gợi ý chuỗi học liệu phù hợp, tuần tự, dễ thực hiện tại nhà và trên lớp.",
+      desc: "Bino gợi ý chuỗi học liệu phù hợp, tuần tự, dễ thực hiện mỗi ngày.",
       icon: Sparkles,
+      bg: "var(--brand-mint-soft)",
+      dot: "var(--brand-mint)",
     },
     {
       n: "03",
       title: "Theo dõi & cải thiện",
-      desc: "Ghi nhận tiến trình, nhận phản hồi thích ứng và điều chỉnh nhẹ nhàng mỗi ngày.",
+      desc: "Ghi nhận tiến trình, nhận phản hồi thích ứng và điều chỉnh nhẹ nhàng.",
       icon: BarChart2,
+      bg: "var(--brand-peach-soft)",
+      dot: "var(--brand-peach)",
     },
   ];
   return (
-    <section className="py-20 sm:py-28 bg-gradient-to-b from-white/60 to-emerald-50/40">
+    <section className="py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center">
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-sky-50 text-sky-600 text-sm font-medium">
+          <span
+            className="inline-flex px-4 py-1.5 rounded-full text-ink text-sm font-medium"
+            style={{ background: "var(--brand-yellow-soft)" }}
+          >
             Quy trình
           </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-slate-800 leading-tight">
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-ink leading-tight">
             3 bước đơn giản để bắt đầu
           </h2>
         </div>
-        <div className="mt-16 relative">
-          <div className="hidden lg:block absolute top-16 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-emerald-200 via-amber-200 to-sky-200" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {steps.map(({ n, title, desc, icon: Icon }) => (
-              <div key={n} className="relative text-center">
-                <div className="relative mx-auto w-32 h-32">
-                  <div className="absolute inset-0 rounded-full bg-emerald-100/60 blur-2xl" />
-                  <div className="relative w-32 h-32 rounded-full bg-white border-2 border-emerald-100 grid place-items-center shadow-lg shadow-emerald-100/60">
-                    <Icon className="w-10 h-10 text-emerald-600" />
-                    <span className="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-amber-400 text-white text-sm font-bold grid place-items-center shadow-md">
-                      {n}
-                    </span>
-                  </div>
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8 relative">
+          <div
+            className="hidden lg:block absolute top-16 left-[16%] right-[16%] h-1 rounded-full"
+            style={{
+              background:
+                "linear-gradient(90deg, var(--brand-blue) 0%, var(--brand-mint) 50%, var(--brand-peach) 100%)",
+              opacity: 0.4,
+            }}
+          />
+          {steps.map(({ n, title, desc, icon: Icon, bg, dot }) => (
+            <div key={n} className="relative text-center">
+              <div className="relative mx-auto w-32 h-32">
+                <div
+                  className="absolute inset-0 rounded-full blur-2xl"
+                  style={{ background: bg, opacity: 0.9 }}
+                />
+                <div
+                  className="relative w-32 h-32 rounded-full bg-white grid place-items-center shadow-lg"
+                  style={{ boxShadow: `0 12px 32px -10px ${bg}` }}
+                >
+                  <Icon
+                    className="w-10 h-10"
+                    style={{ color: "var(--ink)" }}
+                    strokeWidth={2}
+                  />
+                  <span
+                    className="absolute -top-2 -right-2 w-10 h-10 rounded-full text-ink text-sm font-bold grid place-items-center shadow-md"
+                    style={{ background: dot }}
+                  >
+                    {n}
+                  </span>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-slate-800">{title}</h3>
-                <p className="mt-3 text-slate-600 leading-relaxed max-w-xs mx-auto">{desc}</p>
               </div>
-            ))}
+              <h3 className="mt-6 text-xl font-semibold text-ink">{title}</h3>
+              <p className="mt-3 text-ink/70 leading-relaxed max-w-xs mx-auto">
+                {desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Community ---------- */
+
+function Community() {
+  return (
+    <section id="community" className="py-20 sm:py-28">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="relative overflow-hidden rounded-[2.5rem] p-8 sm:p-12 lg:p-16"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--brand-blue-soft) 0%, var(--brand-peach-soft) 50%, var(--brand-pink-soft) 100%)",
+          }}
+        >
+          <div
+            className="absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl"
+            style={{ background: "var(--brand-yellow)", opacity: 0.35 }}
+          />
+          <div
+            className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full blur-3xl"
+            style={{ background: "var(--brand-mint)", opacity: 0.35 }}
+          />
+          <div className="relative grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur text-ink text-sm font-medium">
+                <Heart className="w-4 h-4" style={{ color: "#D67B8B" }} />{" "}
+                Kết nối
+              </span>
+              <h2 className="mt-5 text-3xl sm:text-4xl font-bold text-ink leading-tight">
+                Không ai phải bước đi một mình
+              </h2>
+              <p className="mt-4 text-ink/80 leading-relaxed">
+                Tham gia thử thách{" "}
+                <strong className="text-ink">"7 Ngày Giao Tiếp Cùng Con"</strong>{" "}
+                miễn phí và đặt lịch trò chuyện với chuyên gia đã được Bino kiểm
+                định.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <button
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-ink font-semibold shadow-md transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
+                  style={{ background: "var(--brand-blue)" }}
+                >
+                  Tham gia thử thách
+                </button>
+                <button className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-ink font-semibold shadow-sm hover:-translate-y-1 transition-all duration-300">
+                  <Calendar className="w-4 h-4" /> Đặt lịch chuyên gia
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                {
+                  icon: Users,
+                  v: "12.4k+",
+                  l: "Cha mẹ đồng hành",
+                  c: "var(--brand-blue)",
+                },
+                {
+                  icon: GraduationCap,
+                  v: "280+",
+                  l: "Chuyên gia kiểm định",
+                  c: "var(--brand-mint)",
+                  offset: true,
+                },
+                {
+                  icon: Sun,
+                  v: "7 ngày",
+                  l: "Giao tiếp cùng con",
+                  c: "var(--brand-yellow)",
+                },
+                {
+                  icon: BookOpen,
+                  v: "1.500+",
+                  l: "Học liệu chuyên biệt",
+                  c: "var(--brand-pink)",
+                  offset: true,
+                },
+              ].map(({ icon: Icon, v, l, c, offset }) => (
+                <div
+                  key={l}
+                  className={`p-5 rounded-3xl bg-white/95 backdrop-blur shadow-sm ${
+                    offset ? "mt-8" : ""
+                  }`}
+                >
+                  <div
+                    className="w-10 h-10 rounded-2xl grid place-items-center"
+                    style={{ background: c }}
+                  >
+                    <Icon className="w-5 h-5 text-white" strokeWidth={2.4} />
+                  </div>
+                  <p className="mt-3 text-2xl font-bold text-ink">{v}</p>
+                  <p className="text-sm text-ink/60">{l}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -400,62 +691,7 @@ function HowItWorks() {
   );
 }
 
-function Community() {
-  return (
-    <section id="community" className="py-20 sm:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-emerald-100 via-amber-50 to-sky-100 p-8 sm:p-12 lg:p-16">
-          <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-amber-200/40 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-emerald-200/40 blur-3xl" />
-          <div className="relative grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 text-emerald-700 text-sm font-medium">
-                <Heart className="w-4 h-4" /> Kết nối
-              </span>
-              <h2 className="mt-5 text-3xl sm:text-4xl font-bold text-slate-800 leading-tight">
-                Không ai phải bước đi một mình
-              </h2>
-              <p className="mt-4 text-slate-700 leading-relaxed">
-                Tham gia thử thách <strong>"7 Ngày Giao Tiếp Cùng Con"</strong> miễn phí và đặt lịch
-                trò chuyện với chuyên gia đã được Bino kiểm định.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-all duration-300 hover:-translate-y-1 shadow-md shadow-emerald-200">
-                  Tham gia thử thách
-                </button>
-                <button className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-700 font-semibold hover:bg-slate-50 transition-all duration-300 hover:-translate-y-1">
-                  <Calendar className="w-4 h-4" /> Đặt lịch chuyên gia
-                </button>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl bg-white/90 backdrop-blur shadow-sm">
-                <Users className="w-7 h-7 text-emerald-600" />
-                <p className="mt-3 text-2xl font-bold text-slate-800">12.4k+</p>
-                <p className="text-sm text-slate-500">Cha mẹ đồng hành</p>
-              </div>
-              <div className="p-5 rounded-2xl bg-white/90 backdrop-blur shadow-sm mt-8">
-                <GraduationCap className="w-7 h-7 text-sky-600" />
-                <p className="mt-3 text-2xl font-bold text-slate-800">280+</p>
-                <p className="text-sm text-slate-500">Chuyên gia kiểm định</p>
-              </div>
-              <div className="p-5 rounded-2xl bg-white/90 backdrop-blur shadow-sm">
-                <Sun className="w-7 h-7 text-amber-500" />
-                <p className="mt-3 text-2xl font-bold text-slate-800">7 ngày</p>
-                <p className="text-sm text-slate-500">Giao tiếp cùng con</p>
-              </div>
-              <div className="p-5 rounded-2xl bg-white/90 backdrop-blur shadow-sm mt-8">
-                <BookOpen className="w-7 h-7 text-rose-500" />
-                <p className="mt-3 text-2xl font-bold text-slate-800">1.500+</p>
-                <p className="text-sm text-slate-500">Học liệu chuyên biệt</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+/* ---------- Testimonials ---------- */
 
 function Testimonials() {
   const items = [
@@ -464,31 +700,37 @@ function Testimonials() {
         "Lần đầu tiên tôi cảm thấy mình thực sự biết phải làm gì tiếp theo cho con. Bino dịu dàng dẫn dắt từng bước nhỏ.",
       name: "Chị Mai Anh",
       role: "Mẹ của bé Nam, 4 tuổi",
-      bg: "bg-amber-50",
+      bg: "var(--brand-peach-soft)",
+      avatar: "var(--brand-peach)",
     },
     {
       quote:
         "Lesson Builder tiết kiệm cho tôi hàng giờ mỗi tuần. Giáo án cá nhân hóa giờ chỉ mất 10 phút.",
       name: "Cô Thu Hằng",
       role: "Giáo viên Giáo dục Đặc biệt",
-      bg: "bg-emerald-50",
+      bg: "var(--brand-mint-soft)",
+      avatar: "var(--brand-mint)",
     },
     {
       quote:
         "Cộng đồng Bino là nơi tôi không phải giải thích quá nhiều. Mọi người đều hiểu.",
       name: "Anh Tuấn Khôi",
       role: "Bố của bé Bin, 6 tuổi",
-      bg: "bg-sky-50",
+      bg: "var(--brand-blue-soft)",
+      avatar: "var(--brand-blue)",
     },
   ];
   return (
-    <section className="py-20 sm:py-28 bg-white/60">
+    <section className="py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center">
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-rose-50 text-rose-500 text-sm font-medium">
+          <span
+            className="inline-flex px-4 py-1.5 rounded-full text-ink text-sm font-medium"
+            style={{ background: "var(--brand-pink-soft)" }}
+          >
             Câu chuyện thật
           </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-slate-800 leading-tight">
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-ink leading-tight">
             Những lời cảm ơn ấm áp
           </h2>
         </div>
@@ -496,23 +738,31 @@ function Testimonials() {
           {items.map((t) => (
             <figure
               key={t.name}
-              className={`p-7 rounded-3xl ${t.bg} transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md`}
+              className="p-7 rounded-3xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md shadow-sm"
+              style={{ background: t.bg }}
             >
-              <div className="flex gap-1 text-amber-400">
+              <div className="flex gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400" />
+                  <Star
+                    key={i}
+                    className="w-4 h-4"
+                    style={{ color: "#E8B84A", fill: "#E8B84A" }}
+                  />
                 ))}
               </div>
-              <blockquote className="mt-4 text-slate-700 leading-relaxed">
+              <blockquote className="mt-4 text-ink leading-relaxed">
                 "{t.quote}"
               </blockquote>
               <figcaption className="mt-6 flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-white grid place-items-center text-emerald-600 font-bold">
-                  {t.name.charAt(t.name.length - 1).toUpperCase()}
+                <div
+                  className="w-11 h-11 rounded-full grid place-items-center text-ink font-bold"
+                  style={{ background: t.avatar }}
+                >
+                  {t.name.split(" ").slice(-1)[0].charAt(0)}
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-800 text-sm">{t.name}</p>
-                  <p className="text-xs text-slate-500">{t.role}</p>
+                  <p className="font-semibold text-ink text-sm">{t.name}</p>
+                  <p className="text-xs text-ink/60">{t.role}</p>
                 </div>
               </figcaption>
             </figure>
@@ -522,6 +772,8 @@ function Testimonials() {
     </section>
   );
 }
+
+/* ---------- Pricing ---------- */
 
 function Pricing() {
   const plans = [
@@ -558,81 +810,80 @@ function Pricing() {
     <section id="pricing" className="py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center">
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-medium">
-            Minh bạch
+          <span
+            className="inline-flex px-4 py-1.5 rounded-full text-ink text-sm font-medium"
+            style={{ background: "var(--brand-mint-soft)" }}
+          >
+            Bảng giá minh bạch
           </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-slate-800 leading-tight">
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-ink leading-tight">
             Lựa chọn gói phù hợp với gia đình bạn
           </h2>
-          <p className="mt-4 text-slate-600 leading-relaxed">
-            Bạn có thể bắt đầu miễn phí và nâng cấp bất cứ khi nào cần thêm sự hỗ trợ.
+          <p className="mt-4 text-ink/70 leading-relaxed">
+            Bạn có thể bắt đầu miễn phí và nâng cấp bất cứ khi nào cần thêm sự
+            hỗ trợ.
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {plans.map((p) => (
             <div
               key={p.name}
-              className={`relative p-8 rounded-3xl transition-all duration-300 ease-out hover:-translate-y-1 ${
-                p.featured
-                  ? "bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-xl shadow-emerald-200"
-                  : "bg-white border border-slate-100 hover:shadow-md"
-              }`}
+              className="relative p-8 rounded-3xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg shadow-sm"
+              style={{
+                background: p.featured
+                  ? "linear-gradient(150deg, var(--brand-blue-soft) 0%, var(--brand-mint-soft) 100%)"
+                  : "#FFFFFF",
+                border: p.featured ? "none" : "1px solid #EEF2F7",
+              }}
             >
               {p.featured && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-amber-400 text-white text-xs font-bold shadow-sm">
-                  ✨ Khuyên dùng
+                <span
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-ink text-xs font-bold shadow-sm flex items-center gap-1"
+                  style={{ background: "var(--brand-yellow)" }}
+                >
+                  <Sparkles className="w-3 h-3" /> Khuyên dùng
                 </span>
               )}
-              <h3 className={`text-xl font-bold ${p.featured ? "text-white" : "text-slate-800"}`}>
-                {p.name}
-              </h3>
-              <p
-                className={`mt-2 text-sm leading-relaxed ${
-                  p.featured ? "text-emerald-50" : "text-slate-500"
-                }`}
-              >
+              <h3 className="text-xl font-bold text-ink">{p.name}</h3>
+              <p className="mt-2 text-sm text-ink/70 leading-relaxed">
                 {p.desc}
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span
-                  className={`text-4xl font-bold ${
-                    p.featured ? "text-white" : "text-slate-800"
-                  }`}
-                >
-                  {p.price}
-                </span>
-                {p.sub && (
-                  <span className={p.featured ? "text-emerald-100" : "text-slate-500"}>
-                    {p.sub}
-                  </span>
-                )}
+                <span className="text-4xl font-bold text-ink">{p.price}</span>
+                {p.sub && <span className="text-ink/60">{p.sub}</span>}
               </div>
               <ul className="mt-6 space-y-3">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-start gap-3">
                     <span
-                      className={`mt-0.5 w-5 h-5 rounded-full grid place-items-center shrink-0 ${
-                        p.featured ? "bg-white/20" : "bg-emerald-100"
-                      }`}
+                      className="mt-0.5 w-5 h-5 rounded-full grid place-items-center shrink-0"
+                      style={{
+                        background: p.featured
+                          ? "var(--brand-mint)"
+                          : "var(--brand-blue-soft)",
+                      }}
                     >
                       <Check
-                        className={`w-3 h-3 ${p.featured ? "text-white" : "text-emerald-600"}`}
+                        className="w-3 h-3"
+                        style={{
+                          color: p.featured ? "#FFFFFF" : "var(--ink)",
+                        }}
+                        strokeWidth={3}
                       />
                     </span>
-                    <span
-                      className={`text-sm ${p.featured ? "text-emerald-50" : "text-slate-600"}`}
-                    >
-                      {f}
-                    </span>
+                    <span className="text-sm text-ink/80">{f}</span>
                   </li>
                 ))}
               </ul>
               <button
-                className={`mt-8 w-full py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5 ${
-                  p.featured
-                    ? "bg-white text-emerald-600 hover:bg-emerald-50"
-                    : "bg-slate-900 text-white hover:bg-slate-800"
-                }`}
+                className="mt-8 w-full py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                style={{
+                  background: p.featured
+                    ? "var(--brand-blue)"
+                    : "#FFFFFF",
+                  color: "var(--ink)",
+                  border: p.featured ? "none" : "1px solid #E5E7EB",
+                }}
               >
                 {p.cta}
               </button>
@@ -643,6 +894,8 @@ function Pricing() {
     </section>
   );
 }
+
+/* ---------- Footer ---------- */
 
 function Footer() {
   const cols = [
@@ -660,29 +913,27 @@ function Footer() {
     },
   ];
   return (
-    <footer className="border-t border-emerald-100/60 bg-white/70 backdrop-blur-md">
+    <footer className="bg-white/60 backdrop-blur-md border-t border-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2">
-              <span className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 grid place-items-center">
-                <Leaf className="w-5 h-5 text-white" />
-              </span>
-              <span className="text-xl font-bold text-slate-800">Bino</span>
+            <div className="flex items-center gap-2.5">
+              <BinoMark />
+              <span className="text-xl font-bold text-ink">Bino</span>
             </div>
-            <p className="mt-4 text-sm text-slate-600 leading-relaxed">
+            <p className="mt-4 text-sm text-ink/70 leading-relaxed">
               Người bạn đồng hành thông minh trong quá trình can thiệp sớm.
             </p>
           </div>
           {cols.map((c) => (
             <div key={c.title}>
-              <h4 className="font-semibold text-slate-800">{c.title}</h4>
+              <h4 className="font-semibold text-ink">{c.title}</h4>
               <ul className="mt-4 space-y-3">
                 {c.links.map((l) => (
                   <li key={l}>
                     <a
                       href="#"
-                      className="text-sm text-slate-600 hover:text-emerald-600 transition-colors"
+                      className="text-sm text-ink/70 hover:text-ink transition-colors"
                     >
                       {l}
                     </a>
@@ -692,12 +943,15 @@ function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-slate-500">
+        <div className="mt-12 pt-8 border-t border-ink/10 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-ink/60">
             © {new Date().getFullYear()} Bino. Mọi quyền được bảo lưu.
           </p>
-          <p className="text-sm italic text-emerald-600 flex items-center gap-2">
-            <Heart className="w-4 h-4 fill-emerald-500 text-emerald-500" />
+          <p className="text-sm italic text-ink flex items-center gap-2">
+            <Heart
+              className="w-4 h-4"
+              style={{ color: "#D67B8B", fill: "#FFCAD4" }}
+            />
             Đồng hành cùng con từ những bước đi đầu tiên
           </p>
         </div>
@@ -706,9 +960,11 @@ function Footer() {
   );
 }
 
+/* ---------- Page ---------- */
+
 function Index() {
   return (
-    <main className="min-h-screen bg-amber-50/40 font-sans text-slate-700 antialiased">
+    <main className="min-h-screen bg-background font-sans text-ink antialiased">
       <Navbar />
       <Hero />
       <Problems />
