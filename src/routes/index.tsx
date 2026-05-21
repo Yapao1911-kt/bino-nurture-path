@@ -970,8 +970,6 @@ function Index() {
       <Problems />
       <Features />
       <HowItWorks />
-      <Community />
-      <Testimonials />
       <Pricing />
       <Footer />
     </main>
