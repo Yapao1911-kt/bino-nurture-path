@@ -52,6 +52,74 @@ function BinoMark({ className = "w-9 h-9" }: { className?: string }) {
   );
 }
 
+/* ---------- Cute SVG illustrations ---------- */
+
+function CuteCloud({ className = "", color = "#FFFFFF" }: { className?: string; color?: string }) {
+  return (
+    <svg viewBox="0 0 120 80" className={className} aria-hidden>
+      <g>
+        <ellipse cx="40" cy="50" rx="28" ry="22" fill={color} />
+        <ellipse cx="72" cy="42" rx="32" ry="26" fill={color} />
+        <ellipse cx="92" cy="55" rx="22" ry="18" fill={color} />
+        <ellipse cx="58" cy="60" rx="34" ry="18" fill={color} />
+        {/* Smile */}
+        <circle cx="52" cy="48" r="2.4" fill="#4B5563" />
+        <circle cx="74" cy="48" r="2.4" fill="#4B5563" />
+        <path d="M55 56 Q63 63 71 56" stroke="#4B5563" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+        {/* Blush */}
+        <circle cx="46" cy="56" r="2.8" fill="#FFCAD4" opacity="0.85" />
+        <circle cx="78" cy="56" r="2.8" fill="#FFCAD4" opacity="0.85" />
+      </g>
+    </svg>
+  );
+}
+
+function CuteStar({ className = "", color = "#FFF3B0" }: { className?: string; color?: string }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <path
+        d="M32 6 L39 24 L58 26 L43 38 L48 56 L32 46 L16 56 L21 38 L6 26 L25 24 Z"
+        fill={color}
+        stroke="#4B5563"
+        strokeOpacity="0.15"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <circle cx="26" cy="32" r="1.8" fill="#4B5563" />
+      <circle cx="38" cy="32" r="1.8" fill="#4B5563" />
+      <path d="M28 38 Q32 41 36 38" stroke="#4B5563" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CuteBear({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 140 140" className={className} aria-hidden>
+      {/* Ears */}
+      <circle cx="40" cy="42" r="16" fill="#FFD3B6" />
+      <circle cx="100" cy="42" r="16" fill="#FFD3B6" />
+      <circle cx="40" cy="42" r="8" fill="#FFEBDC" />
+      <circle cx="100" cy="42" r="8" fill="#FFEBDC" />
+      {/* Head */}
+      <circle cx="70" cy="78" r="44" fill="#FFD3B6" />
+      {/* Snout */}
+      <ellipse cx="70" cy="92" rx="22" ry="16" fill="#FFEBDC" />
+      {/* Eyes */}
+      <circle cx="56" cy="74" r="4" fill="#4B5563" />
+      <circle cx="84" cy="74" r="4" fill="#4B5563" />
+      <circle cx="57.5" cy="72.5" r="1.2" fill="#FFFFFF" />
+      <circle cx="85.5" cy="72.5" r="1.2" fill="#FFFFFF" />
+      {/* Nose */}
+      <ellipse cx="70" cy="88" rx="4" ry="3" fill="#4B5563" />
+      {/* Smile */}
+      <path d="M62 96 Q70 104 78 96" stroke="#4B5563" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      {/* Blush */}
+      <circle cx="48" cy="88" r="5" fill="#FFCAD4" opacity="0.7" />
+      <circle cx="92" cy="88" r="5" fill="#FFCAD4" opacity="0.7" />
+    </svg>
+  );
+}
+
 /* ---------- Navbar ---------- */
 
 function Navbar() {
@@ -153,6 +221,11 @@ function Hero() {
       <FloatingShape className="top-10 -left-20 w-96 h-96" color="#DCEFFB" />
       <FloatingShape className="-top-10 right-0 w-96 h-96" color="#FFEBDC" />
       <FloatingShape className="bottom-10 left-1/3 w-80 h-80" color="#E2F6EC" />
+
+      {/* Cute floating illustrations */}
+      <CuteCloud className="hidden sm:block absolute top-24 right-[8%] w-24 opacity-90 animate-[float_6s_ease-in-out_infinite]" />
+      <CuteStar className="hidden sm:block absolute top-40 left-[6%] w-12 rotate-[-12deg] animate-[float_5s_ease-in-out_infinite]" />
+      <CuteStar className="absolute bottom-24 right-[14%] w-10 rotate-[18deg] opacity-80" color="#FFD3B6" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div>
@@ -318,6 +391,10 @@ function Hero() {
             <div className="absolute -bottom-4 right-4 px-4 py-2.5 rounded-2xl bg-white shadow-md flex items-center gap-2 rotate-[5deg]">
               <Cloud className="w-4 h-4" style={{ color: "#4FA37F" }} />
               <span className="text-xs font-semibold text-ink">Tiến bộ +18%</span>
+            </div>
+            {/* Friendly bear mascot peeking */}
+            <div className="absolute -bottom-10 -right-6 w-28 sm:w-32 drop-shadow-md">
+              <CuteBear className="w-full" />
             </div>
           </div>
         </div>
@@ -533,7 +610,9 @@ function HowItWorks() {
   ];
   return (
     <section className="py-20 sm:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <CuteCloud className="hidden md:block absolute -top-4 right-8 w-20 opacity-80" />
+        <CuteStar className="hidden md:block absolute top-10 left-4 w-10 rotate-[10deg]" color="#A8E6CF" />
         <div className="max-w-2xl mx-auto text-center">
           <span
             className="inline-flex px-4 py-1.5 rounded-full text-ink text-sm font-medium"
