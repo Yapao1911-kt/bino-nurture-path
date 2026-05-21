@@ -610,7 +610,9 @@ function HowItWorks() {
   ];
   return (
     <section className="py-20 sm:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <CuteCloud className="hidden md:block absolute -top-4 right-8 w-20 opacity-80" />
+        <CuteStar className="hidden md:block absolute top-10 left-4 w-10 rotate-[10deg]" color="#A8E6CF" />
         <div className="max-w-2xl mx-auto text-center">
           <span
             className="inline-flex px-4 py-1.5 rounded-full text-ink text-sm font-medium"
