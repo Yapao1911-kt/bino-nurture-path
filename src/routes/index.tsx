@@ -392,6 +392,10 @@ function Hero() {
               <Cloud className="w-4 h-4" style={{ color: "#4FA37F" }} />
               <span className="text-xs font-semibold text-ink">Tiến bộ +18%</span>
             </div>
+            {/* Friendly bear mascot peeking */}
+            <div className="absolute -bottom-10 -right-6 w-28 sm:w-32 drop-shadow-md">
+              <CuteBear className="w-full" />
+            </div>
           </div>
         </div>
       </div>
