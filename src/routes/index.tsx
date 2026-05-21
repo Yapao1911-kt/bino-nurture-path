@@ -222,6 +222,11 @@ function Hero() {
       <FloatingShape className="-top-10 right-0 w-96 h-96" color="#FFEBDC" />
       <FloatingShape className="bottom-10 left-1/3 w-80 h-80" color="#E2F6EC" />
 
+      {/* Cute floating illustrations */}
+      <CuteCloud className="hidden sm:block absolute top-24 right-[8%] w-24 opacity-90 animate-[float_6s_ease-in-out_infinite]" />
+      <CuteStar className="hidden sm:block absolute top-40 left-[6%] w-12 rotate-[-12deg] animate-[float_5s_ease-in-out_infinite]" />
+      <CuteStar className="absolute bottom-24 right-[14%] w-10 rotate-[18deg] opacity-80" color="#FFD3B6" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div>
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur text-ink text-sm font-medium shadow-sm">
