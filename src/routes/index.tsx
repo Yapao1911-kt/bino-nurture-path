@@ -227,40 +227,58 @@ function Hero() {
       <CuteStar className="hidden sm:block absolute top-40 left-[6%] w-12 rotate-[-12deg] animate-[float_5s_ease-in-out_infinite]" />
       <CuteStar className="absolute bottom-24 right-[14%] w-10 rotate-[18deg] opacity-80" color="#FFD3B6" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        <div>
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur text-ink text-sm font-medium shadow-sm">
-            <Sparkles className="w-4 h-4" style={{ color: "var(--brand-blue)" }} />
+      {/* Crafty paper-cut decorations */}
+      <div className="hidden lg:block absolute top-28 left-[4%] w-28 h-20 opacity-60 rotate-12">
+        <svg viewBox="0 0 120 80" fill="none" className="w-full h-full">
+          <path d="M20 50C20 40 30 35 40 35C45 20 65 20 75 30C85 25 105 30 105 45C115 50 115 65 100 70H25C10 70 10 55 20 50Z" fill="#8ECDF8" />
+        </svg>
+      </div>
+      <div className="hidden lg:block absolute bottom-16 right-[6%] w-20 h-20 opacity-60 -rotate-6">
+        <svg viewBox="0 0 80 80" fill="none" className="w-full h-full">
+          <path d="M40 5L48 30H75L53 45L62 70L40 55L18 70L27 45L5 30H32L40 5Z" fill="#FFF3B0" />
+        </svg>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-28 lg:pt-24 lg:pb-36 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="text-center lg:text-left">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border-2 border-[#8ECDF8] text-ink text-sm font-semibold shadow-[4px_4px_0px_rgba(142,205,248,0.4)] -rotate-2 hover:rotate-0 transition-transform">
+            <span className="w-2 h-2 rounded-full" style={{ background: "var(--brand-blue)" }} />
             AI dịu dàng đồng hành can thiệp sớm
           </span>
-          <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-ink leading-[1.15] tracking-tight">
-            Mỗi đứa trẻ đều lớn lên theo một{" "}
-            <span className="relative inline-block">
-              <span
-                className="absolute inset-x-0 bottom-2 h-4 rounded-full -z-10"
-                style={{ backgroundColor: "var(--brand-yellow)" }}
-              />
-              cách riêng
+          <h1 className="mt-8 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.2] tracking-tight text-ink">
+            <span className="inline-block bg-white px-3 py-1 rounded-xl shadow-[6px_6px_0px_#A8E6CF] rotate-1 mb-3">
+              Mỗi đứa trẻ
+            </span>
+            <br />
+            <span
+              className="inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#efb8c2] -rotate-1 mb-3"
+              style={{ background: "var(--brand-pink)" }}
+            >
+              đều lớn lên
+            </span>
+            <br />
+            <span className="inline-block bg-white px-3 py-1 rounded-xl shadow-[6px_6px_0px_#FFD3B6] rotate-2">
+              theo một cách riêng
             </span>
           </h1>
-          <p className="mt-6 text-lg text-ink/70 leading-relaxed max-w-xl">
+          <p className="mt-8 text-lg text-ink/70 leading-relaxed max-w-xl mx-auto lg:mx-0">
             Bino đồng hành cùng cha mẹ và thầy cô xây dựng lộ trình cá nhân hóa,
             cung cấp học liệu chuyên biệt dưới sự hỗ trợ dịu dàng của Trí tuệ
             nhân tạo.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-5">
             <button
-              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-ink font-semibold shadow-md shadow-brand-blue/30 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
+              className="group inline-flex items-center gap-2 px-7 py-4 rounded-2xl text-white font-bold shadow-[6px_6px_0px_#6eb0db] -rotate-2 hover:rotate-0 transition-transform"
               style={{ background: "var(--brand-blue)" }}
             >
               Bắt đầu miễn phí
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-ink font-semibold shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md">
+            <button className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-ink font-bold border-2 border-slate-100 shadow-[6px_6px_0px_#f0f0f0] rotate-1 hover:rotate-0 transition-transform">
               Khám phá học liệu
             </button>
           </div>
-          <div className="mt-10 flex flex-wrap items-center gap-6 text-sm text-ink/60">
+          <div className="mt-10 flex flex-wrap justify-center lg:justify-start items-center gap-6 text-sm text-ink/60 font-medium">
             <div className="flex items-center gap-2">
               <span
                 className="w-2 h-2 rounded-full"
@@ -288,7 +306,10 @@ function Hero() {
         {/* Illustration card */}
         <div className="relative">
           <div className="relative max-w-lg mx-auto">
-            {/* Background blobs */}
+            {/* Dashed swirly trail */}
+            <svg className="absolute -top-10 -left-10 w-full h-full -z-10 opacity-30 pointer-events-none" viewBox="0 0 400 400" fill="none">
+              <path d="M10,200 C50,100 150,100 200,200 S350,300 390,200" stroke="#8ECDF8" strokeWidth="4" strokeDasharray="8,8" />
+            </svg>
             <div
               className="absolute -top-8 -right-8 w-32 h-32 rounded-full"
               style={{ background: "var(--brand-yellow-soft)" }}
@@ -298,8 +319,14 @@ function Hero() {
               style={{ background: "var(--brand-pink-soft)" }}
             />
 
-            {/* Main card */}
-            <div className="relative rounded-[2.5rem] bg-white p-6 sm:p-8 shadow-xl shadow-brand-blue/10 space-y-4">
+            {/* Main card — paper cutout style, slight tilt */}
+            <div className="relative rounded-[2.5rem] bg-white p-6 sm:p-8 shadow-[15px_15px_0px_#f3f3f3] border border-slate-50 rotate-2 space-y-4">
+              {/* Sticker label */}
+              <div className="absolute -top-4 left-6 bg-white px-3 py-1 rounded-lg shadow-sm border border-slate-100 -rotate-[4deg] flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5" style={{ color: "var(--brand-blue)" }} />
+                <span className="text-[10px] font-bold text-ink/50 tracking-wider uppercase">AI đề xuất</span>
+              </div>
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
@@ -351,12 +378,13 @@ function Hero() {
                     bg: "var(--brand-peach-soft)",
                     color: "#C9794B",
                   },
-                ].map((it) => {
+                ].map((it, i) => {
                   const Icon = it.icon;
+                  const tilts = ["-rotate-1", "rotate-2", "rotate-1", "-rotate-2"];
                   return (
                     <div
                       key={it.title}
-                      className="p-4 rounded-2xl transition-all duration-300 ease-out hover:-translate-y-1"
+                      className={`p-4 rounded-2xl border-2 border-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 ${tilts[i]}`}
                       style={{ background: it.bg }}
                     >
                       <Icon className="w-5 h-5" style={{ color: it.color }} />
@@ -370,7 +398,7 @@ function Hero() {
               </div>
 
               <div
-                className="p-4 rounded-2xl flex items-center gap-3"
+                className="p-4 rounded-2xl flex items-center gap-3 border-2 border-dashed border-[#f0e396] -rotate-1"
                 style={{ background: "var(--brand-yellow-soft)" }}
               >
                 <Sun className="w-5 h-5" style={{ color: "#C99A2E" }} />
@@ -380,20 +408,13 @@ function Hero() {
               </div>
             </div>
 
-            {/* Floating chips */}
-            <div
-              className="absolute -top-4 -left-6 px-4 py-2.5 rounded-2xl bg-white shadow-md flex items-center gap-2 rotate-[-6deg]"
-              style={{ animation: "none" }}
-            >
-              <Sparkles className="w-4 h-4" style={{ color: "#3D8FC0" }} />
-              <span className="text-xs font-semibold text-ink">AI đề xuất</span>
-            </div>
-            <div className="absolute -bottom-4 right-4 px-4 py-2.5 rounded-2xl bg-white shadow-md flex items-center gap-2 rotate-[5deg]">
+            {/* Floating tilted sticker chip */}
+            <div className="absolute -bottom-4 right-4 px-4 py-2.5 rounded-2xl bg-white border-2 border-white shadow-[4px_4px_0px_#A8E6CF] flex items-center gap-2 rotate-[5deg]">
               <Cloud className="w-4 h-4" style={{ color: "#4FA37F" }} />
               <span className="text-xs font-semibold text-ink">Tiến bộ +18%</span>
             </div>
             {/* Friendly bear mascot peeking */}
-            <div className="absolute -bottom-10 -right-6 w-28 sm:w-32 drop-shadow-md">
+            <div className="absolute -bottom-12 -right-6 w-28 sm:w-32 drop-shadow-md rotate-6">
               <CuteBear className="w-full" />
             </div>
           </div>
