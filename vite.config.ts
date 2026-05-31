@@ -11,5 +11,13 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
+    srcDirectory: "app",
   },
+  vite: {
+    resolve: {
+      alias: {
+        "@": `${process.cwd()}/app`
+      }
+    }
+  }
 });
