@@ -56,14 +56,124 @@ export const saveDesignFn = createServerFn({ method: 'POST' })
     return data
   })
 
+export const uploadAssetFn = createServerFn({ method: 'POST' })
+  .inputValidator((d: { fileName: string, fileBase64: string, contentType: string }) => d)
+  .handler(async (ctx) => {
+    const supabase = createServerSupabase(ctx as any)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error("Chưa đăng nhập")
+
+    const { fileName, fileBase64, contentType } = ctx.data
+    const blob = await fetch(`data:${contentType};base64,${fileBase64}`).then(r => r.blob())
+    const filePath = `${user.id}/${Date.now()}_${fileName}`
+    
+    const { error } = await supabase.storage
+      .from('studio_assets')
+      .upload(filePath, blob, { contentType })
+      
+    if (error) throw new Error(error.message)
+    
+    const { data: { publicUrl } } = supabase.storage.from('studio_assets').getPublicUrl(filePath)
+    return publicUrl
+  })
+
 // --- CONTEXT & HOOKS ---
 const StudioContext = createContext<any>(null)
 function useStudio() { return useContext(StudioContext) }
 
+// Custom Hook lõi Fabric.js
+function useFabricCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
+  const [canvas, setCanvas] = useState<any>(null)
+  const historyStack = useRef<string[]>([])
+  const historyIndex = useRef<number>(-1)
+  const isHistoryUpdate = useRef(false)
+
+  useEffect(() => {
+    if (!canvasRef.current || typeof window === 'undefined') return
+    const initCanvas = new (fabric.Canvas as any)(canvasRef.current, {
+      width: 850,
+      height: 478,
+      backgroundColor: '#ffffff'
+    })
+    setCanvas(initCanvas)
+
+    // Khởi tạo lịch sử
+    historyStack.current = [JSON.stringify(initCanvas.toJSON())]
+    historyIndex.current = 0
+
+    const saveHistory = () => {
+      if (isHistoryUpdate.current) return
+      const json = JSON.stringify(initCanvas.toJSON())
+      historyStack.current = historyStack.current.slice(0, historyIndex.current + 1)
+      historyStack.current.push(json)
+      historyIndex.current = historyStack.current.length - 1
+    }
+
+    initCanvas.on('object:modified', saveHistory)
+    initCanvas.on('object:added', saveHistory)
+    initCanvas.on('object:removed', saveHistory)
+
+    return () => { initCanvas.dispose() }
+  }, [])
+
+  const undo = async () => {
+    if (!canvas || historyIndex.current <= 0) return
+    isHistoryUpdate.current = true
+    historyIndex.current -= 1
+    try {
+      await canvas.loadFromJSON(JSON.parse(historyStack.current[historyIndex.current]))
+      canvas.renderAll()
+    } catch(e) {}
+    isHistoryUpdate.current = false
+  }
+
+  const redo = async () => {
+    if (!canvas || historyIndex.current >= historyStack.current.length - 1) return
+    isHistoryUpdate.current = true
+    historyIndex.current += 1
+    try {
+      await canvas.loadFromJSON(JSON.parse(historyStack.current[historyIndex.current]))
+      canvas.renderAll()
+    } catch(e) {}
+    isHistoryUpdate.current = false
+  }
+
+  const addText = (fontSize = 32, fontWeight = 800) => {
+    if (!canvas) return
+    const text = new (fabric.IText as any)('Văn bản của bạn', {
+      left: 100, top: 100, fontFamily: 'sans-serif', fill: '#334155', fontSize, fontWeight
+    })
+    canvas.add(text)
+    canvas.setActiveObject(text)
+  }
+
+  const addEmoji = (emoji: string) => {
+    if (!canvas) return
+    const text = new (fabric.Text as any)(emoji, { left: 100, top: 100, fontSize: 80 })
+    canvas.add(text)
+    canvas.setActiveObject(text)
+  }
+
+  const addImage = async (url: string) => {
+    if (!canvas) return
+    try {
+      const img = await (fabric.Image as any).fromURL(url, { crossOrigin: 'anonymous' })
+      img.set({ left: 100, top: 100 })
+      if (img.width > 400) img.scaleToWidth(400)
+      canvas.add(img)
+      canvas.setActiveObject(img)
+    } catch (err) {
+      console.error("Không tải được ảnh:", err)
+    }
+  }
+
+  return { canvas, addText, addEmoji, addImage, undo, redo }
+}
+
 // --- COMPONENTS ---
 
 function TopHeader() {
-  const { title, setTitle, canvas, handleSaveAndExport } = useStudio()
+  const { title, setTitle, handleSaveAndExport, undo, redo } = useStudio()
   const [isSaving, setIsSaving] = useState(false)
 
   const onSave = async () => {
@@ -110,10 +220,10 @@ function TopHeader() {
       {/* Right */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
-          <button className="p-2.5 text-slate-400 hover:text-emerald-500 hover:bg-white rounded-xl transition-all shadow-none hover:shadow-sm" title="Hoàn tác">
+          <button onClick={undo} className="p-2.5 text-slate-400 hover:text-emerald-500 hover:bg-white rounded-xl transition-all shadow-none hover:shadow-sm" title="Hoàn tác">
             <Undo2 className="w-5 h-5" />
           </button>
-          <button className="p-2.5 text-slate-400 hover:text-emerald-500 hover:bg-white rounded-xl transition-all shadow-none hover:shadow-sm" title="Làm lại">
+          <button onClick={redo} className="p-2.5 text-slate-400 hover:text-emerald-500 hover:bg-white rounded-xl transition-all shadow-none hover:shadow-sm" title="Làm lại">
             <Redo2 className="w-5 h-5" />
           </button>
           <div className="w-px h-6 bg-slate-200 mx-1"></div>
@@ -310,11 +420,56 @@ function TextPanel() {
   )
 }
 function UploadsPanel() {
+  const { addImage } = useStudio()
+  const [isUploading, setIsUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setIsUploading(true)
+    
+    try {
+      // Đọc file dưới dạng base64
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = async () => {
+        const base64Str = (reader.result as string).split(',')[1]
+        
+        // Gọi Server Function để lưu lên Supabase Storage
+        const publicUrl = await uploadAssetFn({ data: { 
+          fileName: file.name, 
+          fileBase64: base64Str, 
+          contentType: file.type 
+        }})
+        
+        // Chèn ảnh vào Canvas
+        addImage(publicUrl)
+        setIsUploading(false)
+      }
+    } catch (err: any) {
+      console.error(err)
+      alert("Lỗi tải ảnh: " + err.message)
+      setIsUploading(false)
+    }
+  }
+
   return (
     <div className="p-6 animate-in fade-in slide-in-from-left-4 duration-300">
       <h3 className="text-base font-extrabold text-slate-700 mb-4">Tải lên</h3>
-      <button className="w-full py-4 bg-blue-400 hover:bg-blue-500 text-white rounded-[20px] font-bold shadow-[0_4px_14px_rgba(96,165,250,0.3)] hover:-translate-y-0.5 transition-all mb-6">
-        Tải lên hình ảnh / video
+      <input 
+        type="file" 
+        accept="image/*" 
+        ref={fileInputRef} 
+        onChange={handleUpload} 
+        className="hidden" 
+      />
+      <button 
+        onClick={() => fileInputRef.current?.click()}
+        disabled={isUploading}
+        className="w-full py-4 bg-blue-400 hover:bg-blue-500 text-white rounded-[20px] font-bold shadow-[0_4px_14px_rgba(96,165,250,0.3)] hover:-translate-y-0.5 transition-all mb-6 disabled:opacity-70 disabled:hover:-translate-y-0"
+      >
+        {isUploading ? 'Đang tải lên...' : 'Tải lên hình ảnh'}
       </button>
       <div className="text-slate-400 text-sm font-medium text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
         Các tệp của bạn sẽ an toàn tại đây.
@@ -404,36 +559,9 @@ function BinoStudio() {
   const [isPanelOpen, setIsPanelOpen] = useState(true)
   const [title, setTitle] = useState("Thiết kế thẻ PECS - Kỹ năng sống")
   
-  // Fabric Hooks
+  // Gắn Custom Hook
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [canvas, setCanvas] = useState<any>(null)
-
-  useEffect(() => {
-    if (!canvasRef.current || typeof window === 'undefined') return
-    const initCanvas = new (fabric.Canvas as any)(canvasRef.current, {
-      width: 850,
-      height: 478,
-      backgroundColor: '#ffffff'
-    })
-    setCanvas(initCanvas)
-    return () => { initCanvas.dispose() }
-  }, [])
-
-  const addText = (fontSize = 32, fontWeight = 800) => {
-    if (!canvas) return
-    const text = new (fabric.IText as any)('Văn bản của bạn', {
-      left: 100, top: 100, fontFamily: 'sans-serif', fill: '#334155', fontSize, fontWeight
-    })
-    canvas.add(text)
-    canvas.setActiveObject(text)
-  }
-
-  const addEmoji = (emoji: string) => {
-    if (!canvas) return
-    const text = new (fabric.Text as any)(emoji, { left: 100, top: 100, fontSize: 80 })
-    canvas.add(text)
-    canvas.setActiveObject(text)
-  }
+  const { canvas, addText, addEmoji, addImage, undo, redo } = useFabricCanvas(canvasRef)
 
   const handleSaveAndExport = async () => {
     if (!canvas) return
@@ -458,7 +586,7 @@ function BinoStudio() {
   }
 
   const contextValue = {
-    canvas, canvasRef, title, setTitle, addText, addEmoji, handleSaveAndExport
+    canvas, canvasRef, title, setTitle, addText, addEmoji, addImage, undo, redo, handleSaveAndExport
   }
 
   return (
