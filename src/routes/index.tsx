@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Heart,
@@ -127,8 +127,8 @@ function Navbar() {
   const links = [
     { label: "Trang chủ", href: "#home" },
     { label: "Tính năng", href: "#features" },
+    { label: "Lesson Builder", href: "/lesson-builder" },
     { label: "Cộng đồng", href: "#community" },
-    { label: "Học liệu", href: "#resources" },
     { label: "Bảng giá", href: "#pricing" },
   ];
   return (
@@ -139,27 +139,40 @@ function Navbar() {
           <span className="text-xl font-bold text-ink tracking-tight">Bino</span>
         </a>
         <ul className="hidden md:flex items-center gap-8">
-          {links.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                className="text-sm font-medium text-ink/70 hover:text-ink transition-colors"
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
+          {links.map((l) => {
+            const isHash = l.href.startsWith("#");
+            return (
+              <li key={l.href}>
+                {isHash ? (
+                  <a
+                    href={l.href}
+                    className="text-sm font-medium text-ink/70 hover:text-ink transition-colors"
+                  >
+                    {l.label}
+                  </a>
+                ) : (
+                  <Link
+                    to={l.href}
+                    className="text-sm font-medium text-ink/70 hover:text-ink transition-colors"
+                  >
+                    {l.label}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
         <div className="hidden md:flex items-center gap-2">
           <button className="px-5 py-2.5 text-sm font-medium text-ink hover:bg-white/60 rounded-full transition-colors">
             Đăng nhập
           </button>
-          <button
-            className="px-5 py-2.5 text-sm font-semibold text-ink rounded-full shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md"
+          <Link
+            to="/create-child"
+            className="px-5 py-2.5 text-sm font-semibold text-ink rounded-full shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md text-center"
             style={{ background: "var(--brand-mint)" }}
           >
             Dùng thử miễn phí
-          </button>
+          </Link>
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
@@ -171,26 +184,40 @@ function Navbar() {
       </nav>
       {open && (
         <div className="md:hidden border-t border-white bg-white/90 backdrop-blur-md px-4 py-4 space-y-1.5">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="block px-4 py-2.5 rounded-2xl text-ink hover:bg-brand-blue-soft"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) => {
+            const isHash = l.href.startsWith("#");
+            return isHash ? (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="block px-4 py-2.5 rounded-2xl text-ink hover:bg-brand-blue-soft"
+              >
+                {l.label}
+              </a>
+            ) : (
+              <Link
+                key={l.href}
+                to={l.href}
+                onClick={() => setOpen(false)}
+                className="block px-4 py-2.5 rounded-2xl text-ink hover:bg-brand-blue-soft"
+              >
+                {l.label}
+              </Link>
+            );
+          })}
           <div className="pt-2 flex gap-2">
             <button className="flex-1 px-4 py-2.5 text-sm rounded-full border border-ink/10 text-ink">
               Đăng nhập
             </button>
-            <button
-              className="flex-1 px-4 py-2.5 text-sm rounded-full text-ink font-semibold"
+            <Link
+              to="/create-child"
+              onClick={() => setOpen(false)}
+              className="flex-1 px-4 py-2.5 text-sm rounded-full text-ink font-semibold text-center"
               style={{ background: "var(--brand-mint)" }}
             >
               Dùng thử
-            </button>
+            </Link>
           </div>
         </div>
       )}
@@ -267,16 +294,20 @@ function Hero() {
             nhân tạo.
           </p>
           <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-5">
-            <button
-              className="group inline-flex items-center gap-2 px-7 py-4 rounded-2xl text-white font-bold shadow-[6px_6px_0px_#6eb0db] -rotate-2 hover:rotate-0 transition-transform"
+            <Link
+              to="/create-child"
+              className="group inline-flex items-center gap-2 px-7 py-4 rounded-2xl text-white font-bold shadow-[6px_6px_0px_#6eb0db] -rotate-2 hover:rotate-0 transition-transform text-center"
               style={{ background: "var(--brand-blue)" }}
             >
               Bắt đầu miễn phí
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
-            <button className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-ink font-bold border-2 border-slate-100 shadow-[6px_6px_0px_#f0f0f0] rotate-1 hover:rotate-0 transition-transform">
+            </Link>
+            <a
+              href="#features"
+              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-ink font-bold border-2 border-slate-100 shadow-[6px_6px_0px_#f0f0f0] rotate-1 hover:rotate-0 transition-transform text-center"
+            >
               Khám phá học liệu
-            </button>
+            </a>
           </div>
           <div className="mt-10 flex flex-wrap justify-center lg:justify-start items-center gap-6 text-sm text-ink/60 font-medium">
             <div className="flex items-center gap-2">
@@ -526,6 +557,7 @@ function Features() {
       desc: "Công cụ kéo thả phong cách Canva tạo giáo án cá nhân hóa trong vài phút.",
       bg: "var(--brand-peach-soft)",
       accent: "var(--brand-peach)",
+      href: "/lesson-builder",
     },
     {
       icon: BarChart2,
@@ -567,7 +599,7 @@ function Features() {
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map(({ icon: Icon, title, desc, bg, accent }) => (
+          {features.map(({ icon: Icon, title, desc, bg, accent, href }) => (
             <div
               key={title}
               className="group p-7 rounded-3xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg shadow-sm"
@@ -586,12 +618,21 @@ function Features() {
               </div>
               <h3 className="mt-6 text-xl font-semibold text-ink">{title}</h3>
               <p className="mt-3 text-ink/70 leading-relaxed">{desc}</p>
-              <a
-                href="#"
-                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:gap-2.5 transition-all"
-              >
-                Tìm hiểu <ArrowRight className="w-4 h-4" />
-              </a>
+              {href ? (
+                <Link
+                  to={href}
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:gap-2.5 transition-all"
+                >
+                  Mở ngay <ArrowRight className="w-4 h-4" />
+                </Link>
+              ) : (
+                <a
+                  href="#"
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:gap-2.5 transition-all"
+                >
+                  Tìm hiểu <ArrowRight className="w-4 h-4" />
+                </a>
+              )}
             </div>
           ))}
         </div>
@@ -727,12 +768,13 @@ function Community() {
                 định.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <button
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-ink font-semibold shadow-md transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
+                <Link
+                  to="/create-child"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-ink font-semibold shadow-md transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg text-center"
                   style={{ background: "var(--brand-blue)" }}
                 >
                   Tham gia thử thách
-                </button>
+                </Link>
                 <button className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-ink font-semibold shadow-sm hover:-translate-y-1 transition-all duration-300">
                   <Calendar className="w-4 h-4" /> Đặt lịch chuyên gia
                 </button>
@@ -975,8 +1017,9 @@ function Pricing() {
                   </li>
                 ))}
               </ul>
-              <button
-                className="mt-8 w-full py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+              <Link
+                to="/create-child"
+                className="mt-8 w-full py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md text-center block"
                 style={{
                   background: p.featured
                     ? "var(--brand-blue)"
@@ -986,7 +1029,7 @@ function Pricing() {
                 }}
               >
                 {p.cta}
-              </button>
+              </Link>
             </div>
           ))}
         </div>
@@ -1001,15 +1044,30 @@ function Footer() {
   const cols = [
     {
       title: "Sản phẩm",
-      links: ["Tính năng", "Học liệu", "Lesson Builder", "Bảng giá"],
+      links: [
+        { label: "Tính năng", href: "#features" },
+        { label: "Học liệu", href: "#" },
+        { label: "Lesson Builder", href: "/lesson-builder" },
+        { label: "Bảng giá", href: "#pricing" },
+      ],
     },
     {
       title: "Cộng đồng",
-      links: ["Nhóm phụ huynh", "Chuyên gia", "Thử thách 7 ngày", "Sự kiện"],
+      links: [
+        { label: "Nhóm phụ huynh", href: "#" },
+        { label: "Chuyên gia", href: "#" },
+        { label: "Thử thách 7 ngày", href: "#" },
+        { label: "Sự kiện", href: "#" },
+      ],
     },
     {
       title: "Công ty",
-      links: ["Về Bino", "Sứ mệnh", "Tuyển dụng", "Liên hệ"],
+      links: [
+        { label: "Về Bino", href: "#" },
+        { label: "Sứ mệnh", href: "#" },
+        { label: "Tuyển dụng", href: "#" },
+        { label: "Liên hệ", href: "#" },
+      ],
     },
   ];
   return (
@@ -1029,16 +1087,28 @@ function Footer() {
             <div key={c.title}>
               <h4 className="font-semibold text-ink">{c.title}</h4>
               <ul className="mt-4 space-y-3">
-                {c.links.map((l) => (
-                  <li key={l}>
-                    <a
-                      href="#"
-                      className="text-sm text-ink/70 hover:text-ink transition-colors"
-                    >
-                      {l}
-                    </a>
-                  </li>
-                ))}
+                {c.links.map((l) => {
+                  const isHash = l.href.startsWith("#");
+                  return (
+                    <li key={l.label}>
+                      {isHash ? (
+                        <a
+                          href={l.href}
+                          className="text-sm text-ink/70 hover:text-ink transition-colors"
+                        >
+                          {l.label}
+                        </a>
+                      ) : (
+                        <Link
+                          to={l.href}
+                          className="text-sm text-ink/70 hover:text-ink transition-colors"
+                        >
+                          {l.label}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
