@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Heart,
@@ -128,7 +128,7 @@ function Navbar() {
     { label: "Trang chủ", href: "#home" },
     { label: "Tính năng", href: "#features" },
     { label: "Cộng đồng", href: "#community" },
-    { label: "Học liệu", href: "#resources" },
+    { label: "Học liệu", href: "/library" },
     { label: "Bảng giá", href: "#pricing" },
   ];
   return (
@@ -274,9 +274,9 @@ function Hero() {
               Bắt đầu miễn phí
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-ink font-bold border-2 border-slate-100 shadow-[6px_6px_0px_#f0f0f0] rotate-1 hover:rotate-0 transition-transform">
+            <Link to="/library" className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-ink font-bold border-2 border-slate-100 shadow-[6px_6px_0px_#f0f0f0] rotate-1 hover:rotate-0 transition-transform">
               Khám phá học liệu
-            </button>
+            </Link>
           </div>
           <div className="mt-10 flex flex-wrap justify-center lg:justify-start items-center gap-6 text-sm text-ink/60 font-medium">
             <div className="flex items-center gap-2">
