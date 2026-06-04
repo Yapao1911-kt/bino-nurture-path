@@ -1,0 +1,300 @@
+ĐẶC TẢ YÊU CẦU PHẦN MỀM
+(Software Requirements Specification - SRS)
+
+DỰ ÁN: BINO — NỀN TẢNG HỖ TRỢ HỌC TẬP TÍCH HỢP AI
+Phiên bản: 1.0
+Ngày: 21 tháng 05 năm 2026
+Vai trò cấu trúc: Senior System Analyst / Software Architect
+
+LỊCH SỬ PHIÊN BẢN
+Phiên bản
+Ngày
+Người thực hiện
+Nội dung thay đổi
+ 
+v1.0
+21/05/2026
+Senior System Analyst / Software Architect
+Khởi tạo tài liệu SRS ban đầu – Tổng hợp, cấu trúc hóa và chuẩn hóa toàn bộ yêu cầu hệ thống Bino theo tiêu chuẩn IEEE 830.
+
+
+1. GIỚI THIỆU (INTRODUCTION)
+1.1. Mục tiêu tài liệu (Purpose of the Document)
+Tài liệu Đặc tả Yêu cầu Phần mềm (SRS) này cung cấp mô tả toàn diện, chi tiết và có cấu trúc về các yêu cầu chức năng, phi chức năng, kiến trúc hệ thống và thiết kế dữ liệu cho nền tảng Bino. Tài liệu được biên soạn dựa trên các nguyên tắc chuẩn hóa của IEEE Std 830-1998 nhằm:
+Làm cơ sở kỹ thuật chính xác cho đội ngũ lập trình viên (Developers) triển khai hệ thống.
+Định hướng thiết kế kiến trúc hệ thống (System Architecture) và mô hình hóa dữ liệu (Database Design).
+Cung cấp tiêu chuẩn tham chiếu phục vụ công tác kiểm thử phần mềm và đảm bảo chất lượng (QA/QC).
+Định hình lộ trình phát triển và kiểm soát phạm vi dự án đối với các bên liên quan (Product Owners, Investors).
+
+1.2. Tuyên bố từ chối trách nhiệm y tế (Medical Disclaimer)
+QUAN TRỌNG: Bino KHÔNG phải là một hệ thống chẩn đoán y khoa, không đưa ra kết luận lâm sàng và không có giá trị thay thế các chuyên gia y tế, bác sĩ tâm thần hoặc các nhà trị liệu chuyên môn. Nền tảng chỉ đóng vai trò hỗ trợ hướng dẫn học tập, cung cấp tài nguyên giáo dục sớm và can thiệp sớm dựa trên các mô hình khoa học giáo dục hành vi.
+
+2. PHẠM VI HỆ THỐNG (SYSTEM SCOPE)
+Bino là một hệ sinh thái đa nền tảng (Web/App) tích hợp Trí tuệ nhân tạo (AI) nhằm giải quyết bài toán cốt lõi của phụ huynh và giáo viên: "Tôi nên làm gì cho đứa trẻ này ngay bây giờ?".
+Hệ thống kết nối luồng thông tin và hành động giữa ba tác nhân chính: Phụ huynh, Giáo viên thông qua các phân hệ chức năng tập trung:
+Thư viện kiến thức & học liệu đa phương tiện chuyên biệt.
+Bộ công cụ thiết kế bài học tương tác kéo-thả (Lesson Builder Studio).
+Hệ thống theo dõi, phân tích tiến độ hành vi và nhận thức của trẻ (Progress Tracker).
+Trợ lý ảo AI cá nhân hóa lộ trình và khuyến nghị tài nguyên (AI Personal Learning Assistant).
+
+3. ĐỊNH NGHĨA VÀ THUẬT NGỮ (DEFINITIONS AND ABBREVIATIONS)
+Thuật ngữ / Viết tắt
+Định nghĩa
+ 
+AI
+Artificial Intelligence - Trí tuệ nhân tạo
+ATS
+Applicant Tracking System - Hệ thống quản lý ứng viên (sử dụng trong tuyển dụng chuyên gia)
+B2B
+Business-to-Business - Mô hình kinh doanh giữa doanh nghiệp với doanh nghiệp (Trường học, Trung tâm can thiệp)
+CRUD
+Create, Read, Update, Delete - Các thao tác cơ bản với dữ liệu (Tạo, Đọc, Cập nhật, Xóa)
+JWT
+JSON Web Token - Mã đại diện chuỗi bảo mật dùng để xác thực quyền truy cập API
+PECS
+Picture Exchange Communication System - Hệ thống giao tiếp qua trao đổi hình ảnh dành cho trẻ tự kỷ
+PII
+Personally Identifiable Information - Thông tin định danh cá nhân nhạy cảm
+RBAC
+Role-Based Access Control - Kiểm soát truy cập dựa trên vai trò người dùng
+RPO / RTO
+Recovery Point Objective / Recovery Time Objective - Mục tiêu điểm phục hồi / Mục tiêu thời gian phục hồi
+SPA
+Single Page Application - Ứng dụng web một trang
+SSO
+Single Sign-On - Hệ thống đăng nhập một lần
+TTL
+Time To Live - Thời gian sống/Hiệu lực của Token hoặc dữ liệu
+UUID
+Universally Unique Identifier - Mã định danh duy nhất toàn cầu (128-bit)
+
+
+4. TỔNG QUAN HỆ THỐNG & ĐỐI TƯỢNG SỬ DỤNG (OVERALL DESCRIPTION)
+4.1. Kiến trúc kỹ thuật sơ bộ (High-Level Tech Stack)
+Frontend: TanStack Start (React 19 + Vite 7)  kết hợp với Tailwind CSS nhằm tối ưu SEO, hỗ trợ Server-Side Rendering (SSR) cho thư viện kiến thức công cộng và đảm bảo giao diện responsive vượt trội.
+Backend & Database: Supabase (Cung cấp PostgreSQL làm Single Source of Truth, tích hợp cơ chế Real-time, Supabase Auth và quản lý chính sách bảo mật Row Level Security - RLS).
+Storage: Supabase Storage (Mã hóa at-rest, quản lý tài nguyên học liệu tĩnh và các file xuất bản PDF).
+Editor Component: Fabric.js (Thư viện xử lý Canvas HTML5 mạnh mẽ hỗ trợ kéo thả cho Studio thiết kế).
+AI Engine: OpenAI API (Sử dụng các dòng mô hình GPT-4o để xử lý ngôn ngữ tự nhiên và phân tích dữ liệu đầu vào).
+
+4.2. Đặc điểm đối tượng sử dụng (User Characteristics)
+Vai trò người dùng
+Mô tả đặc điểm hành vi và nhu cầu
+Quyền hạn cốt lõi trên hệ thống
+ 
+Parents (Phụ huynh)
+Nhóm người dùng có mức độ căng thẳng tâm lý (cognitive load) cao, cần giao diện tối giản, mang tính chữa lành (healing). Đòi hỏi câu trả lời nhanh, tài nguyên thực hành ngay lập tức.
+Xem thư viện, sử dụng AI Assistant, tạo hồ sơ trẻ, theo dõi tiến độ, tương tác cộng đồng.
+Teachers (Giáo viên)
+Cần các công cụ có năng suất cao để soạn thảo giáo án nhanh, quản lý nhiều trẻ cùng lúc, chia sẻ tài liệu trực quan với phụ huynh.
+Toàn quyền sử dụng Lesson Builder Studio, quản lý danh sách lớp học/trẻ, phân phối bài học.
+Admin (Quản trị viên)
+Đội ngũ vận hành hệ thống kỹ thuật và kiểm duyệt nội dung của Bino.
+Quản lý người dùng, cấu hình tham số AI, phê duyệt định danh chuyên gia, kiểm duyệt cộng đồng, đối soát tài chính.
+
+
+5. YÊU CẦU CHỨC NĂNG (FUNCTIONAL REQUIREMENTS)
+5.1. Phân hệ Xác thực & Bảo mật (Authentication & Security - FR-AUTH)
+FR-AUTH-001: Hệ thống phải hỗ trợ Đăng ký/Đăng nhập qua Email/Password kết hợp với Đăng nhập một lần (SSO) thông qua Google và Apple ID.
+FR-AUTH-002: Sau khi xác thực thành công, Supabase Auth phải trả về JWT Access Token (TTL ≤ 1 tiếng) và Refresh Token (TTL ≤ 30 ngày).
+FR-AUTH-003: Hệ thống phải áp dụng chính sách Supabase Row Level Security (RLS) trên mọi bảng chứa thông tin nhạy cảm. Phụ huynh chỉ được quyền CRUD hồ sơ con cái của họ (auth.uid() = parent_id).
+FR-AUTH-004: Cơ chế phân quyền RBAC phải kiểm tra định danh vai trò người dùng (metadata.role) trước khi cho phép truy cập các route cụ thể
+
+5.2. Phân hệ Thư viện Kiến thức & Học liệu (Knowledge & Resource Library - FR-LIB)
+FR-LIB-001: Thư viện phải phân tách rõ ràng thành 2 phân khu: Thư viện Kiến thức (Bài viết, video hướng dẫn nhận biết dấu hiệu sớm, cẩm nang xử lý tình huống hành vi) và Thư viện Học liệu (Flashcards, bảng tính, thẻ PECS, Storyboards).
+FR-LIB-002: Hệ thống phải hỗ trợ bộ lọc đa tầng (faceted search) theo các chiều dữ liệu: Độ tuổi của trẻ, Loại khó khăn phát triển (Tự kỷ - ASD, Tăng động giảm chú ý - ADHD, Chậm ngôn ngữ, Khó khăn học tập), và Loại định dạng tệp tin.
+FR-LIB-003: Người dùng Premium mới được quyền xem và tải các tài nguyên được đánh dấu nhãn PREMIUM. Người dùng Free chỉ truy cập được tài nguyên BASIC.
+
+5.3. Phân hệ Studio Thiết kế Bài học (Lesson Builder Studio - FR-STD)
+FR-STD-001: Hệ thống phải cung cấp một canvas tương tác kéo-thả dựa trên Fabric.js, cho phép người dùng tùy biến kích thước, chèn văn bản, hình ảnh, hình khối để tạo Flashcards hoặc Thẻ PECS.
+FR-STD-002: Studio phải hỗ trợ tính năng lưu trạng thái thiết kế dưới dạng JSON cấu trúc vào database làm "Template cá nhân".
+FR-STD-003: Hệ thống phải cho phép kết xuất (export) thiết kế từ canvas ra định dạng tệp tin PDF độ phân giải cao (300 DPI) hoặc hình ảnh (PNG/JPG) để in ấn trực tiếp. Chức năng nâng cao này giới hạn cho tài khoản Giáo viên và tài khoản Premium.
+
+5.4. Phân hệ Nhật ký Tiến độ (Progress Tracker - FR-TRK)
+FR-TRK-001: Hệ thống phải cung cấp biểu mẫu nhập liệu nhật ký hàng ngày cho trẻ bao gồm các trường: Số từ mới học được, Biểu hiện phản ứng tâm lý (Thang đo 1-5), Mức độ tập trung (phút), Các hoạt động học tập đã hoàn thành.
+FR-TRK-002: Hệ thống phải tự động tổng hợp dữ liệu nhật ký thô để tạo Báo cáo tiến độ hàng tuần (Weekly Report), hiển thị dưới dạng biểu đồ đường (Line Chart) mô tả xu hướng phát triển hành vi.
+
+5.5. Trợ lý Cá nhân hóa AI (AI Personal Learning Assistant - FR-AI)
+FR-AI-001: Hệ thống phải cung cấp giao diện biểu mẫu cấu trúc thu thập thông tin đầu vào của trẻ bao gồm: Độ tuổi, Mức độ giao tiếp hiện tại, Biểu hiện hành vi đặc trưng, Thách thức phát triển cốt lõi và Mục tiêu giáo dục mong muốn.
+FR-AI-002: Hệ thống phải chuyển đổi dữ liệu đầu vào này thành cấu trúc Prompt chuẩn hóa, gửi đến OpenAI API (Sử dụng cơ chế Structured Outputs để ép kiểu dữ liệu trả về dạng JSON).
+FR-AI-003: Kết quả đầu ra từ AI phải hiển thị đầy đủ: Lộ trình học tập theo tuần (Weekly Roadmap), Gợi ý 3 hoạt động thực hành chi tiết theo ngày, và Liên kết tự động (Deep Link) đến các học liệu phù hợp có sẵn trong hệ thống Bino.
+
+5.6. Phân hệ Cộng đồng (Community System - FR-COM)
+FR-COM-001: Hệ thống phải cho phép người dùng tham gia các nhóm thảo luận theo chủ đề được điều phối (ví dụ: "Nhóm phụ huynh có con tăng động", "Cộng đồng can thiệp ngôn ngữ sớm").
+FR-COM-002: Hệ thống phải hỗ trợ tạo bài viết, bình luận, và thả cảm xúc. Tích hợp bộ lọc từ vựng tiêu cực tự động trên backend trước khi lưu nội dung vào database.
+
+6. MÔ HÌNH HÓA CA SỬ DỤNG VÀ LUỒNG NGƯỜI DÙNG (USE CASES & USER FLOW)
+6.1. Ma trận phân quyền chức năng (Permission Matrix)
+Phân hệ chức năng
+Admin
+Expert / Mentor
+Teacher
+Parent
+ 
+Quản lý Hệ thống & User
+Full (CRUD)
+No Access
+No Access
+No Access
+Thư viện Kiến thức
+Toàn quyền kiểm duyệt
+Tạo + Đăng học liệu
+Xem + Đóng góp
+Xem công cộng
+Studio Thiết kế
+Quản lý Template mẫu
+Sử dụng nâng cao
+Toàn quyền sử dụng
+Chỉ dùng Template Free hoặc Premium
+Hồ sơ & Tiến độ Trẻ
+Xem dạng ẩn danh
+Xem khi được share
+CRUD trẻ thuộc lớp
+CRUD con của mình
+AI Personal Assistant
+Cấu hình Prompt
+Xem kết quả của trẻ
+Sử dụng cho học sinh
+Sử dụng cho con
+Tư vấn / Marketplace
+Quản lý doanh thu
+Cấu hình lịch + Thu phí
+Tham gia với vai trò học viên
+Đặt lịch tư vấn (Trả phí)
+
+
+6.2. Mô tả Ca sử dụng chi tiết (Use Case Description)
+Use Case ID: UC-AI-001
+Tên Ca Sử Dụng: Yêu cầu khởi tạo Lộ trình Giáo dục Cá nhân hóa bằng AI
+Tác nhân chính (Actor): Parent (Phụ huynh) hoặc Teacher (Giáo viên)
+Điều kiện tiên quyết: Người dùng đã đăng nhập hệ thống và tài khoản đang ở trạng thái Premium. Trẻ đã được tạo hồ sơ thông tin cơ bản.
+
+Luồng sự kiện chính (Main Success Scenario):
+Người dùng truy cập phân hệ "Trợ lý AI" và chọn hồ sơ của trẻ cần lập lộ trình.
+Hệ thống hiển thị biểu mẫu thu thập trạng thái hiện tại (Độ tuổi, mức độ ngôn ngữ, thách thức hành vi).
+Người dùng cập nhật các thông tin mới nhất và nhấn nút "Khởi tạo lộ trình".
+Hệ thống đóng gói dữ liệu cấu trúc, gửi request đến backend dịch vụ bảo mật trung gian để chuyển tiếp sang OpenAI API.
+OpenAI API phân tích và phản hồi chuỗi JSON chứa lộ trình cấu trúc.
+Hệ thống phân tích cú pháp JSON, lưu kết quả vào bảng ai_roadmaps trong cơ sở dữ liệu PostgreSQL.
+Hệ thống hiển thị lộ trình trực quan hóa trên giao diện (Biểu đồ tiến trình tuần, danh sách hoạt động kéo thả, các liên kết tài nguyên gợi ý).
+
+Luồng ngoại lệ (Exception Scenarios):
+Trường hợp 3a (Tài khoản hết hạn Premium): Hệ thống chặn không cho bấm nút, hiển thị pop-up thông báo nâng cấp tài khoản và chuyển hướng tới trang thanh toán.
+Trường hợp 5a (OpenAI API gặp sự cố timeout hoặc quá tải): Hệ thống bắt ngoại lệ lỗi (Exception), thử lại (retry) tối đa 3 lần. Nếu vẫn thất bại, trả về mã lỗi thân thiện: "Hệ thống AI đang bận, lộ trình của bạn đang được đưa vào hàng đợi xử lý. Vui lòng kiểm tra lại sau 2 phút."
+
+6.3. Luồng người dùng cốt lõi (Core User Flow Diagram)
+[Đăng nhập / Đăng ký] 
+        │
+        ▼
+[Dashboard Chính] ───► [Tạo Hồ Sơ Trẻ (Nhập tuổi, thách thức phát triển)]
+        │
+        ├─► [Trợ lý AI] ───► [Nhập hành vi hiện tại] ───► [AI tạo Lộ trình & Gợi ý Học liệu]
+        │                                                           │
+        ├─► [Thư viện Học liệu] ◄───────────────────────────────────┘
+        │         │
+        │         └─► [Chọn Học liệu Mẫu] ───► [Mở trong Studio Kéo - Thả (FabricJS)] ───► [Xuất PDF]
+        │
+        └─► [Nhật ký Tiến độ] ───► [Nhập chỉ số hàng ngày] ───► [Hệ thống xuất Báo cáo Xu hướng Tuần]
+
+
+
+7. KIẾN TRÚC DỮ LIỆU GỢI Ý (DATABASE DESIGN SUGGESTIONS)
+Hệ thống sử dụng cơ sở dữ liệu quan hệ PostgreSQL (Supabase). Toàn bộ các bảng bắt buộc sử dụng định dạng kiểu dữ liệu UUID làm khóa chính (Primary Key) để đảm bảo tính duy nhất và khả năng mở rộng phân tán tốt. Mối quan hệ được ràng buộc chặt chẽ thông qua các khóa ngoại (Foreign Key) và quy định cơ chế xóa mềm (Soft-delete).
+
+7.1. Cấu trúc các bảng dữ liệu cốt lõi (DDL Schema Sample)
+-- Kích hoạt extension sinh UUID tự động
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- 1. BẢNG NGƯỜI DÙNG MỞ RỘNG (Profiles - Liên kết trực tiếp với supauth.users)
+CREATE TABLE public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    full_name VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL CHECK (role IN ('ADMIN', 'EXPERT', 'TEACHER', 'PARENT')),
+    subscription_tier VARCHAR(30) DEFAULT 'FREE' CHECK (subscription_tier IN ('FREE', 'PREMIUM')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- 2. BẢNG HỒ SƠ TRẺ EM (Children)
+CREATE TABLE public.children (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    parent_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    full_name VARCHAR(255) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    developmental_challenges TEXT[] NOT NULL,
+    communication_level TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+    CONSTRAINT chk_age_valid CHECK (date_of_birth <= CURRENT_DATE)
+);
+
+-- 3. BẢNG LỘ TRÌNH DO AI TẠO (AI Roadmaps)
+CREATE TABLE public.ai_roadmaps (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    child_id UUID REFERENCES public.children(id) ON DELETE CASCADE NOT NULL,
+    input_snapshot JSONB NOT NULL,
+    generated_roadmap JSONB NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- 4. BẢNG NHẬT KÝ TIẾN ĐỘ (Progress Logs)
+CREATE TABLE public.progress_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    child_id UUID REFERENCES public.children(id) ON DELETE CASCADE NOT NULL,
+    logged_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    logged_date DATE DEFAULT CURRENT_DATE NOT NULL,
+    new_words_count INT DEFAULT 0,
+    attention_level INT CHECK (attention_level BETWEEN 1 AND 5),
+    reaction_score INT CHECK (reaction_score BETWEEN 1 AND 5),
+    activities_completed TEXT[],
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- Tạo các chỉ mục tối ưu hóa hiệu năng
+CREATE INDEX idx_profiles_role ON public.profiles(role);
+CREATE INDEX idx_children_parent ON public.children(parent_id);
+CREATE INDEX idx_progress_logs_child_date ON public.progress_logs(child_id, logged_date);
+
+
+
+7.2. Sơ đồ thực thể mối quan hệ cơ bản (Entity-Relationship Insights)
+profiles → children (One-to-Many): Một tài khoản phụ huynh hoặc giáo viên có thể quản lý, theo dõi nhiều trẻ em.
+children → ai_roadmaps (One-to-Many): Một đứa trẻ có thể có nhiều lộ trình được khởi tạo theo từng giai đoạn phát triển khác nhau, nhưng tại một thời điểm chỉ có một lộ trình mang trạng thái is_active = true.
+children → progress_logs (One-to-Many): Một trẻ nhận được nhiều bản ghi nhật ký cập nhật hàng ngày để vẽ biểu đồ xu hướng.
+
+8. YÊU CẦU PHI CHỨC NĂNG (NON-FUNCTIONAL REQUIREMENTS)
+8.1. Bảo mật và Quyền riêng tư dữ liệu (Security & Privacy - NFR-SEC)
+NFR-SEC-001: Toàn bộ dữ liệu truyền tải qua mạng bắt buộc phải được mã hóa bằng giao thức TLS 1.3 (HTTPS).
+NFR-SEC-002: Thông tin định danh của trẻ và phụ huynh phải được mã hóa ở tầng lưu trữ (Encryption at-rest) trong PostgreSQL sử dụng tiện ích mở rộng pgcrypto hoặc tính năng mã hóa phân vùng của nhà cung cấp Cloud đám mây.
+NFR-SEC-003: Áp dụng cơ chế Rate Limiting ở tầng API Gateway để chống tấn công từ chối dịch vụ (DoS): Tối đa 60 requests/phút đối với một địa chỉ IP hoặc tài khoản định danh người dùng. Riêng API kết nối sang cụm OpenAI phải có hàng đợi (queue) để tránh vượt hạn mức quota (Rate Limit Exceeded).
+
+8.2. Hiệu năng hệ thống (Performance - NFR-PERF)
+NFR-PERF-001: Thời gian phản hồi (Response Time) của các API thông thường (Tải thư viện, lưu nhật ký) phải ≤ 1.5 giây đối với 95% số lượng yêu cầu (95th percentile).
+NFR-PERF-002: Phân hệ Canvas Studio (Fabric.js) phải xử lý mượt mà trên trình duyệt Client; thời gian render ban đầu cho một bản thiết kế học liệu chuẩn không được vượt quá 2 giây.
+NFR-PERF-003: Hệ thống phải có khả năng chịu tải tối thiểu 5,000 người dùng hoạt động đồng thời (Concurrent Users) mà không làm suy giảm hiệu năng hệ thống quá 10%.
+
+8.3. Độ khả dụng và Phục hồi sau sự cố (Availability & Disaster Recovery - NFR-AVL)
+NFR-AVL-001: Cam kết thời gian hoạt động ổn định liên tục của hệ thống (Uptime) đạt tỷ lệ tối thiểu 99.9% hàng năm.
+NFR-AVL-002: Cơ chế sao lưu dữ liệu tự động (Automated Backup): Hệ thống Supabase/PostgreSQL phải tự động sao lưu toàn bộ (Full Backup) hàng ngày và sao lưu nhật ký giao dịch (Transaction Logs/WAL) mỗi 15 phút một lần.
+NFR-AVL-003: Chỉ số mục tiêu khôi phục dữ liệu: Thời gian khôi phục hệ thống tối đa khi xảy ra thảm họa hệ thống mạng (RTO) ≤ 2 giờ; Mức độ mất mát dữ liệu tối đa chấp nhận được (RPO) ≤ 15 phút.
+
+9. CÁC YÊU CẦU THIẾT KẾ ĐẶC THÙ VÀ LỘ TRÌNH TƯƠNG LAI
+9.1. Tiêu chuẩn UI/UX và Khả năng tiếp cận (UI/UX & Accessibility)
+Hệ thống hướng tới trải nghiệm giảm áp lực tâm lý cho phụ huynh, tuân thủ các nguyên tắc:
+Healing Design: Sử dụng bảng màu pastel dịu nhẹ (Xanh mint, hồng phấn nhạt, vàng kem sữa làm chủ đạo). Toàn bộ các nút bấm và khung hiển thị sử dụng góc bo tròn lớn (Rounded corners) tạo cảm giác thân thiện, an toàn.
+Tối giản tải nhận thức (Minimal Cognitive Load): Mỗi màn hình chức năng không hiển thị quá 3 lựa chọn hành động chính. Sử dụng khoảng trắng thông minh (White space) để phân tách nội dung rõ ràng.
+Accessibility Support (WCAG 2.1 AA): Toàn bộ hình ảnh, thẻ bài học, biểu tượng hệ thống phải có thuộc tính alt mô tả text rõ ràng phục vụ trình đọc màn hình (Screen Readers) dành cho những người dùng có vấn đề về thị lực.
+
+9.2. Giả định và Ràng buộc hệ thống (Assumptions & Constraints)
+Giả định: Người dùng (Phụ huynh/Giáo viên) có thiết bị đầu cuối thông minh (Máy tính, Máy tính bảng, Điện thoại di động) kết nối mạng Internet với băng thông ổn định tối thiểu 5 Mbps để xem video và tải tài nguyên PDF.
+Ràng buộc: Toàn bộ nội dung thư viện kiến thức, các định hướng từ mô hình AI phải tuân thủ chặt chẽ khung pháp lý và chuẩn mực y học giáo dục tại quốc gia vận hành (ví dụ: Quy định bảo mật thông tin trẻ em trực tuyến).
+
+9.3. Khoảng trống đã biết và Hướng phát triển tương lai (Future Enhancements)
+Khoảng trống hiện tại: Bộ tiêu chí để AI tự động chấm điểm và kiểm duyệt học liệu do chuyên gia tự tải lên hệ thống hiện tại cần ban cố vấn y khoa chuẩn hóa thêm nội dung kiểm tra.
+Lộ trình tương lai:
+Phát triển phiên bản Mobile App Native (Flutter/React Native) tích hợp các Mini-game tương tác ngoại tuyến cho trẻ.
+Tích hợp mô hình thị giác máy tính (Computer Vision) hỗ trợ phân tích hành vi biểu cảm khuôn mặt và mức độ chú ý của trẻ thông qua Camera thiết bị khi đang tham gia bài học tương tác.
+Mở rộng cổng thanh toán quốc tế đa tiền tệ cho mô hình Sàn thương mại điện tử (Expert Marketplace).
+
+--- KẾT THÚC TÀI LIỆU ---
