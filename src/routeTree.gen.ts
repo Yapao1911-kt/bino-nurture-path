@@ -12,10 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as AiAssistantRouteImport } from './routes/ai-assistant'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiChildrenRouteImport } from './routes/api/children'
 
-const LibraryRoute = LibraryRouteImport.update({
-  id: '/library',
-  path: '/library',
+const LessonBuilderRoute = LessonBuilderRouteImport.update({
+  id: '/lesson-builder',
+  path: '/lesson-builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateChildRoute = CreateChildRouteImport.update({
+  id: '/create-child',
+  path: '/create-child',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiAssistantRoute = AiAssistantRouteImport.update({
@@ -28,44 +34,80 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChildrenRoute = ApiChildrenRouteImport.update({
+  id: '/api/children',
+  path: '/api/children',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ai-assistant': typeof AiAssistantRoute
-  '/library': typeof LibraryRoute
+  '/create-child': typeof CreateChildRoute
+  '/lesson-builder': typeof LessonBuilderRoute
+  '/api/children': typeof ApiChildrenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-assistant': typeof AiAssistantRoute
-  '/library': typeof LibraryRoute
+  '/create-child': typeof CreateChildRoute
+  '/lesson-builder': typeof LessonBuilderRoute
+  '/api/children': typeof ApiChildrenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/ai-assistant': typeof AiAssistantRoute
-  '/library': typeof LibraryRoute
+  '/create-child': typeof CreateChildRoute
+  '/lesson-builder': typeof LessonBuilderRoute
+  '/api/children': typeof ApiChildrenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/ai-assistant' | '/library'
+  fullPaths:
+    | '/'
+    | '/ai-assistant'
+    | '/create-child'
+    | '/lesson-builder'
+    | '/api/children'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/ai-assistant' | '/library'
-  id: '__root__' | '/' | '/ai-assistant' | '/library'
+  to:
+    | '/'
+    | '/ai-assistant'
+    | '/create-child'
+    | '/lesson-builder'
+    | '/api/children'
+  id:
+    | '__root__'
+    | '/'
+    | '/ai-assistant'
+    | '/create-child'
+    | '/lesson-builder'
+    | '/api/children'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AiAssistantRoute: typeof AiAssistantRoute
-  LibraryRoute: typeof LibraryRoute
+  CreateChildRoute: typeof CreateChildRoute
+  LessonBuilderRoute: typeof LessonBuilderRoute
+  ApiChildrenRoute: typeof ApiChildrenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/library': {
-      id: '/library'
-      path: '/library'
-      fullPath: '/library'
-      preLoaderRoute: typeof LibraryRouteImport
+    '/lesson-builder': {
+      id: '/lesson-builder'
+      path: '/lesson-builder'
+      fullPath: '/lesson-builder'
+      preLoaderRoute: typeof LessonBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-child': {
+      id: '/create-child'
+      path: '/create-child'
+      fullPath: '/create-child'
+      preLoaderRoute: typeof CreateChildRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-assistant': {
@@ -82,13 +124,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/children': {
+      id: '/api/children'
+      path: '/api/children'
+      fullPath: '/api/children'
+      preLoaderRoute: typeof ApiChildrenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AiAssistantRoute: AiAssistantRoute,
-  LibraryRoute: LibraryRoute,
+  CreateChildRoute: CreateChildRoute,
+  LessonBuilderRoute: LessonBuilderRoute,
+  ApiChildrenRoute: ApiChildrenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
