@@ -268,7 +268,7 @@ function Hero() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-28 lg:pt-24 lg:pb-36 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div className="text-center lg:text-left">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border-2 border-[#8ECDF8] text-ink text-sm font-semibold shadow-[4px_4px_0px_rgba(142,205,248,0.4)] -rotate-2 hover:rotate-0 transition-transform">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border-2 border-[#8ECDF8] text-ink text-sm font-semibold shadow-[4px_4px_0px_rgba(142,205,248,0.4)] -rotate-1 hover:rotate-0 transition-transform">
             <span className="w-2 h-2 rounded-full" style={{ background: "var(--brand-blue)" }} />
             AI dịu dàng đồng hành can thiệp sớm
           </span>
@@ -302,10 +302,7 @@ function Hero() {
               Bắt đầu miễn phí
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <a
-              href="#features"
-              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-ink font-bold border-2 border-slate-100 shadow-[6px_6px_0px_#f0f0f0] rotate-1 hover:rotate-0 transition-transform text-center"
-            >
+            <a href="#features" className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-ink font-bold border-2 border-slate-100 shadow-[6px_6px_0px_#f0f0f0] rotate-1 hover:rotate-0 transition-transform text-center">
               Khám phá học liệu
             </a>
           </div>
@@ -1141,6 +1138,8 @@ function Index() {
       <Features />
       <HowItWorks />
       <Pricing />
+      <Testimonials />
+      <Community />
       <Footer />
     </main>
   );
