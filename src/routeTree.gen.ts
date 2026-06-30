@@ -10,10 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LibraryRouteImport } from './routes/library'
+import { Route as LessonBuilderRouteImport } from './routes/lesson-builder'
+import { Route as CreateChildRouteImport } from './routes/create-child'
 import { Route as AiAssistantRouteImport } from './routes/ai-assistant'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChildrenRouteImport } from './routes/api/children'
 
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LessonBuilderRoute = LessonBuilderRouteImport.update({
   id: '/lesson-builder',
   path: '/lesson-builder',
@@ -45,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/ai-assistant': typeof AiAssistantRoute
   '/create-child': typeof CreateChildRoute
   '/lesson-builder': typeof LessonBuilderRoute
+  '/library': typeof LibraryRoute
   '/api/children': typeof ApiChildrenRoute
 }
 export interface FileRoutesByTo {
@@ -52,6 +60,7 @@ export interface FileRoutesByTo {
   '/ai-assistant': typeof AiAssistantRoute
   '/create-child': typeof CreateChildRoute
   '/lesson-builder': typeof LessonBuilderRoute
+  '/library': typeof LibraryRoute
   '/api/children': typeof ApiChildrenRoute
 }
 export interface FileRoutesById {
@@ -60,6 +69,7 @@ export interface FileRoutesById {
   '/ai-assistant': typeof AiAssistantRoute
   '/create-child': typeof CreateChildRoute
   '/lesson-builder': typeof LessonBuilderRoute
+  '/library': typeof LibraryRoute
   '/api/children': typeof ApiChildrenRoute
 }
 export interface FileRouteTypes {
@@ -69,6 +79,7 @@ export interface FileRouteTypes {
     | '/ai-assistant'
     | '/create-child'
     | '/lesson-builder'
+    | '/library'
     | '/api/children'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -76,6 +87,7 @@ export interface FileRouteTypes {
     | '/ai-assistant'
     | '/create-child'
     | '/lesson-builder'
+    | '/library'
     | '/api/children'
   id:
     | '__root__'
@@ -83,6 +95,7 @@ export interface FileRouteTypes {
     | '/ai-assistant'
     | '/create-child'
     | '/lesson-builder'
+    | '/library'
     | '/api/children'
   fileRoutesById: FileRoutesById
 }
@@ -91,11 +104,19 @@ export interface RootRouteChildren {
   AiAssistantRoute: typeof AiAssistantRoute
   CreateChildRoute: typeof CreateChildRoute
   LessonBuilderRoute: typeof LessonBuilderRoute
+  LibraryRoute: typeof LibraryRoute
   ApiChildrenRoute: typeof ApiChildrenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lesson-builder': {
       id: '/lesson-builder'
       path: '/lesson-builder'
@@ -139,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   AiAssistantRoute: AiAssistantRoute,
   CreateChildRoute: CreateChildRoute,
   LessonBuilderRoute: LessonBuilderRoute,
+  LibraryRoute: LibraryRoute,
   ApiChildrenRoute: ApiChildrenRoute,
 }
 export const routeTree = rootRouteImport
