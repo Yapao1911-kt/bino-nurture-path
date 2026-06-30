@@ -133,10 +133,9 @@ function Navbar() {
   ];
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-white">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-2.5">
-          <BinoMark />
-          <span className="text-xl font-bold text-ink tracking-tight">Bino</span>
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3 flex items-center justify-between">
+        <a href="#home" className="flex items-center overflow-hidden h-14 md:h-20">
+          <img src="/logo.png" alt="Bino Logo" className="h-32 md:h-44 my-[-36px] md:my-[-50px] w-auto object-contain" />
         </a>
         <ul className="hidden md:flex items-center gap-8">
           {links.map((l) => {
@@ -268,35 +267,38 @@ function Hero() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-28 lg:pt-24 lg:pb-36 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div className="text-center lg:text-left">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border-2 border-[#8ECDF8] text-ink text-sm font-semibold shadow-[4px_4px_0px_rgba(142,205,248,0.4)] -rotate-2 hover:rotate-0 transition-transform">
-            <span className="w-2 h-2 rounded-full" style={{ background: "var(--brand-blue)" }} />
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border-2 border-brand-blue text-ink text-sm font-semibold shadow-[4px_4px_0px_rgba(78,163,247,0.4)] -rotate-2 hover:rotate-0 transition-transform">
+            <span className="w-2 h-2 rounded-full bg-brand-blue" />
             AI dịu dàng đồng hành can thiệp sớm
           </span>
           <h1 className="mt-8 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.2] tracking-tight text-ink">
-            <span className="inline-block bg-white px-3 py-1 rounded-xl shadow-[6px_6px_0px_#A8E6CF] rotate-1 mb-3">
+            <span className="inline-block bg-white px-3 py-1 rounded-xl shadow-[6px_6px_0px_var(--brand-mint)] rotate-1 mb-3">
               Mỗi đứa trẻ
             </span>
             <br />
             <span
-              className="inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#efb8c2] -rotate-1 mb-3"
+              className="inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#FF8DA1] -rotate-1 mb-3 text-white"
               style={{ background: "var(--brand-pink)" }}
             >
               đều lớn lên
             </span>
             <br />
-            <span className="inline-block bg-white px-3 py-1 rounded-xl shadow-[6px_6px_0px_#FFD3B6] rotate-2">
+            <span className="inline-block bg-white px-3 py-1 rounded-xl shadow-[6px_6px_0px_var(--brand-peach)] rotate-2">
               theo một cách riêng
             </span>
           </h1>
-          <p className="mt-8 text-lg text-ink/70 leading-relaxed max-w-xl mx-auto lg:mx-0">
-            Bino đồng hành cùng cha mẹ và thầy cô xây dựng lộ trình cá nhân hóa,
-            cung cấp học liệu chuyên biệt dưới sự hỗ trợ dịu dàng của Trí tuệ
-            nhân tạo.
-          </p>
+          <div className="mt-8 text-lg text-ink/70 leading-relaxed max-w-xl mx-auto lg:mx-0 space-y-4">
+            <p>
+              Bino là một nền tảng web/app tích hợp Trí tuệ nhân tạo (AI) được thiết kế để hỗ trợ phụ huynh, giáo viên và người chăm sóc đồng hành cùng các trẻ em có khó khăn về phát triển (chậm nói, tự kỷ, tăng động giảm chú ý - ADHD, v.v.).
+            </p>
+            <p className="text-sm border-l-4 border-brand-mint pl-4 italic bg-brand-mint-soft/50 py-2 pr-3 rounded-r-xl">
+              Tên gọi <strong>"Bino"</strong> mang ý nghĩa: <strong>Bi</strong> (baby/bright/begin - em bé, tươi sáng, sự khởi đầu) kết hợp với <strong>No</strong> (no limits/no barriers - không giới hạn, không rào cản), mang thông điệp cốt lõi: <em>"Không giới hạn sự phát triển của trẻ - Nơi đồng hành cùng những bước phát triển đầu tiên"</em>
+            </p>
+          </div>
           <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-5">
             <Link
               to="/create-child"
-              className="group inline-flex items-center gap-2 px-7 py-4 rounded-2xl text-white font-bold shadow-[6px_6px_0px_#6eb0db] -rotate-2 hover:rotate-0 transition-transform text-center"
+              className="group inline-flex items-center gap-2 px-7 py-4 rounded-2xl text-white font-bold shadow-[6px_6px_0px_#2581DF] -rotate-2 hover:rotate-0 transition-transform text-center"
               style={{ background: "var(--brand-blue)" }}
             >
               Bắt đầu miễn phí
@@ -309,29 +311,7 @@ function Hero() {
               Khám phá học liệu
             </a>
           </div>
-          <div className="mt-10 flex flex-wrap justify-center lg:justify-start items-center gap-6 text-sm text-ink/60 font-medium">
-            <div className="flex items-center gap-2">
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{ background: "var(--brand-mint)" }}
-              />
-              An toàn cho trẻ
-            </div>
-            <div className="flex items-center gap-2">
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{ background: "var(--brand-peach)" }}
-              />
-              Thiết kế bởi chuyên gia
-            </div>
-            <div className="flex items-center gap-2">
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{ background: "var(--brand-pink)" }}
-              />
-              Hơn 12k gia đình tin dùng
-            </div>
-          </div>
+
         </div>
 
         {/* Illustration card */}
@@ -386,28 +366,28 @@ function Hero() {
                     title: "Giao tiếp",
                     sub: "12 từ mới",
                     bg: "var(--brand-blue-soft)",
-                    color: "#3D8FC0",
+                    color: "#25729F",
                   },
                   {
                     icon: Heart,
                     title: "Cảm xúc",
                     sub: "4 cảm xúc",
                     bg: "var(--brand-pink-soft)",
-                    color: "#D67B8B",
+                    color: "#C55266",
                   },
                   {
                     icon: BookOpen,
                     title: "Flashcard",
                     sub: "24 thẻ",
                     bg: "var(--brand-mint-soft)",
-                    color: "#4FA37F",
+                    color: "#2B825D",
                   },
                   {
                     icon: Star,
                     title: "Vận động",
                     sub: "5 hoạt động",
                     bg: "var(--brand-peach-soft)",
-                    color: "#C9794B",
+                    color: "#A6572A",
                   },
                 ].map((it, i) => {
                   const Icon = it.icon;
@@ -429,10 +409,10 @@ function Hero() {
               </div>
 
               <div
-                className="p-4 rounded-2xl flex items-center gap-3 border-2 border-dashed border-[#f0e396] -rotate-1"
+                className="p-4 rounded-2xl flex items-center gap-3 border-2 border-dashed border-[#E5BA35] -rotate-1"
                 style={{ background: "var(--brand-yellow-soft)" }}
               >
-                <Sun className="w-5 h-5" style={{ color: "#C99A2E" }} />
+                <Sun className="w-5 h-5" style={{ color: "#A17415" }} />
                 <p className="text-sm text-ink">
                   "Hôm nay con đã chủ động vẫy tay chào mẹ!"
                 </p>
@@ -440,8 +420,8 @@ function Hero() {
             </div>
 
             {/* Floating tilted sticker chip */}
-            <div className="absolute -bottom-4 right-4 px-4 py-2.5 rounded-2xl bg-white border-2 border-white shadow-[4px_4px_0px_#A8E6CF] flex items-center gap-2 rotate-[5deg]">
-              <Cloud className="w-4 h-4" style={{ color: "#4FA37F" }} />
+            <div className="absolute -bottom-4 right-4 px-4 py-2.5 rounded-2xl bg-white border-2 border-white shadow-[4px_4px_0px_var(--brand-mint)] flex items-center gap-2 rotate-[5deg]">
+              <Cloud className="w-4 h-4" style={{ color: "#2B825D" }} />
               <span className="text-xs font-semibold text-ink">Tiến bộ +18%</span>
             </div>
             {/* Friendly bear mascot peeking */}
@@ -1075,9 +1055,8 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2.5">
-              <BinoMark />
-              <span className="text-xl font-bold text-ink">Bino</span>
+            <div className="flex items-center overflow-hidden h-14">
+              <img src="/logo.png" alt="Bino Logo" className="h-32 my-[-36px] w-auto object-contain" />
             </div>
             <p className="mt-4 text-sm text-ink/70 leading-relaxed">
               Người bạn đồng hành thông minh trong quá trình can thiệp sớm.
@@ -1130,6 +1109,43 @@ function Footer() {
   );
 }
 
+/* ---------- Floating Mascot ---------- */
+
+function FloatingMascot() {
+  const [visible, setVisible] = useState(true);
+
+  if (!visible) return null;
+
+  return (
+    <div className="fixed bottom-[-24px] right-[-24px] md:bottom-[-44px] md:right-[-44px] z-50 group">
+      {/* Tooltip speech bubble */}
+      <div className="absolute bottom-[80%] right-[20%] mb-3 bg-white text-ink text-xs font-semibold px-3.5 py-2 rounded-2xl shadow-md border border-slate-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10">
+        Bino luôn đồng hành cùng con! 🌟
+        {/* Little bubble arrow */}
+        <div className="absolute top-full right-12 w-3 h-3 bg-white border-r border-b border-slate-100 rotate-45 -translate-y-1.5" />
+      </div>
+      <div className="relative p-8">
+        <img
+          src="/MASCOT PNG.png"
+          alt="Bino Mascot"
+          className="w-48 md:w-72 h-auto object-contain animate-[float_4s_ease-in-out_infinite] cursor-pointer drop-shadow-lg transition-transform duration-300 hover:scale-105"
+        />
+        {/* Cute close button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setVisible(false);
+          }}
+          className="absolute top-6 left-6 w-7 h-7 rounded-full bg-white/90 border border-slate-100 flex items-center justify-center text-ink/60 hover:text-ink hover:bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
+          aria-label="Đóng"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- Page ---------- */
 
 function Index() {
@@ -1142,6 +1158,7 @@ function Index() {
       <HowItWorks />
       <Pricing />
       <Footer />
+      <FloatingMascot />
     </main>
   );
 }
