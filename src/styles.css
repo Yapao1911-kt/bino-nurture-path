@@ -75,32 +75,32 @@
 
 :root {
   --radius: 1.5rem;
-  --brand-blue: #4EA3F7;
-  --brand-blue-soft: #D5EAFD;
-  --brand-mint: #48D09B;
-  --brand-mint-soft: #D1F5E5;
-  --brand-peach: #FF9E66;
-  --brand-peach-soft: #FFE2D1;
-  --brand-yellow: #FED85D;
-  --brand-yellow-soft: #FFF2C2;
-  --brand-pink: #FF8DA1;
-  --brand-pink-soft: #FFD6DE;
-  --ink: #4B5563;
-  --ink-soft: #9AA3AF;
-  --background: #F8FAFC;
-  --foreground: #4B5563;
-  --card: #FFFFFF;
-  --card-foreground: #4B5563;
-  --popover: #FFFFFF;
-  --popover-foreground: #4B5563;
+  --brand-blue: #4ea3f7;
+  --brand-blue-soft: #d5eafd;
+  --brand-mint: #48d09b;
+  --brand-mint-soft: #d1f5e5;
+  --brand-peach: #ff9e66;
+  --brand-peach-soft: #ffe2d1;
+  --brand-yellow: #fed85d;
+  --brand-yellow-soft: #fff2c2;
+  --brand-pink: #ff8da1;
+  --brand-pink-soft: #ffd6de;
+  --ink: #4b5563;
+  --ink-soft: #9aa3af;
+  --background: #f8fafc;
+  --foreground: #4b5563;
+  --card: #ffffff;
+  --card-foreground: #4b5563;
+  --popover: #ffffff;
+  --popover-foreground: #4b5563;
   --primary: var(--brand-blue);
   --primary-foreground: #143552;
   --secondary: var(--brand-mint);
-  --secondary-foreground: #1B4E38;
-  --muted: #EEF3F8;
-  --muted-foreground: #6B7280;
+  --secondary-foreground: #1b4e38;
+  --muted: #eef3f8;
+  --muted-foreground: #6b7280;
   --accent: var(--brand-peach);
-  --accent-foreground: #6D3613;
+  --accent-foreground: #6d3613;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.929 0.013 255.508);
@@ -168,13 +168,25 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes breathe {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.06); opacity: 0.9; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.9;
+  }
 }
 
 .animate-fade-in {
@@ -182,8 +194,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Quizlet-style 3D card flip utility classes */

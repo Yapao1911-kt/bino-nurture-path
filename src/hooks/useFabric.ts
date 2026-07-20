@@ -61,19 +61,14 @@ export interface UseFabricReturn {
 // ============================================================
 // HOOK CHÍNH
 // ============================================================
-export function useFabric(
-  width: number = 800,
-  height: number = 560,
-): UseFabricReturn {
+export function useFabric(width: number = 800, height: number = 560): UseFabricReturn {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fabricRef = useRef<FabricCanvas | null>(null);
   const [canvasInstance, setCanvasInstance] = useState<FabricCanvas | null>(null);
 
   // State cho active object — chỉ lưu thông tin serializable
   // để React có thể so sánh và trigger re-render khi cần
-  const [activeObject, setActiveObject] = useState<ActiveObjectInfo | null>(
-    null,
-  );
+  const [activeObject, setActiveObject] = useState<ActiveObjectInfo | null>(null);
 
   // -------------------------------------------------------
   // Hàm đọc thông tin từ FabricObject → ActiveObjectInfo
@@ -85,9 +80,7 @@ export function useFabric(
         type: obj.type ?? "unknown",
         fill: typeof obj.fill === "string" ? obj.fill : "#000000",
         stroke: typeof obj.stroke === "string" ? obj.stroke : "",
-        fontFamily: (obj as unknown as Record<string, unknown>).fontFamily as
-          | string
-          | undefined,
+        fontFamily: (obj as unknown as Record<string, unknown>).fontFamily as string | undefined,
       };
     },
     [],
@@ -265,45 +258,48 @@ export function useFabric(
   // -------------------------------------------------------
   // INSERT: Thêm hình ảnh (Image)
   // -------------------------------------------------------
-  const addImage = useCallback(async (url: string) => {
-    const canvas = fabricRef.current;
-    if (!canvas) return;
+  const addImage = useCallback(
+    async (url: string) => {
+      const canvas = fabricRef.current;
+      if (!canvas) return;
 
-    const fabric = await import("fabric");
-    const pos = randomPosition();
+      const fabric = await import("fabric");
+      const pos = randomPosition();
 
-    try {
-      const img = await fabric.Image.fromURL(url, {
-        crossOrigin: "anonymous"
-      });
+      try {
+        const img = await fabric.Image.fromURL(url, {
+          crossOrigin: "anonymous",
+        });
 
-      // Giới hạn kích thước tối đa (300px) để không tràn canvas
-      const maxDim = 300;
-      if (img.width > maxDim || img.height > maxDim) {
-        const scale = maxDim / Math.max(img.width, img.height);
-        img.scale(scale);
+        // Giới hạn kích thước tối đa (300px) để không tràn canvas
+        const maxDim = 300;
+        if (img.width > maxDim || img.height > maxDim) {
+          const scale = maxDim / Math.max(img.width, img.height);
+          img.scale(scale);
+        }
+
+        img.set({
+          left: pos.left,
+          top: pos.top,
+          cornerColor: "#8ECDF8",
+          cornerStyle: "circle",
+          cornerSize: 8,
+          transparentCorners: false,
+          borderColor: "#8ECDF8",
+          borderScaleFactor: 1.5,
+        });
+
+        canvas.add(img);
+        canvas.setActiveObject(img);
+        canvas.renderAll();
+        setActiveObject(extractInfo(img));
+      } catch (err) {
+        console.error("Error loading image in Fabric:", err);
+        throw err;
       }
-
-      img.set({
-        left: pos.left,
-        top: pos.top,
-        cornerColor: "#8ECDF8",
-        cornerStyle: "circle",
-        cornerSize: 8,
-        transparentCorners: false,
-        borderColor: "#8ECDF8",
-        borderScaleFactor: 1.5,
-      });
-
-      canvas.add(img);
-      canvas.setActiveObject(img);
-      canvas.renderAll();
-      setActiveObject(extractInfo(img));
-    } catch (err) {
-      console.error("Error loading image in Fabric:", err);
-      throw err;
-    }
-  }, [randomPosition, extractInfo]);
+    },
+    [randomPosition, extractInfo],
+  );
 
   // -------------------------------------------------------
   // EDIT: Đổi fill color cho active object

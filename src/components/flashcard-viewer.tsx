@@ -74,11 +74,8 @@ export function FlashcardViewer({
 
   // Lọc dữ liệu ban đầu
   useEffect(() => {
-    let filtered =
-      category === "all"
-        ? cards
-        : cards.filter((card) => card.category === category);
-    
+    let filtered = category === "all" ? cards : cards.filter((card) => card.category === category);
+
     if (isShuffled) {
       filtered = [...filtered].sort(() => Math.random() - 0.5);
     }
@@ -110,14 +107,14 @@ export function FlashcardViewer({
     utterance.lang = "vi-VN";
     utterance.rate = 0.85; // tốc độ hơi chậm cho bé dễ nghe
     utterance.volume = 1;
-    
+
     // Tìm giọng đọc tiếng Việt ấm áp nếu có
     const voices = window.speechSynthesis.getVoices();
-    const viVoice = voices.find(v => v.lang.includes("vi-VN"));
+    const viVoice = voices.find((v) => v.lang.includes("vi-VN"));
     if (viVoice) {
       utterance.voice = viVoice;
     }
-    
+
     window.speechSynthesis.speak(utterance);
   }, []);
 
@@ -136,7 +133,7 @@ export function FlashcardViewer({
         speakVietnamese(fallbackText);
       });
     },
-    [speakVietnamese]
+    [speakVietnamese],
   );
 
   // Phát giọng đọc từ vựng, ưu tiên file thu âm rồi mới fallback sang TTS.
@@ -151,7 +148,7 @@ export function FlashcardViewer({
         speakVietnamese(card.label);
       }
     },
-    [playAudioFile, speakVietnamese]
+    [playAudioFile, speakVietnamese],
   );
 
   // Phát tiếng kêu động vật hoặc fallback sang giọng đọc từ vựng.
@@ -163,7 +160,7 @@ export function FlashcardViewer({
         playVoice(card);
       }
     },
-    [playAudioFile, playVoice]
+    [playAudioFile, playVoice],
   );
 
   const activeCard = deck[current];
@@ -171,13 +168,12 @@ export function FlashcardViewer({
   // Tự động phát âm thanh khi lật hoặc đổi thẻ
   useEffect(() => {
     if (!activeCard) return;
-    
+
     if (autoSpeak) {
       // Đọc từ khi hiển thị mặt chữ
-      const shouldSpeak = 
-        (frontSide === "word" && !isFlipped) || 
-        (frontSide === "image" && isFlipped);
-      
+      const shouldSpeak =
+        (frontSide === "word" && !isFlipped) || (frontSide === "image" && isFlipped);
+
       if (shouldSpeak) {
         // Chỉ phát âm khi mặt chữ hiển thị
         playVoice(activeCard);
@@ -295,7 +291,7 @@ export function FlashcardViewer({
               "px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer",
               activeTab === "flashcard"
                 ? "bg-white text-ink shadow-sm"
-                : "text-ink/60 hover:text-ink"
+                : "text-ink/60 hover:text-ink",
             )}
           >
             <BookOpen className="w-4 h-4" />
@@ -305,9 +301,7 @@ export function FlashcardViewer({
             onClick={() => setActiveTab("game")}
             className={cn(
               "px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer",
-              activeTab === "game"
-                ? "bg-white text-ink shadow-sm"
-                : "text-ink/60 hover:text-ink"
+              activeTab === "game" ? "bg-white text-ink shadow-sm" : "text-ink/60 hover:text-ink",
             )}
           >
             <Gamepad2 className="w-4 h-4 text-emerald-500" />
@@ -335,7 +329,7 @@ export function FlashcardViewer({
                   "px-3 py-1.5 rounded-xl text-xs font-semibold border-2 transition-all cursor-pointer",
                   category === item.value
                     ? "border-[var(--brand-blue)] bg-[var(--brand-blue-soft)]/20 text-blue-600 font-bold"
-                    : "border-transparent text-ink/60 hover:bg-slate-50"
+                    : "border-transparent text-ink/60 hover:bg-slate-50",
                 )}
               >
                 {item.label}
@@ -347,13 +341,22 @@ export function FlashcardViewer({
         {activeTab === "flashcard" && deck.length > 0 && (
           <div className="flex items-center gap-3 text-xs text-ink/50">
             <span className="font-semibold flex items-center gap-1">
-              <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200">Space</span> Lật
+              <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200">
+                Space
+              </span>{" "}
+              Lật
             </span>
             <span className="font-semibold flex items-center gap-1">
-              <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200">← →</span> Di chuyển
+              <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200">
+                ← →
+              </span>{" "}
+              Di chuyển
             </span>
             <span className="font-semibold flex items-center gap-1">
-              <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200">Enter</span> Đọc âm
+              <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200">
+                Enter
+              </span>{" "}
+              Đọc âm
             </span>
           </div>
         )}
@@ -372,7 +375,9 @@ export function FlashcardViewer({
               <div className="space-y-1">
                 <div className="flex justify-between text-xs font-bold text-ink/50 px-1">
                   <span>Tiến trình tự học</span>
-                  <span>{current + 1} / {deck.length} thẻ</span>
+                  <span>
+                    {current + 1} / {deck.length} thẻ
+                  </span>
                 </div>
                 <Progress value={progressPercent} className="h-2.5 rounded-full" />
               </div>
@@ -383,13 +388,16 @@ export function FlashcardViewer({
                   onClick={() => setIsFlipped((prev) => !prev)}
                   className={cn(
                     "relative w-full aspect-[4/3] sm:aspect-[1.5] cursor-pointer transform-style-3d transition-transform duration-500 ease-out",
-                    isFlipped ? "rotate-y-180" : ""
+                    isFlipped ? "rotate-y-180" : "",
                   )}
                 >
                   {/* FRONT SIDE */}
                   <Card className="absolute inset-0 bg-white rounded-[2rem] border-2 border-slate-100 shadow-[0_12px_24px_rgba(0,0,0,0.04)] overflow-hidden backface-hidden flex flex-col">
                     <div className="absolute top-4 left-6 flex items-center gap-2">
-                      <Badge variant="outline" className="bg-slate-50 border-slate-200 text-ink/60 text-xs font-semibold py-1 px-3.5">
+                      <Badge
+                        variant="outline"
+                        className="bg-slate-50 border-slate-200 text-ink/60 text-xs font-semibold py-1 px-3.5"
+                      >
                         {activeCard.category === "animal" ? "Con vật" : "Trái cây / Thực phẩm"}
                       </Badge>
                     </div>
@@ -427,7 +435,9 @@ export function FlashcardViewer({
                             {activeCard.label}
                           </h3>
                           {activeCard.soundText && (
-                            <p className="text-xl font-bold text-[var(--brand-blue)] italic">{activeCard.soundText}</p>
+                            <p className="text-xl font-bold text-[var(--brand-blue)] italic">
+                              {activeCard.soundText}
+                            </p>
                           )}
                         </div>
                       )}
@@ -441,7 +451,10 @@ export function FlashcardViewer({
                   {/* BACK SIDE */}
                   <Card className="absolute inset-0 bg-white rounded-[2rem] border-2 border-slate-100 shadow-[0_12px_24px_rgba(0,0,0,0.04)] overflow-hidden backface-hidden rotate-y-180 flex flex-col">
                     <div className="absolute top-4 left-6 flex items-center gap-2">
-                      <Badge variant="outline" className="bg-slate-50 border-slate-200 text-ink/60 text-xs font-semibold py-1 px-3.5">
+                      <Badge
+                        variant="outline"
+                        className="bg-slate-50 border-slate-200 text-ink/60 text-xs font-semibold py-1 px-3.5"
+                      >
                         Mặt sau của thẻ
                       </Badge>
                     </div>
@@ -457,7 +470,7 @@ export function FlashcardViewer({
                           <h3 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight">
                             {activeCard.label}
                           </h3>
-                          
+
                           {activeCard.soundText && (
                             <p className="text-2xl font-bold text-[var(--brand-blue)] italic">
                               {activeCard.soundText}
@@ -482,8 +495,8 @@ export function FlashcardViewer({
                               size="sm"
                               variant="outline"
                               onClick={(e) => {
-                                  e.stopPropagation();
-                                  playVoice(activeCard);
+                                e.stopPropagation();
+                                playVoice(activeCard);
                               }}
                               className="rounded-xl font-bold gap-1.5 cursor-pointer"
                             >
@@ -544,7 +557,7 @@ export function FlashcardViewer({
                     onClick={() => setIsPlaying((v) => !v)}
                     className={cn(
                       "w-10 h-10 rounded-xl cursor-pointer",
-                      isPlaying ? "bg-amber-100 text-amber-600" : "hover:bg-slate-200"
+                      isPlaying ? "bg-amber-100 text-amber-600" : "hover:bg-slate-200",
                     )}
                     title={isPlaying ? "Tạm dừng chạy tự động" : "Tự động chạy slideshow"}
                   >
@@ -558,7 +571,7 @@ export function FlashcardViewer({
                     onClick={toggleShuffle}
                     className={cn(
                       "w-10 h-10 rounded-xl cursor-pointer",
-                      isShuffled ? "bg-blue-100 text-blue-600" : "hover:bg-slate-200"
+                      isShuffled ? "bg-blue-100 text-blue-600" : "hover:bg-slate-200",
                     )}
                     title={isShuffled ? "Hủy xáo bài" : "Xáo trộn thứ tự bài"}
                   >
@@ -572,7 +585,9 @@ export function FlashcardViewer({
                     onClick={() => setAutoSpeak((v) => !v)}
                     className={cn(
                       "w-10 h-10 rounded-xl cursor-pointer",
-                      autoSpeak ? "bg-emerald-100 text-emerald-600" : "hover:bg-slate-200 text-slate-400"
+                      autoSpeak
+                        ? "bg-emerald-100 text-emerald-600"
+                        : "hover:bg-slate-200 text-slate-400",
                     )}
                     title={autoSpeak ? "Tắt tự động đọc âm" : "Bật tự động đọc âm"}
                   >
@@ -607,7 +622,7 @@ export function FlashcardViewer({
                   >
                     <ChevronLeft className="w-5 h-5 text-ink" />
                   </Button>
-                  
+
                   <span className="text-sm font-bold text-ink/70 min-w-16 text-center tabular-nums">
                     {current + 1} / {deck.length}
                   </span>
@@ -627,7 +642,9 @@ export function FlashcardViewer({
 
               {/* GRID INDEX PREVIEW */}
               <div className="border-t pt-6">
-                <p className="text-xs font-bold text-ink/40 uppercase tracking-wider mb-3 px-1">Danh sách thẻ trong bộ:</p>
+                <p className="text-xs font-bold text-ink/40 uppercase tracking-wider mb-3 px-1">
+                  Danh sách thẻ trong bộ:
+                </p>
                 <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3">
                   {deck.map((card, index) => (
                     <button
@@ -642,7 +659,7 @@ export function FlashcardViewer({
                         "rounded-2xl border-2 p-2 bg-white transition-all text-center hover:scale-105 active:scale-95 hover:shadow-sm cursor-pointer",
                         index === current
                           ? "border-[var(--brand-blue)] bg-blue-50/10"
-                          : "border-slate-100 hover:border-slate-200"
+                          : "border-slate-100 hover:border-slate-200",
                       )}
                     >
                       <img
@@ -650,7 +667,9 @@ export function FlashcardViewer({
                         alt={card.label}
                         className="w-full aspect-square object-contain mx-auto"
                       />
-                      <p className="text-[10px] font-bold mt-1.5 text-ink/80 truncate">{card.label}</p>
+                      <p className="text-[10px] font-bold mt-1.5 text-ink/80 truncate">
+                        {card.label}
+                      </p>
                     </button>
                   ))}
                 </div>
@@ -681,13 +700,19 @@ interface Tile {
   isError: boolean;
 }
 
-function MatchingGame({ cards, speakCardFn }: { cards: Flashcard[]; speakCardFn: (card: Flashcard) => void }) {
+function MatchingGame({
+  cards,
+  speakCardFn,
+}: {
+  cards: Flashcard[];
+  speakCardFn: (card: Flashcard) => void;
+}) {
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [firstSelected, setFirstSelected] = useState<Tile | null>(null);
   const [secondSelected, setSecondSelected] = useState<Tile | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameCompleted, setGameCompleted] = useState(false);
-  
+
   // Hẹn giờ
   const [seconds, setSeconds] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -769,24 +794,22 @@ function MatchingGame({ cards, speakCardFn }: { cards: Flashcard[]; speakCardFn:
       }
     }
 
-    const updatedTiles = tiles.map((t) =>
-      t.id === tile.id ? { ...t, isSelected: true } : t
-    );
+    const updatedTiles = tiles.map((t) => (t.id === tile.id ? { ...t, isSelected: true } : t));
     setTiles(updatedTiles);
 
     if (!firstSelected) {
       setFirstSelected(tile);
     } else {
       setSecondSelected(tile);
-      
+
       // Kiểm tra xem 2 ô có khớp nhau không
       if (firstSelected.cardId === tile.cardId && firstSelected.type !== tile.type) {
         // KHỚP NHAU!
         setTimeout(() => {
           setTiles((prevTiles) =>
             prevTiles.map((t) =>
-              t.cardId === tile.cardId ? { ...t, isMatched: true, isSelected: false } : t
-            )
+              t.cardId === tile.cardId ? { ...t, isMatched: true, isSelected: false } : t,
+            ),
           );
           setFirstSelected(null);
           setSecondSelected(null);
@@ -796,10 +819,8 @@ function MatchingGame({ cards, speakCardFn }: { cards: Flashcard[]; speakCardFn:
         setTimeout(() => {
           setTiles((prevTiles) =>
             prevTiles.map((t) =>
-              t.id === firstSelected.id || t.id === tile.id
-                ? { ...t, isError: true }
-                : t
-            )
+              t.id === firstSelected.id || t.id === tile.id ? { ...t, isError: true } : t,
+            ),
           );
         }, 200);
 
@@ -809,8 +830,8 @@ function MatchingGame({ cards, speakCardFn }: { cards: Flashcard[]; speakCardFn:
             prevTiles.map((t) =>
               t.id === firstSelected.id || t.id === tile.id
                 ? { ...t, isSelected: false, isError: false }
-                : t
-            )
+                : t,
+            ),
           );
           setFirstSelected(null);
           setSecondSelected(null);
@@ -830,7 +851,8 @@ function MatchingGame({ cards, speakCardFn }: { cards: Flashcard[]; speakCardFn:
           <div className="space-y-2">
             <h3 className="text-2xl font-bold text-ink">Trò chơi Ghép Thẻ thú vị</h3>
             <p className="text-sm text-ink/60 max-w-md mx-auto leading-relaxed">
-              Trực quan hóa từ vựng! Hãy ghép đôi các thẻ chữ tương ứng với hình ảnh động vật/trái cây đúng nhanh nhất có thể.
+              Trực quan hóa từ vựng! Hãy ghép đôi các thẻ chữ tương ứng với hình ảnh động vật/trái
+              cây đúng nhanh nhất có thể.
             </p>
           </div>
           <Button
@@ -867,9 +889,7 @@ function MatchingGame({ cards, speakCardFn }: { cards: Flashcard[]; speakCardFn:
                   tile.isSelected
                     ? "border-blue-400 bg-blue-50/20 scale-102 ring-4 ring-blue-100"
                     : "border-slate-100",
-                  tile.isError
-                    ? "border-rose-400 bg-rose-50/20 animate-shake"
-                    : ""
+                  tile.isError ? "border-rose-400 bg-rose-50/20 animate-shake" : "",
                 )}
               >
                 {tile.type === "image" ? (
@@ -907,7 +927,8 @@ function MatchingGame({ cards, speakCardFn }: { cards: Flashcard[]; speakCardFn:
             <h3 className="text-3xl font-extrabold text-ink">Bé giỏi quá! 🎉</h3>
             <p className="text-sm text-ink/70">Đã ghép thành công tất cả các cặp thẻ.</p>
             <div className="inline-block mt-3 px-6 py-3 rounded-2xl bg-white border border-slate-100 shadow-sm font-bold text-ink">
-              ⏱️ Thành tích của con: <span className="text-emerald-500 text-lg font-black">{seconds} giây</span>
+              ⏱️ Thành tích của con:{" "}
+              <span className="text-emerald-500 text-lg font-black">{seconds} giây</span>
             </div>
           </div>
           <div className="flex justify-center gap-3">

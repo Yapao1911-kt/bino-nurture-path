@@ -41,13 +41,10 @@ function LibraryPage() {
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <BookOpen className="w-8 h-8 text-primary" />
-              <h1 className="text-4xl font-bold text-foreground">
-                Thư viện Học liệu
-              </h1>
+              <h1 className="text-4xl font-bold text-foreground">Thư viện Học liệu</h1>
             </div>
             <p className="text-lg text-muted-foreground">
-              Khám phá các tài nguyên giáo dục được thiết kế để hỗ trợ phát
-              triển của con bạn
+              Khám phá các tài nguyên giáo dục được thiết kế để hỗ trợ phát triển của con bạn
             </p>
           </div>
         </div>

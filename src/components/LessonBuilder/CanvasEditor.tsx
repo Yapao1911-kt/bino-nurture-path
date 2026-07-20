@@ -32,17 +32,8 @@ import {
 } from "lucide-react";
 import { useFabric } from "@/hooks/useFabric";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -110,9 +101,7 @@ function ColorGrid({
 }) {
   return (
     <div className="space-y-2.5">
-      <p className="text-xs font-semibold text-ink/60 uppercase tracking-wider">
-        {label}
-      </p>
+      <p className="text-xs font-semibold text-ink/60 uppercase tracking-wider">{label}</p>
       <div className="grid grid-cols-6 gap-1.5">
         {colors.map((color) => {
           const isTransparent = color === "transparent";
@@ -232,9 +221,7 @@ function InsertToolbar({
   return (
     <div className="flex flex-col gap-3">
       {/* Tiêu đề nhóm */}
-      <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest px-1">
-        Chèn
-      </p>
+      <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest px-1">Chèn</p>
 
       {/* Nút 1: Chèn Text — action chính, luôn hiển thị */}
       <TooltipProvider delayDuration={300}>
@@ -373,8 +360,7 @@ function PropertiesPanel({
     textbox: "Văn bản",
   };
   const typeLabel = typeLabels[activeObject.type] ?? "Phần tử";
-  const isText =
-    activeObject.type === "i-text" || activeObject.type === "textbox";
+  const isText = activeObject.type === "i-text" || activeObject.type === "textbox";
 
   return (
     <div className="w-56 flex flex-col gap-4 animate-fade-in">
@@ -387,9 +373,7 @@ function PropertiesPanel({
           <Sparkles className="w-4 h-4 text-[#3D8FC0]" />
         </span>
         <div>
-          <p className="text-xs font-bold text-ink/50 uppercase tracking-wider">
-            Đang chỉnh sửa
-          </p>
+          <p className="text-xs font-bold text-ink/50 uppercase tracking-wider">Đang chỉnh sửa</p>
           <p className="text-sm font-semibold text-ink">{typeLabel}</p>
         </div>
       </div>
@@ -399,13 +383,8 @@ function PropertiesPanel({
       {/* --- Nhóm 1: Font chữ (chỉ hiện khi chọn Text) --- */}
       {isText && (
         <div className="space-y-2">
-          <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest">
-            Font chữ
-          </p>
-          <FontSelector
-            currentFont={activeObject.fontFamily ?? "Inter"}
-            onSelect={onSetFont}
-          />
+          <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest">Font chữ</p>
+          <FontSelector currentFont={activeObject.fontFamily ?? "Inter"} onSelect={onSetFont} />
         </div>
       )}
 
@@ -460,17 +439,14 @@ function PropertiesPanel({
               </div>
               <span
                 className={`w-7 h-7 rounded-lg border-2 border-white shadow-sm group-hover:scale-110 transition-transform ${
-                  !activeObject.stroke || activeObject.stroke === "transparent"
-                    ? "bg-white"
-                    : ""
+                  !activeObject.stroke || activeObject.stroke === "transparent" ? "bg-white" : ""
                 }`}
                 style={{
                   backgroundColor:
                     activeObject.stroke && activeObject.stroke !== "transparent"
                       ? activeObject.stroke
                       : undefined,
-                  ...((!activeObject.stroke ||
-                    activeObject.stroke === "transparent") && {
+                  ...((!activeObject.stroke || activeObject.stroke === "transparent") && {
                     backgroundImage:
                       "linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%), linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%)",
                     backgroundSize: "8px 8px",
@@ -552,7 +528,9 @@ export default function CanvasEditor() {
     const fetchUserRole = async () => {
       setCheckingRole(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (user) {
           // 1. Check user metadata
           const metadataRole = user.user_metadata?.role;
@@ -654,9 +632,9 @@ export default function CanvasEditor() {
         toast.info("Chế độ Offline: Ảnh đã được nạp trực tiếp vào canvas.", { id: toastId });
       } else {
         // Lấy URL công khai
-        const { data: { publicUrl } } = supabase.storage
-          .from("lesson-materials")
-          .getPublicUrl(filePath);
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("lesson-materials").getPublicUrl(filePath);
         finalUrl = publicUrl;
         toast.success("Tải ảnh lên Supabase thành công!", { id: toastId });
       }
@@ -683,17 +661,17 @@ export default function CanvasEditor() {
 
     try {
       const canvasJson = canvasInstance.toJSON();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-      const { error } = await supabase
-        .from("lesson_templates")
-        .insert([
-          {
-            name: templateName.trim(),
-            content: canvasJson,
-            user_id: user?.id || null,
-          },
-        ]);
+      const { error } = await supabase.from("lesson_templates").insert([
+        {
+          name: templateName.trim(),
+          content: canvasJson,
+          user_id: user?.id || null,
+        },
+      ]);
 
       if (error) {
         console.warn("Save to Supabase failed, storing locally as fallback:", error.message);
@@ -821,12 +799,8 @@ export default function CanvasEditor() {
                 <Sparkles className="w-4 h-4 text-white" strokeWidth={2.5} />
               </span>
               <div>
-                <h1 className="text-sm font-bold text-ink leading-tight">
-                  Lesson Builder
-                </h1>
-                <p className="text-[10px] text-ink/50">
-                  Studio thiết kế bài học
-                </p>
+                <h1 className="text-sm font-bold text-ink leading-tight">Lesson Builder</h1>
+                <p className="text-[10px] text-ink/50">Studio thiết kế bài học</p>
               </div>
             </div>
           </div>
@@ -848,8 +822,13 @@ export default function CanvasEditor() {
                   <ChevronDown className="w-3.5 h-3.5 text-ink/50" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-48 p-2 rounded-2xl border-2 border-brand-blue-soft shadow-lg bg-white" align="end">
-                <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest px-2 pb-1.5">Mô phỏng tài khoản</p>
+              <PopoverContent
+                className="w-48 p-2 rounded-2xl border-2 border-brand-blue-soft shadow-lg bg-white"
+                align="end"
+              >
+                <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest px-2 pb-1.5">
+                  Mô phỏng tài khoản
+                </p>
                 {[
                   { value: "parent", label: "Phụ huynh (Miễn phí)" },
                   { value: "teacher", label: "Giáo viên (Premium)" },
@@ -903,8 +882,13 @@ export default function CanvasEditor() {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-44 p-2 rounded-2xl border-2 border-brand-blue-soft shadow-lg bg-white" align="end">
-                <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest px-2 pb-1.5">Định dạng file</p>
+              <PopoverContent
+                className="w-44 p-2 rounded-2xl border-2 border-brand-blue-soft shadow-lg bg-white"
+                align="end"
+              >
+                <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest px-2 pb-1.5">
+                  Định dạng file
+                </p>
                 <button
                   onClick={() => handleExport("png")}
                   className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-ink/70 hover:bg-slate-50 hover:text-ink cursor-pointer"
@@ -1004,7 +988,8 @@ export default function CanvasEditor() {
             <div className="space-y-1.5">
               <h3 className="text-base font-bold text-ink">Nâng cấp tài khoản</h3>
               <p className="text-xs text-ink/70 leading-relaxed">
-                Chức năng xuất thiết kế chất lượng cao (PNG, JPG, PDF 300 DPI) chỉ dành riêng cho tài khoản <strong>Giáo viên</strong> hoặc <strong>Premium</strong>.
+                Chức năng xuất thiết kế chất lượng cao (PNG, JPG, PDF 300 DPI) chỉ dành riêng cho
+                tài khoản <strong>Giáo viên</strong> hoặc <strong>Premium</strong>.
               </p>
             </div>
             <div className="pt-2 flex gap-3">

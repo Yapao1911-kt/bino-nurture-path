@@ -73,17 +73,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Lovable App" },
-      { name: "description", content: "Bino is an AI-powered early support ecosystem for children with developmental challenges." },
+      {
+        name: "description",
+        content:
+          "Bino is an AI-powered early support ecosystem for children with developmental challenges.",
+      },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Bino is an AI-powered early support ecosystem for children with developmental challenges." },
+      {
+        property: "og:description",
+        content:
+          "Bino is an AI-powered early support ecosystem for children with developmental challenges.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Bino is an AI-powered early support ecosystem for children with developmental challenges." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/876e195a-08dd-4bd6-82ed-ca9e0c15611b/id-preview-994ed363--eb0b7f03-f3b0-4081-b7cc-a1e089dee3cc.lovable.app-1780236384522.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/876e195a-08dd-4bd6-82ed-ca9e0c15611b/id-preview-994ed363--eb0b7f03-f3b0-4081-b7cc-a1e089dee3cc.lovable.app-1780236384522.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Bino is an AI-powered early support ecosystem for children with developmental challenges.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/876e195a-08dd-4bd6-82ed-ca9e0c15611b/id-preview-994ed363--eb0b7f03-f3b0-4081-b7cc-a1e089dee3cc.lovable.app-1780236384522.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/876e195a-08dd-4bd6-82ed-ca9e0c15611b/id-preview-994ed363--eb0b7f03-f3b0-4081-b7cc-a1e089dee3cc.lovable.app-1780236384522.png",
+      },
     ],
     links: [
       {

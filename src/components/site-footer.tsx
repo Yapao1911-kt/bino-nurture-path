@@ -53,10 +53,7 @@ export function SiteFooter() {
             © {new Date().getFullYear()} Bino. Mọi quyền được bảo lưu.
           </p>
           <p className="text-sm italic text-slate-700 flex items-center gap-2">
-            <Heart
-              className="w-4 h-4"
-              style={{ color: "#D67B8B", fill: "#FFCAD4" }}
-            />
+            <Heart className="w-4 h-4" style={{ color: "#D67B8B", fill: "#FFCAD4" }} />
             Đồng hành cùng con từ những bước đi đầu tiên
           </p>
         </div>

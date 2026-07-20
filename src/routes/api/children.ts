@@ -8,8 +8,14 @@ export const Route = createFileRoute("/api/children")({
   component: () => null,
 });
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || "https://akgrbwyrlqvxhzgoykpt.supabase.co";
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_HmZ1YfIHkXCG8u_U1VZysg_pt-GsXGF";
+const supabaseUrl =
+  process.env.VITE_SUPABASE_URL ||
+  import.meta.env.VITE_SUPABASE_URL ||
+  "https://akgrbwyrlqvxhzgoykpt.supabase.co";
+const supabaseAnonKey =
+  process.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  "sb_publishable_HmZ1YfIHkXCG8u_U1VZysg_pt-GsXGF";
 
 export interface CreateChildInput {
   full_name: string;
@@ -31,7 +37,7 @@ export const createChildFn = createServerFn({ method: "POST" })
       if (!token) {
         return new Response(
           JSON.stringify({ message: "Không tìm thấy mã xác thực JWT. Vui lòng đăng nhập lại." }),
-          { status: 401, headers: { "Content-Type": "application/json" } }
+          { status: 401, headers: { "Content-Type": "application/json" } },
         );
       }
 
@@ -40,16 +46,19 @@ export const createChildFn = createServerFn({ method: "POST" })
         auth: {
           persistSession: false,
           autoRefreshToken: false,
-        }
+        },
       });
 
       // Lấy thông tin user từ token JWT của người dùng hiện tại
-      const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser(token);
 
       if (authError || !user) {
         return new Response(
           JSON.stringify({ message: "Mã xác thực JWT không hợp lệ hoặc đã hết hạn." }),
-          { status: 401, headers: { "Content-Type": "application/json" } }
+          { status: 401, headers: { "Content-Type": "application/json" } },
         );
       }
 
@@ -68,7 +77,7 @@ export const createChildFn = createServerFn({ method: "POST" })
       if (!allowedRoles.includes(userRole)) {
         return new Response(
           JSON.stringify({ message: "Tài khoản của bạn không có quyền thực hiện hành động này." }),
-          { status: 403, headers: { "Content-Type": "application/json" } }
+          { status: 403, headers: { "Content-Type": "application/json" } },
         );
       }
 
@@ -95,21 +104,29 @@ export const createChildFn = createServerFn({ method: "POST" })
         }
       }
 
-      if (!developmental_challenges || !Array.isArray(developmental_challenges) || developmental_challenges.length === 0) {
+      if (
+        !developmental_challenges ||
+        !Array.isArray(developmental_challenges) ||
+        developmental_challenges.length === 0
+      ) {
         validationErrors.push("Khó khăn phát triển (developmental_challenges) là bắt buộc.");
       } else if (developmental_challenges.some((c) => typeof c !== "string" || !c.trim())) {
         validationErrors.push("Tất cả các khó khăn phát triển phải là chuỗi hợp lệ.");
       }
 
-      if (!communication_level || typeof communication_level !== "string" || !communication_level.trim()) {
+      if (
+        !communication_level ||
+        typeof communication_level !== "string" ||
+        !communication_level.trim()
+      ) {
         validationErrors.push("Mức độ giao tiếp của trẻ (communication_level) là bắt buộc.");
       }
 
       if (validationErrors.length > 0) {
-        return new Response(
-          JSON.stringify({ errors: validationErrors }),
-          { status: 400, headers: { "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ errors: validationErrors }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
       }
 
       // 4. Lưu vào Supabase Database bảng children
@@ -130,22 +147,24 @@ export const createChildFn = createServerFn({ method: "POST" })
       if (insertError) {
         console.error("Database insert error:", insertError.message);
         return new Response(
-          JSON.stringify({ message: "Lỗi cơ sở dữ liệu khi lưu thông tin trẻ.", details: insertError.message }),
-          { status: 500, headers: { "Content-Type": "application/json" } }
+          JSON.stringify({
+            message: "Lỗi cơ sở dữ liệu khi lưu thông tin trẻ.",
+            details: insertError.message,
+          }),
+          { status: 500, headers: { "Content-Type": "application/json" } },
         );
       }
 
       // 5. Thành công: Trả về đối tượng trẻ vừa tạo (HTTP 200)
-      return new Response(
-        JSON.stringify(newChild),
-        { status: 200, headers: { "Content-Type": "application/json" } }
-      );
-
+      return new Response(JSON.stringify(newChild), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
     } catch (err: any) {
       console.error("Server Function createChildFn error:", err);
       return new Response(
         JSON.stringify({ message: "Lỗi hệ thống máy chủ nội bộ.", error: err.message }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+        { status: 500, headers: { "Content-Type": "application/json" } },
       );
     }
   });

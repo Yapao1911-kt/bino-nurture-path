@@ -21,13 +21,7 @@ import { supabase } from "@/lib/supabase";
 import { createChildFn } from "@/routes/api/children";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -121,13 +115,7 @@ function CuteBear({ className = "" }: { className?: string }) {
 // -------------------------------------------------------
 // Cute Star (SVG inline)
 // -------------------------------------------------------
-function CuteStar({
-  className = "",
-  color = "#FFF3B0",
-}: {
-  className?: string;
-  color?: string;
-}) {
+function CuteStar({ className = "", color = "#FFF3B0" }: { className?: string; color?: string }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden>
       <path
@@ -256,14 +244,14 @@ export default function CreateChildForm() {
     const dobString = `${birthYear}-01-01`;
 
     // Lấy nhãn tình trạng phát triển của trẻ
-    const selectedCondition = CONDITION_OPTIONS.find(
-      (opt) => opt.value === formData.condition
-    );
+    const selectedCondition = CONDITION_OPTIONS.find((opt) => opt.value === formData.condition);
     const challenge = selectedCondition?.label || formData.condition || "Phát triển bình thường";
 
     try {
       // Lấy token xác thực từ Supabase Client
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       const token = session?.access_token;
       const simulatedRole = localStorage.getItem("bino_simulated_role");
 
@@ -276,14 +264,14 @@ export default function CreateChildForm() {
           date_of_birth: dobString,
           developmental_challenges: [challenge],
           communication_level: "Bình thường",
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
         };
         localChildren.push(mockChild);
         localStorage.setItem("bino_local_children", JSON.stringify(localChildren));
 
         setApiResponse({
           type: "success",
-          message: simulatedRole 
+          message: simulatedRole
             ? `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Đăng nhập tài khoản thật để đồng bộ đám mây.`
             : `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Bạn có thể Đăng nhập để lưu trên cloud.`,
         });
@@ -293,19 +281,16 @@ export default function CreateChildForm() {
         return;
       }
 
-      // Gọi Server Function của TanStack Start với tùy chọn headers ở đối số thứ hai
+      // Gọi Server Function của TanStack Start
       // Nếu deploy Vercel mà không có token thì dùng offline
-      const response = await createChildFn(
-        {
+      const response = (await createChildFn({
+        data: {
           full_name: formData.name.trim(),
           date_of_birth: dobString,
           developmental_challenges: [challenge],
           communication_level: "Bình thường", // Giá trị mặc định
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      ) as Response;
+      })) as Response;
 
       const data = await response.json();
 
@@ -347,7 +332,10 @@ export default function CreateChildForm() {
   // RENDER — Giao diện form
   // -------------------------------------------------------
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "var(--background)" }}>
+    <div
+      className="min-h-screen relative overflow-hidden"
+      style={{ background: "var(--background)" }}
+    >
       {/* ============================================
           Background Decorations — Pastel blobs + illustrations
           ============================================ */}
@@ -440,9 +428,7 @@ export default function CreateChildForm() {
                 <AlertCircle className="h-5 w-5" />
               )}
               <AlertTitle className="font-semibold">
-                {apiResponse.type === "success"
-                  ? "🎉 Thành công!"
-                  : "⚠️ Có lỗi xảy ra"}
+                {apiResponse.type === "success" ? "🎉 Thành công!" : "⚠️ Có lỗi xảy ra"}
               </AlertTitle>
               <AlertDescription>{apiResponse.message}</AlertDescription>
             </Alert>
@@ -454,7 +440,8 @@ export default function CreateChildForm() {
             ============================================ */}
         <Card className="relative rounded-[2rem] border-0 bg-white shadow-[12px_12px_0px_#f3f3f3] rotate-0 hover:rotate-0 transition-transform animate-fade-in">
           {/* Decorative sticker on top-right */}
-          <div className="absolute -top-3 -right-3 w-16 h-16 rounded-full grid place-items-center shadow-md z-10"
+          <div
+            className="absolute -top-3 -right-3 w-16 h-16 rounded-full grid place-items-center shadow-md z-10"
             style={{ background: "var(--brand-pink-soft)" }}
           >
             <Heart className="w-7 h-7" style={{ color: "#D67B8B" }} />
@@ -466,7 +453,8 @@ export default function CreateChildForm() {
               Thông tin hồ sơ trẻ
             </CardTitle>
             <CardDescription className="text-ink/60">
-              Các trường có dấu <span className="text-red-400 font-semibold">*</span> là bắt buộc nhập.
+              Các trường có dấu <span className="text-red-400 font-semibold">*</span> là bắt buộc
+              nhập.
             </CardDescription>
           </CardHeader>
 
@@ -651,9 +639,7 @@ export default function CreateChildForm() {
             style={{ animationDelay: "0.3s" }}
           >
             <Heart className="w-4 h-4" style={{ color: "#D67B8B" }} />
-            <span className="text-xs font-semibold text-ink">
-              Mỗi đứa trẻ đều đặc biệt 💛
-            </span>
+            <span className="text-xs font-semibold text-ink">Mỗi đứa trẻ đều đặc biệt 💛</span>
           </div>
         </div>
       </div>

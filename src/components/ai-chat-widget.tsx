@@ -31,7 +31,9 @@ Bạn giúp phụ huynh/giáo viên phân tích tình huống, gợi ý hoạt �
 Luôn trả lời bằng tiếng Việt, ngắn gọn (2-4 đoạn), dùng emoji phù hợp, giọng điệu nhẹ nhàng, khích lệ và chuyên nghiệp.
 Khi đưa lời khuyên, hãy cụ thể, dễ làm tại nhà, không gây áp lực và không thay thế chẩn đoán y khoa.`;
 
-async function callOllama(messages: { role: "user" | "assistant"; text: string }[]): Promise<string> {
+async function callOllama(
+  messages: { role: "user" | "assistant"; text: string }[],
+): Promise<string> {
   const response = await fetch("/api/ollama-chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -64,7 +66,7 @@ function MascotImage({ className = "w-full h-full" }: { className?: string }) {
 function buildContextText(
   selectedChild: AIChatChild,
   progressData: AIChatProgressPoint[] | undefined,
-  contextLabel: string
+  contextLabel: string,
 ) {
   const childText = `${selectedChild.name}${selectedChild.age ? `, ${selectedChild.age} tuổi` : ""}`;
 
@@ -208,20 +210,27 @@ export function AIChatWidget({
 
       <div
         className={`fixed bottom-36 right-8 z-50 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-slate-100 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right ${
-          open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-90 pointer-events-none"
+          open
+            ? "opacity-100 scale-100 pointer-events-auto"
+            : "opacity-0 scale-90 pointer-events-none"
         }`}
         style={{ maxHeight: "520px" }}
       >
         <div
           className="flex items-center gap-3 px-4 py-3 border-b border-slate-100"
-          style={{ background: "linear-gradient(135deg, var(--brand-blue-soft) 0%, var(--brand-mint-soft) 100%)" }}
+          style={{
+            background:
+              "linear-gradient(135deg, var(--brand-blue-soft) 0%, var(--brand-mint-soft) 100%)",
+          }}
         >
           <div className="w-10 h-10 rounded-2xl bg-white shadow-sm overflow-hidden shrink-0 border border-slate-100">
             <MascotImage className="w-full h-full p-0.5" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-ink leading-none">Bino AI</p>
-            <p className="text-[11px] text-ink/50 mt-0.5 truncate">Sẵn sàng hỗ trợ {selectedChild.name}</p>
+            <p className="text-[11px] text-ink/50 mt-0.5 truncate">
+              Sẵn sàng hỗ trợ {selectedChild.name}
+            </p>
           </div>
           <div className="flex items-center gap-1">
             <button
@@ -335,7 +344,9 @@ export function AIChatWidget({
               <Send className="w-4 h-4" />
             </button>
           </div>
-          <p className="text-[10px] text-ink/30 mt-1.5 text-center">Enter để gửi • Shift+Enter để xuống dòng</p>
+          <p className="text-[10px] text-ink/30 mt-1.5 text-center">
+            Enter để gửi • Shift+Enter để xuống dòng
+          </p>
         </div>
       </div>
     </>

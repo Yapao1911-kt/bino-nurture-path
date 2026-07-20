@@ -16,8 +16,7 @@ export const Route = createFileRoute("/create-child")({
       { title: "Tạo hồ sơ cho bé — Bino" },
       {
         name: "description",
-        content:
-          "Tạo hồ sơ mới cho trẻ để Bino xây dựng lộ trình can thiệp sớm cá nhân hóa.",
+        content: "Tạo hồ sơ mới cho trẻ để Bino xây dựng lộ trình can thiệp sớm cá nhân hóa.",
       },
     ],
   }),

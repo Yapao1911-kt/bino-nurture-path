@@ -38,7 +38,8 @@ export const Route = createFileRoute("/login")({
       { title: "Đăng nhập — Bino" },
       {
         name: "description",
-        content: "Đăng nhập vào hệ thống Bino để tiếp tục đồng hành cùng bé yêu trên lộ trình can thiệp sớm.",
+        content:
+          "Đăng nhập vào hệ thống Bino để tiếp tục đồng hành cùng bé yêu trên lộ trình can thiệp sớm.",
       },
     ],
   }),
@@ -166,17 +167,19 @@ function LoginPage() {
       localStorage.setItem("bino_simulated_role", simulatedRole);
       localStorage.setItem(
         "bino_simulated_user",
-        simulatedRole === "parent" ? "Mẹ Bé Minh An (Demo)" : "Cô giáo Mai Anh (Demo)"
+        simulatedRole === "parent" ? "Mẹ Bé Minh An (Demo)" : "Cô giáo Mai Anh (Demo)",
       );
       localStorage.setItem(
         "bino_simulated_email",
-        simulatedRole === "parent" ? "parent.demo@bino.edu.vn" : "teacher.demo@bino.edu.vn"
+        simulatedRole === "parent" ? "parent.demo@bino.edu.vn" : "teacher.demo@bino.edu.vn",
       );
 
       // Kích hoạt thay đổi auth state bằng cách reload nhẹ hoặc redirect
-      setSuccess(`Đăng nhập thành công ở chế độ Demo với vai trò ${simulatedRole === "parent" ? "Phụ huynh" : "Giáo viên"}!`);
+      setSuccess(
+        `Đăng nhập thành công ở chế độ Demo với vai trò ${simulatedRole === "parent" ? "Phụ huynh" : "Giáo viên"}!`,
+      );
       setIsLoading(false);
-      
+
       setTimeout(() => {
         navigate({ to: "/" });
       }, 1000);
@@ -184,41 +187,75 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{ background: "var(--background)" }}>
+    <div
+      className="min-h-screen relative overflow-hidden flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      style={{ background: "var(--background)" }}
+    >
       {/* Background decorations */}
-      <div className="absolute top-10 -left-20 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: "#DCEFFB", opacity: 0.55 }} />
-      <div className="absolute -top-10 right-0 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: "#E2F6EC", opacity: 0.55 }} />
-      <div className="absolute bottom-10 left-1/3 w-80 h-80 rounded-full blur-3xl" style={{ backgroundColor: "#FFE6EB", opacity: 0.55 }} />
-      
+      <div
+        className="absolute top-10 -left-20 w-96 h-96 rounded-full blur-3xl"
+        style={{ backgroundColor: "#DCEFFB", opacity: 0.55 }}
+      />
+      <div
+        className="absolute -top-10 right-0 w-96 h-96 rounded-full blur-3xl"
+        style={{ backgroundColor: "#E2F6EC", opacity: 0.55 }}
+      />
+      <div
+        className="absolute bottom-10 left-1/3 w-80 h-80 rounded-full blur-3xl"
+        style={{ backgroundColor: "#FFE6EB", opacity: 0.55 }}
+      />
+
       <div className="max-w-md w-full space-y-6 relative z-10 animate-fade-in">
         {/* Logo / Header */}
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-ink/60 hover:text-ink transition-colors mb-4">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm font-medium text-ink/60 hover:text-ink transition-colors mb-4"
+          >
             <ArrowLeft className="w-4 h-4" />
             Về trang chủ
           </Link>
           <div className="flex justify-center mb-2">
-            <span className="w-12 h-12 rounded-3xl grid place-items-center shadow-md shadow-brand-blue/30"
-              style={{ background: "linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-mint) 100%)" }}
+            <span
+              className="w-12 h-12 rounded-3xl grid place-items-center shadow-md shadow-brand-blue/30"
+              style={{
+                background: "linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-mint) 100%)",
+              }}
             >
               <Heart className="w-6 h-6 text-white" strokeWidth={2.5} />
             </span>
           </div>
-          <h2 className="text-3xl font-extrabold text-ink tracking-tight">Chào mừng đến với Bino</h2>
+          <h2 className="text-3xl font-extrabold text-ink tracking-tight">
+            Chào mừng đến với Bino
+          </h2>
           <p className="mt-2 text-sm text-ink/60">AI dịu dàng đồng hành cùng con lớn khôn</p>
         </div>
 
         {/* Auth Forms Card */}
         <Card className="rounded-[2.5rem] border-0 bg-white shadow-[12px_12px_0px_#f3f3f3]">
           <CardHeader className="pb-2 pt-6 px-6 sm:px-8">
-            <Tabs defaultValue="login" onValueChange={(val) => {
-              setActiveTab(val as "login" | "register");
-              setError(null);
-              setSuccess(null);
-            }} className="w-full">
+            <Tabs
+              defaultValue="login"
+              onValueChange={(val) => {
+                setActiveTab(val as "login" | "register");
+                setError(null);
+                setSuccess(null);
+              }}
+              className="w-full"
+            >
               <TabsList className="grid grid-cols-2 rounded-2xl p-1 bg-slate-100/80">
-                <TabsTrigger value="login" className="rounded-xl font-bold py-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">Đăng nhập</TabsTrigger>
-                <TabsTrigger value="register" className="rounded-xl font-bold py-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">Đăng ký</TabsTrigger>
+                <TabsTrigger
+                  value="login"
+                  className="rounded-xl font-bold py-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                >
+                  Đăng nhập
+                </TabsTrigger>
+                <TabsTrigger
+                  value="register"
+                  className="rounded-xl font-bold py-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                >
+                  Đăng ký
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </CardHeader>
@@ -242,7 +279,10 @@ function LoginPage() {
             {activeTab === "login" ? (
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="login-email" className="text-xs font-bold text-ink/80 flex items-center gap-1.5">
+                  <Label
+                    htmlFor="login-email"
+                    className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
+                  >
                     <Mail className="w-3.5 h-3.5" /> Email
                   </Label>
                   <Input
@@ -257,7 +297,10 @@ function LoginPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="login-password" className="text-xs font-bold text-ink/80 flex items-center gap-1.5">
+                  <Label
+                    htmlFor="login-password"
+                    className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
+                  >
                     <Lock className="w-3.5 h-3.5" /> Mật khẩu
                   </Label>
                   <Input
@@ -284,7 +327,10 @@ function LoginPage() {
               /* TAB: Đăng ký */
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="reg-name" className="text-xs font-bold text-ink/80 flex items-center gap-1.5">
+                  <Label
+                    htmlFor="reg-name"
+                    className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
+                  >
                     <User className="w-3.5 h-3.5" /> Họ và tên của bạn
                   </Label>
                   <Input
@@ -299,7 +345,10 @@ function LoginPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="reg-email" className="text-xs font-bold text-ink/80 flex items-center gap-1.5">
+                  <Label
+                    htmlFor="reg-email"
+                    className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
+                  >
                     <Mail className="w-3.5 h-3.5" /> Địa chỉ Email
                   </Label>
                   <Input
@@ -314,7 +363,10 @@ function LoginPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="reg-password" className="text-xs font-bold text-ink/80 flex items-center gap-1.5">
+                  <Label
+                    htmlFor="reg-password"
+                    className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
+                  >
                     <Lock className="w-3.5 h-3.5" /> Tạo mật khẩu
                   </Label>
                   <Input
@@ -329,7 +381,9 @@ function LoginPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold text-ink/80">Bạn đăng ký với vai trò là:</Label>
+                  <Label className="text-xs font-bold text-ink/80">
+                    Bạn đăng ký với vai trò là:
+                  </Label>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
@@ -370,7 +424,9 @@ function LoginPage() {
             {/* Quick Demo Logins Section */}
             <div className="relative my-6 text-center">
               <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-slate-100"></span>
-              <span className="relative px-3 bg-white text-xs font-semibold text-slate-400">HOẶC DÙNG THỬ NHANH</span>
+              <span className="relative px-3 bg-white text-xs font-semibold text-slate-400">
+                HOẶC DÙNG THỬ NHANH
+              </span>
             </div>
 
             <div className="grid grid-cols-2 gap-3">

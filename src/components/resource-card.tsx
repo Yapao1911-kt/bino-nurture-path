@@ -2,15 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import {
-  Lock,
-  FileText,
-  Video,
-  Image as ImageIcon,
-  Download,
-  Play,
-  Layers,
-} from "lucide-react";
+import { Lock, FileText, Video, Image as ImageIcon, Download, Play, Layers } from "lucide-react";
 
 interface Resource {
   id: string;
@@ -47,7 +39,11 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
   };
 
   const getActionIcon = (format: string) => {
-    return format === "Video" ? <Play className="w-4 h-4 mr-2" /> : <Download className="w-4 h-4 mr-2" />;
+    return format === "Video" ? (
+      <Play className="w-4 h-4 mr-2" />
+    ) : (
+      <Download className="w-4 h-4 mr-2" />
+    );
   };
 
   const getActionText = (format: string) => {
@@ -68,13 +64,19 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
               <Lock className="w-3 h-3 mr-1" /> Premium
             </Badge>
           ) : (
-            <Badge variant="secondary" className="bg-white/90 text-slate-800 hover:bg-white border-none">
+            <Badge
+              variant="secondary"
+              className="bg-white/90 text-slate-800 hover:bg-white border-none"
+            >
               Basic
             </Badge>
           )}
         </div>
         <div className="absolute bottom-2 left-2">
-          <Badge variant="outline" className="bg-black/50 text-white border-none flex items-center gap-1 backdrop-blur-sm">
+          <Badge
+            variant="outline"
+            className="bg-black/50 text-white border-none flex items-center gap-1 backdrop-blur-sm"
+          >
             {getFormatIcon(resource.format)}
             <span className="ml-1">{resource.format}</span>
           </Badge>
@@ -89,7 +91,11 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
             </Badge>
           ))}
           {resource.difficulty.map((diff) => (
-            <Badge key={diff} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+            <Badge
+              key={diff}
+              variant="outline"
+              className="text-xs bg-blue-50 text-blue-700 border-blue-200"
+            >
               {diff}
             </Badge>
           ))}
@@ -103,7 +109,11 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
 
       <CardFooter className="p-4 pt-0 flex-none mt-auto">
         {isLocked ? (
-          <Button variant="outline" className="w-full bg-slate-50 text-slate-500 cursor-not-allowed" disabled>
+          <Button
+            variant="outline"
+            className="w-full bg-slate-50 text-slate-500 cursor-not-allowed"
+            disabled
+          >
             <Lock className="w-4 h-4 mr-2" />
             Nâng cấp để {getActionText(resource.format).toLowerCase()}
           </Button>

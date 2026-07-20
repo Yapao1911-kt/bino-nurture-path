@@ -72,8 +72,7 @@ export const dailyVocabularyFlashcards: Flashcard[] = [
     category: "animal",
     image: "/flashcards/ngua.png",
     soundText: "Hí hí!",
-    soundUrl:
-      "https://assets.mixkit.co/active_storage/sfx/682/682-preview.mp3",
+    soundUrl: "https://assets.mixkit.co/active_storage/sfx/682/682-preview.mp3",
   },
   {
     id: "khi",

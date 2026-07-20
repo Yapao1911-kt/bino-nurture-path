@@ -1,12 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { ResourceCard } from "./resource-card";
 import { Filter, SearchX } from "lucide-react";
 import { Button } from "./ui/button";
@@ -145,8 +139,7 @@ const allResources: Resource[] = [
   {
     id: "m5",
     title: "Bộ Flashcard Từ vựng hàng ngày",
-    description:
-      "25 thẻ hình ảnh về con vật và thực phẩm — có tiếng kêu hoặc để phụ huynh đọc.",
+    description: "25 thẻ hình ảnh về con vật và thực phẩm — có tiếng kêu hoặc để phụ huynh đọc.",
     category: "Học liệu",
     ageGroup: ["0-3 tuổi", "3-6 tuổi"],
     difficulty: ["Chậm ngôn ngữ", "Tự kỷ (ASD)"],
@@ -163,10 +156,7 @@ interface LearningLibraryProps {
   userEmail?: string;
 }
 
-export function LearningLibrary({
-  initialTab = "Kiến thức",
-  userType,
-}: LearningLibraryProps) {
+export function LearningLibrary({ initialTab = "Kiến thức", userType }: LearningLibraryProps) {
   const [activeTab, setActiveTab] = useState(initialTab);
   const [ageFilter, setAgeFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
@@ -185,21 +175,16 @@ export function LearningLibrary({
   const filteredResources = useMemo(() => {
     return allResources.filter((resource) => {
       if (resource.category !== activeTab) return false;
-      if (ageFilter !== "all" && !resource.ageGroup.includes(ageFilter))
+      if (ageFilter !== "all" && !resource.ageGroup.includes(ageFilter)) return false;
+      if (difficultyFilter !== "all" && !resource.difficulty.includes(difficultyFilter))
         return false;
-      if (
-        difficultyFilter !== "all" &&
-        !resource.difficulty.includes(difficultyFilter)
-      )
-        return false;
-      if (formatFilter !== "all" && resource.format !== formatFilter)
-        return false;
+      if (formatFilter !== "all" && resource.format !== formatFilter) return false;
       return true;
     });
   }, [activeTab, ageFilter, difficultyFilter, formatFilter]);
 
   const activeFilterCount = [ageFilter, difficultyFilter, formatFilter].filter(
-    (f) => f !== "all"
+    (f) => f !== "all",
   ).length;
 
   return (
@@ -217,12 +202,7 @@ export function LearningLibrary({
             )}
           </div>
           {activeFilterCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearFilters}
-              className="h-8 text-xs"
-            >
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 text-xs">
               Xóa bộ lọc
             </Button>
           )}
@@ -274,7 +254,7 @@ export function LearningLibrary({
       {/* Tabs */}
       <Tabs
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={(val) => setActiveTab(val as "Kiến thức" | "Học liệu")}
         className="w-full"
       >
         <TabsList className="grid w-full md:w-[420px] grid-cols-2 mb-6">
@@ -287,11 +267,7 @@ export function LearningLibrary({
             {filteredResources.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredResources.map((resource) => (
-                  <ResourceCard
-                    key={resource.id}
-                    resource={resource}
-                    userType={userType}
-                  />
+                  <ResourceCard key={resource.id} resource={resource} userType={userType} />
                 ))}
               </div>
             ) : (
@@ -310,12 +286,9 @@ function EmptyState() {
       <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
         <SearchX className="w-6 h-6" />
       </div>
-      <h3 className="text-lg font-semibold text-slate-900 mb-1">
-        Không tìm thấy tài liệu
-      </h3>
+      <h3 className="text-lg font-semibold text-slate-900 mb-1">Không tìm thấy tài liệu</h3>
       <p className="text-sm text-slate-500 max-w-sm">
-        Thử thay đổi hoặc xóa bớt các bộ lọc để xem thêm tài nguyên có sẵn
-        trong thư viện.
+        Thử thay đổi hoặc xóa bớt các bộ lọc để xem thêm tài nguyên có sẵn trong thư viện.
       </p>
     </div>
   );

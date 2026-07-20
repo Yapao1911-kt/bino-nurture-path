@@ -11,7 +11,15 @@ const getCurrentUser = async (userEmail: string = "free@example.com") => {
 };
 
 export const getResourcesFn = createServerFn({ method: "GET" })
-  .validator((data: { category: string; ageGroup?: string; difficulty?: string; format?: string; userEmail?: string }) => data)
+  .inputValidator(
+    (data: {
+      category: string;
+      ageGroup?: string;
+      difficulty?: string;
+      format?: string;
+      userEmail?: string;
+    }) => data,
+  )
   .handler(async ({ data }) => {
     const { category, ageGroup, difficulty, format, userEmail } = data;
 
@@ -21,11 +29,11 @@ export const getResourcesFn = createServerFn({ method: "GET" })
     if (ageGroup && ageGroup !== "all") {
       where.ageGroup = { contains: ageGroup };
     }
-    
+
     if (difficulty && difficulty !== "all") {
       where.difficulty = { contains: difficulty };
     }
-    
+
     if (format && format !== "all") {
       where.format = format;
     }
@@ -36,11 +44,11 @@ export const getResourcesFn = createServerFn({ method: "GET" })
     const user = await getCurrentUser(userEmail || "free@example.com");
 
     return {
-      resources: resources.map(res => ({
+      resources: resources.map((res) => ({
         ...res,
         // Chuyển JSON string trở lại mảng cho Frontend dễ dùng
         ageGroup: JSON.parse(res.ageGroup),
-        difficulty: JSON.parse(res.difficulty)
+        difficulty: JSON.parse(res.difficulty),
       })),
       userType: user?.subscription === "PREMIUM" ? "premium" : "free",
     };

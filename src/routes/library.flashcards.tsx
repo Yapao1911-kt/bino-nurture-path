@@ -23,12 +23,9 @@ function FlashcardsPage() {
           <div className="flex items-center gap-3">
             <Layers className="w-8 h-8 text-primary" />
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
-                Flashcard Từ vựng
-              </h1>
+              <h1 className="text-3xl sm:text-4xl font-bold text-foreground">Flashcard Từ vựng</h1>
               <p className="text-muted-foreground mt-1">
-                Học từ vựng qua hình ảnh — con vật có tiếng kêu, thực phẩm để
-                phụ huynh đọc
+                Học từ vựng qua hình ảnh — con vật có tiếng kêu, thực phẩm để phụ huynh đọc
               </p>
             </div>
           </div>

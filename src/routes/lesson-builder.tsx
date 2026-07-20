@@ -12,9 +12,7 @@ import { Loader2 } from "lucide-react";
 
 // Lazy import CanvasEditor vì Fabric.js chỉ chạy phía client
 // (tránh lỗi SSR: "window is not defined")
-const CanvasEditor = lazy(
-  () => import("@/components/LessonBuilder/CanvasEditor"),
-);
+const CanvasEditor = lazy(() => import("@/components/LessonBuilder/CanvasEditor"));
 
 export const Route = createFileRoute("/lesson-builder")({
   component: LessonBuilderPage,
@@ -23,8 +21,7 @@ export const Route = createFileRoute("/lesson-builder")({
       { title: "Lesson Builder Studio — Bino" },
       {
         name: "description",
-        content:
-          "Thiết kế bài học trực quan với công cụ kéo thả dành cho giáo viên và phụ huynh.",
+        content: "Thiết kế bài học trực quan với công cụ kéo thả dành cho giáo viên và phụ huynh.",
       },
     ],
   }),
@@ -39,15 +36,12 @@ function LessonBuilderPage() {
             <div
               className="w-16 h-16 rounded-2xl grid place-items-center shadow-md"
               style={{
-                background:
-                  "linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-mint) 100%)",
+                background: "linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-mint) 100%)",
               }}
             >
               <Loader2 className="w-7 h-7 text-white animate-spin" />
             </div>
-            <p className="text-sm font-medium text-ink/60">
-              Đang tải Lesson Builder...
-            </p>
+            <p className="text-sm font-medium text-ink/60">Đang tải Lesson Builder...</p>
           </div>
         </div>
       }

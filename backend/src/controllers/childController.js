@@ -65,11 +65,7 @@ const createChild = async (req, res) => {
     // .select() trả về dữ liệu vừa tạo (thay vì chỉ trả count)
     // .single() lấy đúng 1 object thay vì mảng
     // -------------------------------------------------------
-    const { data, error } = await supabase
-      .from("children")
-      .insert(childData)
-      .select()
-      .single();
+    const { data, error } = await supabase.from("children").insert(childData).select().single();
 
     // Kiểm tra lỗi từ Supabase
     if (error) {
@@ -100,10 +96,7 @@ const createChild = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Đã xảy ra lỗi nội bộ server. Vui lòng thử lại sau.",
-      error:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Internal Server Error",
+      error: process.env.NODE_ENV === "development" ? error.message : "Internal Server Error",
     });
   }
 };

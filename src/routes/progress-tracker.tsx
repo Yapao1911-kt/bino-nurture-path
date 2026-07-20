@@ -37,9 +37,30 @@ const weeklyData = [
 ];
 
 const recentMilestones = [
-  { id: 1, text: "Bé tự gọi tên 5 đồ vật quen thuộc", date: "3 ngày trước", icon: Star, color: "#C99A2E", bg: "var(--brand-yellow-soft)" },
-  { id: 2, text: "Hoàn thành 10 hoạt động liên tiếp", date: "5 ngày trước", icon: Award, color: "#4FA37F", bg: "var(--brand-mint-soft)" },
-  { id: 3, text: "Bé chủ động giao tiếp mắt khi nói chuyện", date: "1 tuần trước", icon: Smile, color: "#D67B8B", bg: "var(--brand-pink-soft)" },
+  {
+    id: 1,
+    text: "Bé tự gọi tên 5 đồ vật quen thuộc",
+    date: "3 ngày trước",
+    icon: Star,
+    color: "#C99A2E",
+    bg: "var(--brand-yellow-soft)",
+  },
+  {
+    id: 2,
+    text: "Hoàn thành 10 hoạt động liên tiếp",
+    date: "5 ngày trước",
+    icon: Award,
+    color: "#4FA37F",
+    bg: "var(--brand-mint-soft)",
+  },
+  {
+    id: 3,
+    text: "Bé chủ động giao tiếp mắt khi nói chuyện",
+    date: "1 tuần trước",
+    icon: Smile,
+    color: "#D67B8B",
+    bg: "var(--brand-pink-soft)",
+  },
 ];
 
 const activityLog = [
@@ -111,7 +132,14 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
 
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
-      <polyline points={points} stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <polyline
+        points={points}
+        stroke={color}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
       {data.map((v, i) => (
         <circle
           key={i}
@@ -145,14 +173,24 @@ function ProgressTrackerPage() {
       <div
         className="w-full h-1.5"
         style={{
-          background: "linear-gradient(90deg, var(--brand-blue) 0%, var(--brand-mint) 40%, var(--brand-peach) 70%, var(--brand-pink) 100%)",
+          background:
+            "linear-gradient(90deg, var(--brand-blue) 0%, var(--brand-mint) 40%, var(--brand-peach) 70%, var(--brand-pink) 100%)",
         }}
       />
 
       {/* Background blobs */}
-      <div className="absolute top-20 left-[5%] w-72 h-72 rounded-full opacity-30 blur-3xl pointer-events-none" style={{ background: "var(--brand-blue-soft)" }} />
-      <div className="absolute top-48 right-[5%] w-64 h-64 rounded-full opacity-25 blur-3xl pointer-events-none" style={{ background: "var(--brand-mint-soft)" }} />
-      <div className="absolute bottom-32 left-[30%] w-56 h-56 rounded-full opacity-20 blur-3xl pointer-events-none" style={{ background: "var(--brand-yellow-soft)" }} />
+      <div
+        className="absolute top-20 left-[5%] w-72 h-72 rounded-full opacity-30 blur-3xl pointer-events-none"
+        style={{ background: "var(--brand-blue-soft)" }}
+      />
+      <div
+        className="absolute top-48 right-[5%] w-64 h-64 rounded-full opacity-25 blur-3xl pointer-events-none"
+        style={{ background: "var(--brand-mint-soft)" }}
+      />
+      <div
+        className="absolute bottom-32 left-[30%] w-56 h-56 rounded-full opacity-20 blur-3xl pointer-events-none"
+        style={{ background: "var(--brand-yellow-soft)" }}
+      />
 
       <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-40">
         {/* Header */}
@@ -170,7 +208,9 @@ function ProgressTrackerPage() {
               >
                 <BarChart2 className="w-4 h-4" style={{ color: "#C99A2E" }} />
               </div>
-              <span className="text-xs font-bold tracking-wider uppercase text-ink/40">Progress Tracker</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-ink/40">
+                Progress Tracker
+              </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-ink leading-tight">
               Theo dõi Tiến trình Bé
@@ -189,14 +229,19 @@ function ProgressTrackerPage() {
               <p className="text-sm font-bold text-ink">{selectedChild.name}</p>
               <p className="text-xs text-ink/50">{selectedChild.age} tuổi</p>
             </div>
-            <ChevronDown className={`w-4 h-4 text-ink/40 transition-transform ml-1 ${dropdownOpen ? "rotate-180" : ""}`} />
+            <ChevronDown
+              className={`w-4 h-4 text-ink/40 transition-transform ml-1 ${dropdownOpen ? "rotate-180" : ""}`}
+            />
           </button>
           {dropdownOpen && (
             <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl border border-slate-100 shadow-[0_8px_24px_rgba(0,0,0,0.08)] z-20 overflow-hidden min-w-[200px] animate-fade-in">
               {childProfiles.map((c) => (
                 <button
                   key={c.id}
-                  onClick={() => { setSelectedChild(c); setDropdownOpen(false); }}
+                  onClick={() => {
+                    setSelectedChild(c);
+                    setDropdownOpen(false);
+                  }}
                   className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 text-left transition-colors ${selectedChild.id === c.id ? "bg-slate-50" : ""}`}
                 >
                   <span className="text-xl">{c.avatar}</span>
@@ -204,7 +249,12 @@ function ProgressTrackerPage() {
                     <p className="text-sm font-semibold text-ink">{c.name}</p>
                     <p className="text-xs text-ink/50">{c.age} tuổi</p>
                   </div>
-                  {selectedChild.id === c.id && <CheckCircle2 className="w-4 h-4 ml-auto text-brand-mint" style={{ color: "var(--brand-mint)" }} />}
+                  {selectedChild.id === c.id && (
+                    <CheckCircle2
+                      className="w-4 h-4 ml-auto text-brand-mint"
+                      style={{ color: "var(--brand-mint)" }}
+                    />
+                  )}
                 </button>
               ))}
             </div>
@@ -266,10 +316,13 @@ function ProgressTrackerPage() {
                 <Icon className="w-4.5 h-4.5" style={{ color, width: 18, height: 18 }} />
               </div>
               <p className="text-2xl sm:text-3xl font-extrabold text-ink">
-                {value}<span className="text-base font-semibold text-ink/40">{unit}</span>
+                {value}
+                <span className="text-base font-semibold text-ink/40">{unit}</span>
               </p>
               <p className="text-xs text-ink/50 mt-0.5 font-medium">{label}</p>
-              <div className={`mt-2 inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${positive ? "text-emerald-700 bg-emerald-50" : "text-rose-600 bg-rose-50"}`}>
+              <div
+                className={`mt-2 inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${positive ? "text-emerald-700 bg-emerald-50" : "text-rose-600 bg-rose-50"}`}
+              >
                 {delta} so với tuần trước
               </div>
             </div>
@@ -289,8 +342,7 @@ function ProgressTrackerPage() {
                 className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full text-emerald-700"
                 style={{ background: "#D1FAE5" }}
               >
-                <TrendingUp className="w-3.5 h-3.5" />
-                +{scoreDelta} tuần này
+                <TrendingUp className="w-3.5 h-3.5" />+{scoreDelta} tuần này
               </div>
             </div>
             <MiniBarChart data={weeklyData} />
@@ -298,9 +350,17 @@ function ProgressTrackerPage() {
             {/* Sparklines row */}
             <div className="mt-6 grid grid-cols-3 gap-3 pt-4 border-t border-slate-100">
               {[
-                { label: "Từ mới", data: weeklyData.map((d) => d.words), color: "var(--brand-blue)" },
+                {
+                  label: "Từ mới",
+                  data: weeklyData.map((d) => d.words),
+                  color: "var(--brand-blue)",
+                },
                 { label: "Hành vi", data: weeklyData.map((d) => d.behaviors), color: "#D67B8B" },
-                { label: "Hoạt động", data: weeklyData.map((d) => d.activities), color: "var(--brand-mint)" },
+                {
+                  label: "Hoạt động",
+                  data: weeklyData.map((d) => d.activities),
+                  color: "var(--brand-mint)",
+                },
               ].map(({ label, data, color }) => (
                 <div key={label} className="flex flex-col items-center gap-1">
                   <Sparkline data={data} color={color} />
@@ -313,7 +373,10 @@ function ProgressTrackerPage() {
           {/* Milestones */}
           <div className="lg:col-span-2 bg-white rounded-3xl p-6 border border-slate-100 shadow-[0_2px_16px_rgba(0,0,0,0.03)]">
             <div className="flex items-center gap-2 mb-5">
-              <div className="w-7 h-7 rounded-xl grid place-items-center" style={{ background: "var(--brand-yellow-soft)" }}>
+              <div
+                className="w-7 h-7 rounded-xl grid place-items-center"
+                style={{ background: "var(--brand-yellow-soft)" }}
+              >
                 <Award className="w-4 h-4" style={{ color: "#C99A2E" }} />
               </div>
               <h2 className="text-base font-bold text-ink">Cột mốc gần đây</h2>
@@ -345,8 +408,12 @@ function ProgressTrackerPage() {
                 <svg viewBox="0 0 64 64" className="w-full h-full -rotate-90">
                   <circle cx="32" cy="32" r="26" strokeWidth="8" stroke="#F0F0F0" fill="none" />
                   <circle
-                    cx="32" cy="32" r="26" strokeWidth="8"
-                    stroke="url(#progressGrad)" fill="none"
+                    cx="32"
+                    cy="32"
+                    r="26"
+                    strokeWidth="8"
+                    stroke="url(#progressGrad)"
+                    fill="none"
                     strokeDasharray={`${(currentWeek.score / 100) * 163} 163`}
                     strokeLinecap="round"
                   />
@@ -363,7 +430,9 @@ function ProgressTrackerPage() {
               </div>
               <div>
                 <p className="text-sm font-bold text-ink">Tiến độ tổng thể</p>
-                <p className="text-xs text-ink/50 mt-0.5 leading-relaxed">Xuất sắc! Bé đang phát triển rất tốt 🌟</p>
+                <p className="text-xs text-ink/50 mt-0.5 leading-relaxed">
+                  Xuất sắc! Bé đang phát triển rất tốt 🌟
+                </p>
               </div>
             </div>
           </div>
@@ -372,7 +441,10 @@ function ProgressTrackerPage() {
         {/* Activity log */}
         <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-[0_2px_16px_rgba(0,0,0,0.03)]">
           <div className="flex items-center gap-2 mb-5">
-            <div className="w-7 h-7 rounded-xl grid place-items-center" style={{ background: "var(--brand-mint-soft)" }}>
+            <div
+              className="w-7 h-7 rounded-xl grid place-items-center"
+              style={{ background: "var(--brand-mint-soft)" }}
+            >
               <Sparkles className="w-4 h-4" style={{ color: "var(--brand-mint)" }} />
             </div>
             <h2 className="text-base font-bold text-ink">Nhật ký hoạt động gần đây</h2>
@@ -388,7 +460,10 @@ function ProgressTrackerPage() {
                     item.status === "done" ? "" : "opacity-60"
                   }`}
                   style={{
-                    background: item.status === "done" ? "var(--brand-mint-soft)" : "var(--brand-yellow-soft)",
+                    background:
+                      item.status === "done"
+                        ? "var(--brand-mint-soft)"
+                        : "var(--brand-yellow-soft)",
                   }}
                 >
                   {item.status === "done" ? (
@@ -399,7 +474,9 @@ function ProgressTrackerPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-ink truncate">{item.name}</p>
-                  <p className="text-xs text-ink/40 mt-0.5">{item.day} · {item.duration}</p>
+                  <p className="text-xs text-ink/40 mt-0.5">
+                    {item.day} · {item.duration}
+                  </p>
                 </div>
                 <span
                   className={`text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0 ${

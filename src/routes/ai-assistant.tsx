@@ -25,7 +25,8 @@ const mockRoadmapData = {
     {
       id: 1,
       name: "Trò chơi 'Ai đang vui?'",
-      description: "Dùng thẻ hình ảnh các khuôn mặt cảm xúc. Bé chọn thẻ khớp với biểu cảm của bạn hoặc búp bê.",
+      description:
+        "Dùng thẻ hình ảnh các khuôn mặt cảm xúc. Bé chọn thẻ khớp với biểu cảm của bạn hoặc búp bê.",
       duration: "15 phút",
       color: "brand-yellow-soft",
       accentColor: "#C99A2E",
@@ -34,7 +35,8 @@ const mockRoadmapData = {
     {
       id: 2,
       name: "Nhận diện đồ vật qua chạm",
-      description: "Đặt 3 đồ vật quen thuộc trước mặt bé. Hướng dẫn bé chạm vào đồ vật theo yêu cầu.",
+      description:
+        "Đặt 3 đồ vật quen thuộc trước mặt bé. Hướng dẫn bé chạm vào đồ vật theo yêu cầu.",
       duration: "20 phút",
       color: "brand-mint-soft",
       accentColor: "#4FA37F",
@@ -43,7 +45,8 @@ const mockRoadmapData = {
     {
       id: 3,
       name: "Kể chuyện 'Con cá nhỏ'",
-      description: "Đọc to truyện tranh, chỉ tay vào từng hình minh họa. Khuyến khích bé lặp lại từ khóa.",
+      description:
+        "Đọc to truyện tranh, chỉ tay vào từng hình minh họa. Khuyến khích bé lặp lại từ khóa.",
       duration: "15 phút",
       color: "brand-pink-soft",
       accentColor: "#D67B8B",
@@ -108,14 +111,26 @@ function CuteCloudSmall({ className = "" }: { className?: string }) {
       <ellipse cx="38" cy="40" rx="22" ry="12" fill="white" />
       <circle cx="35" cy="30" r="1.5" fill="#4B5563" />
       <circle cx="50" cy="30" r="1.5" fill="#4B5563" />
-      <path d="M38 35 Q43 39 48 35" stroke="#4B5563" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <path
+        d="M38 35 Q43 39 48 35"
+        stroke="#4B5563"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+      />
       <circle cx="31" cy="37" r="1.8" fill="#FFCAD4" opacity="0.7" />
       <circle cx="55" cy="37" r="1.8" fill="#FFCAD4" opacity="0.7" />
     </svg>
   );
 }
 
-function CuteStarSmall({ className = "", color = "#FFF3B0" }: { className?: string; color?: string }) {
+function CuteStarSmall({
+  className = "",
+  color = "#FFF3B0",
+}: {
+  className?: string;
+  color?: string;
+}) {
   return (
     <svg viewBox="0 0 40 40" className={className} aria-hidden>
       <path
@@ -128,7 +143,13 @@ function CuteStarSmall({ className = "", color = "#FFF3B0" }: { className?: stri
       />
       <circle cx="16" cy="20" r="1" fill="#4B5563" />
       <circle cx="24" cy="20" r="1" fill="#4B5563" />
-      <path d="M17 24 Q20 26 23 24" stroke="#4B5563" strokeWidth="1" fill="none" strokeLinecap="round" />
+      <path
+        d="M17 24 Q20 26 23 24"
+        stroke="#4B5563"
+        strokeWidth="1"
+        fill="none"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -176,17 +197,35 @@ function AIAssistantPage() {
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-hidden">
       {/* Floating background decorations */}
-      <div className="absolute top-16 left-[6%] w-64 h-64 rounded-full opacity-40 blur-3xl pointer-events-none" style={{ background: "var(--brand-blue-soft)" }} />
-      <div className="absolute top-40 right-[4%] w-72 h-72 rounded-full opacity-35 blur-3xl pointer-events-none" style={{ background: "var(--brand-peach-soft)" }} />
-      <div className="absolute bottom-20 left-[20%] w-56 h-56 rounded-full opacity-30 blur-3xl pointer-events-none" style={{ background: "var(--brand-mint-soft)" }} />
+      <div
+        className="absolute top-16 left-[6%] w-64 h-64 rounded-full opacity-40 blur-3xl pointer-events-none"
+        style={{ background: "var(--brand-blue-soft)" }}
+      />
+      <div
+        className="absolute top-40 right-[4%] w-72 h-72 rounded-full opacity-35 blur-3xl pointer-events-none"
+        style={{ background: "var(--brand-peach-soft)" }}
+      />
+      <div
+        className="absolute bottom-20 left-[20%] w-56 h-56 rounded-full opacity-30 blur-3xl pointer-events-none"
+        style={{ background: "var(--brand-mint-soft)" }}
+      />
 
       {/* Cute floating elements */}
       <CuteCloudSmall className="absolute top-28 right-[12%] w-16 opacity-70 animate-[float_7s_ease-in-out_infinite] pointer-events-none" />
       <CuteStarSmall className="absolute top-48 left-[8%] w-8 rotate-[-10deg] animate-[float_5s_ease-in-out_infinite_1s] pointer-events-none" />
-      <CuteStarSmall className="absolute bottom-32 right-[15%] w-6 rotate-[15deg] animate-[float_6s_ease-in-out_infinite_2s] pointer-events-none" color="#FFD3B6" />
+      <CuteStarSmall
+        className="absolute bottom-32 right-[15%] w-6 rotate-[15deg] animate-[float_6s_ease-in-out_infinite_2s] pointer-events-none"
+        color="#FFD3B6"
+      />
 
       {/* Top decorative bar */}
-      <div className="w-full h-1.5" style={{ background: "linear-gradient(90deg, var(--brand-blue) 0%, var(--brand-mint) 40%, var(--brand-peach) 70%, var(--brand-pink) 100%)" }} />
+      <div
+        className="w-full h-1.5"
+        style={{
+          background:
+            "linear-gradient(90deg, var(--brand-blue) 0%, var(--brand-mint) 40%, var(--brand-peach) 70%, var(--brand-pink) 100%)",
+        }}
+      />
 
       {/* Main content */}
       <main className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
@@ -234,7 +273,9 @@ function AIAssistantPage() {
                         <p className="text-xs text-ink/50">{selectedChild.age} tuổi</p>
                       </div>
                     </div>
-                    <ChevronDown className={`w-4 h-4 text-ink/40 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown
+                      className={`w-4 h-4 text-ink/40 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                    />
                   </button>
                   {dropdownOpen && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-100 shadow-[0_8px_24px_rgba(0,0,0,0.06)] overflow-hidden z-20 animate-fade-in">
@@ -253,7 +294,10 @@ function AIAssistantPage() {
                             <p className="text-xs text-ink/50">{child.age} tuổi</p>
                           </div>
                           {selectedChild.id === child.id && (
-                            <CheckCircle2 className="w-4 h-4 ml-auto" style={{ color: "var(--brand-mint)" }} />
+                            <CheckCircle2
+                              className="w-4 h-4 ml-auto"
+                              style={{ color: "var(--brand-mint)" }}
+                            />
                           )}
                         </button>
                       ))}
@@ -307,9 +351,15 @@ function AIAssistantPage() {
           <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
             <div className="relative">
               {/* Gentle pulsing rings */}
-              <div className="absolute inset-0 -m-8 rounded-full animate-ping opacity-20" style={{ background: "var(--brand-blue)" }} />
-              <div className="absolute inset-0 -m-4 rounded-full animate-pulse opacity-30" style={{ background: "var(--brand-mint)" }} />
-              
+              <div
+                className="absolute inset-0 -m-8 rounded-full animate-ping opacity-20"
+                style={{ background: "var(--brand-blue)" }}
+              />
+              <div
+                className="absolute inset-0 -m-4 rounded-full animate-pulse opacity-30"
+                style={{ background: "var(--brand-mint)" }}
+              />
+
               {/* Center icon */}
               <div className="relative w-24 h-24 rounded-full bg-white shadow-[0_8px_32px_rgba(0,0,0,0.06)] border border-slate-100 flex items-center justify-center overflow-hidden animate-[breathe_3s_ease-in-out_infinite]">
                 <img
@@ -323,9 +373,15 @@ function AIAssistantPage() {
 
             <div className="mt-10 text-center max-w-sm mx-auto space-y-4">
               <div className="flex items-center justify-center gap-2">
-                <Sparkles className="w-4 h-4 animate-pulse" style={{ color: "var(--brand-blue)" }} />
+                <Sparkles
+                  className="w-4 h-4 animate-pulse"
+                  style={{ color: "var(--brand-blue)" }}
+                />
                 <h2 className="text-xl font-bold text-ink">Bino đang lắng nghe...</h2>
-                <Sparkles className="w-4 h-4 animate-pulse" style={{ color: "var(--brand-peach)" }} />
+                <Sparkles
+                  className="w-4 h-4 animate-pulse"
+                  style={{ color: "var(--brand-peach)" }}
+                />
               </div>
               <p className="text-ink/60 leading-relaxed text-sm">
                 Bino đang lắng nghe và dệt nên một lộ trình tuyệt vời dành riêng cho bé.
@@ -341,7 +397,12 @@ function AIAssistantPage() {
                   key={i}
                   className="w-2.5 h-2.5 rounded-full animate-bounce"
                   style={{
-                    background: i === 0 ? "var(--brand-blue)" : i === 1 ? "var(--brand-mint)" : "var(--brand-peach)",
+                    background:
+                      i === 0
+                        ? "var(--brand-blue)"
+                        : i === 1
+                          ? "var(--brand-mint)"
+                          : "var(--brand-peach)",
                     animationDelay: `${i * 0.2}s`,
                   }}
                 />
@@ -365,14 +426,22 @@ function AIAssistantPage() {
             {/* Encouragement Banner */}
             <div
               className="relative rounded-3xl p-6 sm:p-8 overflow-hidden border border-white shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
-              style={{ background: "linear-gradient(135deg, var(--brand-yellow-soft) 0%, var(--brand-peach-soft) 100%)" }}
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--brand-yellow-soft) 0%, var(--brand-peach-soft) 100%)",
+              }}
             >
-              <CuteStarSmall className="absolute top-4 right-6 w-10 opacity-50 rotate-12" color="#FFF3B0" />
+              <CuteStarSmall
+                className="absolute top-4 right-6 w-10 opacity-50 rotate-12"
+                color="#FFF3B0"
+              />
               <CuteCloudSmall className="absolute bottom-2 right-12 w-12 opacity-40" />
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-3">
                   <Heart className="w-5 h-5" style={{ color: "#D67B8B" }} />
-                  <span className="text-xs font-bold tracking-wider uppercase text-ink/50">Lời động viên từ Bino</span>
+                  <span className="text-xs font-bold tracking-wider uppercase text-ink/50">
+                    Lời động viên từ Bino
+                  </span>
                 </div>
                 <p className="text-lg sm:text-xl font-bold text-ink leading-relaxed">
                   {mockRoadmapData.encouragement}
@@ -383,10 +452,15 @@ function AIAssistantPage() {
             {/* Weekly Goal */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-[0_2px_16px_rgba(0,0,0,0.03)]">
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-xl grid place-items-center" style={{ background: "var(--brand-mint-soft)" }}>
+                <div
+                  className="w-8 h-8 rounded-xl grid place-items-center"
+                  style={{ background: "var(--brand-mint-soft)" }}
+                >
                   <Star className="w-4 h-4" style={{ color: "#4FA37F" }} />
                 </div>
-                <span className="text-xs font-bold tracking-wider uppercase text-ink/50">Mục tiêu tuần này</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-ink/50">
+                  Mục tiêu tuần này
+                </span>
               </div>
               <p className="text-lg sm:text-xl font-extrabold text-ink leading-snug">
                 {mockRoadmapData.weeklyGoal}
@@ -396,7 +470,10 @@ function AIAssistantPage() {
             {/* Activity Grid */}
             <div>
               <div className="flex items-center gap-2 mb-5 px-1">
-                <div className="w-8 h-8 rounded-xl grid place-items-center" style={{ background: "var(--brand-blue-soft)" }}>
+                <div
+                  className="w-8 h-8 rounded-xl grid place-items-center"
+                  style={{ background: "var(--brand-blue-soft)" }}
+                >
                   <Sparkles className="w-4 h-4" style={{ color: "#3D8FC0" }} />
                 </div>
                 <h3 className="text-lg font-bold text-ink">Lộ trình hoạt động đề xuất</h3>
@@ -426,10 +503,14 @@ function AIAssistantPage() {
                           <Icon className="w-5 h-5" style={{ color: activity.accentColor }} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-bold text-ink text-sm leading-snug">{activity.name}</h4>
+                          <h4 className="font-bold text-ink text-sm leading-snug">
+                            {activity.name}
+                          </h4>
                           <div className="flex items-center gap-1.5 mt-1">
                             <Clock className="w-3 h-3 text-ink/40" />
-                            <span className="text-xs text-ink/50 font-medium">{activity.duration}</span>
+                            <span className="text-xs text-ink/50 font-medium">
+                              {activity.duration}
+                            </span>
                           </div>
                         </div>
                       </div>

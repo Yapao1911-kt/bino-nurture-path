@@ -77,10 +77,7 @@ app.use((err, req, res, _next) => {
   res.status(500).json({
     success: false,
     message: "Đã xảy ra lỗi nội bộ server.",
-    error:
-      process.env.NODE_ENV === "development"
-        ? err.message
-        : "Internal Server Error",
+    error: process.env.NODE_ENV === "development" ? err.message : "Internal Server Error",
   });
 });
 

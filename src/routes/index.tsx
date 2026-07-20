@@ -45,8 +45,7 @@ function BinoMark({ className = "w-9 h-9" }: { className?: string }) {
     <span
       className={`${className} rounded-3xl grid place-items-center shadow-sm shadow-brand-blue/40`}
       style={{
-        background:
-          "linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-mint) 100%)",
+        background: "linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-mint) 100%)",
       }}
     >
       <Heart className="w-5 h-5 text-white" strokeWidth={2.5} />
@@ -67,7 +66,13 @@ function CuteCloud({ className = "", color = "#FFFFFF" }: { className?: string; 
         {/* Smile */}
         <circle cx="52" cy="48" r="2.4" fill="#4B5563" />
         <circle cx="74" cy="48" r="2.4" fill="#4B5563" />
-        <path d="M55 56 Q63 63 71 56" stroke="#4B5563" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+        <path
+          d="M55 56 Q63 63 71 56"
+          stroke="#4B5563"
+          strokeWidth="2.2"
+          fill="none"
+          strokeLinecap="round"
+        />
         {/* Blush */}
         <circle cx="46" cy="56" r="2.8" fill="#FFCAD4" opacity="0.85" />
         <circle cx="78" cy="56" r="2.8" fill="#FFCAD4" opacity="0.85" />
@@ -89,7 +94,13 @@ function CuteStar({ className = "", color = "#FFF3B0" }: { className?: string; c
       />
       <circle cx="26" cy="32" r="1.8" fill="#4B5563" />
       <circle cx="38" cy="32" r="1.8" fill="#4B5563" />
-      <path d="M28 38 Q32 41 36 38" stroke="#4B5563" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+      <path
+        d="M28 38 Q32 41 36 38"
+        stroke="#4B5563"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -114,7 +125,13 @@ function CuteBear({ className = "" }: { className?: string }) {
       {/* Nose */}
       <ellipse cx="70" cy="88" rx="4" ry="3" fill="#4B5563" />
       {/* Smile */}
-      <path d="M62 96 Q70 104 78 96" stroke="#4B5563" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      <path
+        d="M62 96 Q70 104 78 96"
+        stroke="#4B5563"
+        strokeWidth="2.4"
+        fill="none"
+        strokeLinecap="round"
+      />
       {/* Blush */}
       <circle cx="48" cy="88" r="5" fill="#FFCAD4" opacity="0.7" />
       <circle cx="92" cy="88" r="5" fill="#FFCAD4" opacity="0.7" />
@@ -219,7 +236,11 @@ function Navbar() {
     <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-white">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3 flex items-center justify-between">
         <a href="#home" className="flex items-center overflow-hidden h-14 md:h-20">
-          <img src="/logo.png" alt="Bino Logo" className="h-32 md:h-44 my-[-36px] md:my-[-50px] w-auto object-contain" />
+          <img
+            src="/logo.png"
+            alt="Bino Logo"
+            className="h-32 md:h-44 my-[-36px] md:my-[-50px] w-auto object-contain"
+          />
         </a>
         <ul className="hidden md:flex items-center gap-8">
           {links.map((l) => {
@@ -368,13 +389,7 @@ function Navbar() {
 
 /* ---------- Hero ---------- */
 
-function FloatingShape({
-  className,
-  color,
-}: {
-  className: string;
-  color: string;
-}) {
+function FloatingShape({ className, color }: { className: string; color: string }) {
   return (
     <div
       className={`absolute rounded-full blur-3xl ${className}`}
@@ -393,12 +408,18 @@ function Hero() {
       {/* Cute floating illustrations */}
       <CuteCloud className="hidden sm:block absolute top-24 right-[8%] w-24 opacity-90 animate-[float_6s_ease-in-out_infinite]" />
       <CuteStar className="hidden sm:block absolute top-40 left-[6%] w-12 rotate-[-12deg] animate-[float_5s_ease-in-out_infinite]" />
-      <CuteStar className="absolute bottom-24 right-[14%] w-10 rotate-[18deg] opacity-80" color="#FFD3B6" />
+      <CuteStar
+        className="absolute bottom-24 right-[14%] w-10 rotate-[18deg] opacity-80"
+        color="#FFD3B6"
+      />
 
       {/* Crafty paper-cut decorations */}
       <div className="hidden lg:block absolute top-28 left-[4%] w-28 h-20 opacity-60 rotate-12">
         <svg viewBox="0 0 120 80" fill="none" className="w-full h-full">
-          <path d="M20 50C20 40 30 35 40 35C45 20 65 20 75 30C85 25 105 30 105 45C115 50 115 65 100 70H25C10 70 10 55 20 50Z" fill="#8ECDF8" />
+          <path
+            d="M20 50C20 40 30 35 40 35C45 20 65 20 75 30C85 25 105 30 105 45C115 50 115 65 100 70H25C10 70 10 55 20 50Z"
+            fill="#8ECDF8"
+          />
         </svg>
       </div>
       <div className="hidden lg:block absolute bottom-16 right-[6%] w-20 h-20 opacity-60 -rotate-6">
@@ -431,10 +452,18 @@ function Hero() {
           </h1>
           <div className="mt-8 text-lg text-ink/70 leading-relaxed max-w-xl mx-auto lg:mx-0 space-y-4">
             <p>
-              Bino là một nền tảng web/app tích hợp Trí tuệ nhân tạo (AI) được thiết kế để hỗ trợ phụ huynh, giáo viên và người chăm sóc đồng hành cùng các trẻ em có khó khăn về phát triển (chậm nói, tự kỷ, tăng động giảm chú ý - ADHD, v.v.).
+              Bino là một nền tảng web/app tích hợp Trí tuệ nhân tạo (AI) được thiết kế để hỗ trợ
+              phụ huynh, giáo viên và người chăm sóc đồng hành cùng các trẻ em có khó khăn về phát
+              triển (chậm nói, tự kỷ, tăng động giảm chú ý - ADHD, v.v.).
             </p>
             <p className="text-sm border-l-4 border-brand-mint pl-4 italic bg-brand-mint-soft/50 py-2 pr-3 rounded-r-xl">
-              Tên gọi <strong>"Bino"</strong> mang ý nghĩa: <strong>Bi</strong> (baby/bright/begin - em bé, tươi sáng, sự khởi đầu) kết hợp với <strong>No</strong> (no limits/no barriers - không giới hạn, không rào cản), mang thông điệp cốt lõi: <em>"Không giới hạn sự phát triển của trẻ - Nơi đồng hành cùng những bước phát triển đầu tiên"</em>
+              Tên gọi <strong>"Bino"</strong> mang ý nghĩa: <strong>Bi</strong> (baby/bright/begin -
+              em bé, tươi sáng, sự khởi đầu) kết hợp với <strong>No</strong> (no limits/no barriers
+              - không giới hạn, không rào cản), mang thông điệp cốt lõi:{" "}
+              <em>
+                "Không giới hạn sự phát triển của trẻ - Nơi đồng hành cùng những bước phát triển đầu
+                tiên"
+              </em>
             </p>
           </div>
           <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-5">
@@ -454,15 +483,23 @@ function Hero() {
               Khám phá học liệu
             </Link>
           </div>
-
         </div>
 
         {/* Illustration card */}
         <div className="relative">
           <div className="relative max-w-lg mx-auto">
             {/* Dashed swirly trail */}
-            <svg className="absolute -top-10 -left-10 w-full h-full -z-10 opacity-30 pointer-events-none" viewBox="0 0 400 400" fill="none">
-              <path d="M10,200 C50,100 150,100 200,200 S350,300 390,200" stroke="#8ECDF8" strokeWidth="4" strokeDasharray="8,8" />
+            <svg
+              className="absolute -top-10 -left-10 w-full h-full -z-10 opacity-30 pointer-events-none"
+              viewBox="0 0 400 400"
+              fill="none"
+            >
+              <path
+                d="M10,200 C50,100 150,100 200,200 S350,300 390,200"
+                stroke="#8ECDF8"
+                strokeWidth="4"
+                strokeDasharray="8,8"
+              />
             </svg>
             <div
               className="absolute -top-8 -right-8 w-32 h-32 rounded-full"
@@ -478,7 +515,9 @@ function Hero() {
               {/* Sticker label */}
               <div className="absolute -top-4 left-6 bg-white px-3 py-1 rounded-lg shadow-sm border border-slate-100 -rotate-[4deg] flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5" style={{ color: "var(--brand-blue)" }} />
-                <span className="text-[10px] font-bold text-ink/50 tracking-wider uppercase">AI đề xuất</span>
+                <span className="text-[10px] font-bold text-ink/50 tracking-wider uppercase">
+                  AI đề xuất
+                </span>
               </div>
 
               <div className="flex items-center justify-between">
@@ -542,9 +581,7 @@ function Hero() {
                       style={{ background: it.bg }}
                     >
                       <Icon className="w-5 h-5" style={{ color: it.color }} />
-                      <p className="mt-2 text-sm font-semibold text-ink">
-                        {it.title}
-                      </p>
+                      <p className="mt-2 text-sm font-semibold text-ink">{it.title}</p>
                       <p className="text-xs text-ink/60">{it.sub}</p>
                     </div>
                   );
@@ -556,9 +593,7 @@ function Hero() {
                 style={{ background: "var(--brand-yellow-soft)" }}
               >
                 <Sun className="w-5 h-5" style={{ color: "#A17415" }} />
-                <p className="text-sm text-ink">
-                  "Hôm nay con đã chủ động vẫy tay chào mẹ!"
-                </p>
+                <p className="text-sm text-ink">"Hôm nay con đã chủ động vẫy tay chào mẹ!"</p>
               </div>
             </div>
 
@@ -625,8 +660,7 @@ function Problems() {
             Những khó khăn trên hành trình đồng hành cùng con
           </h2>
           <p className="mt-4 text-ink/70 leading-relaxed">
-            Bạn không hề đơn độc. Đây là điều rất nhiều cha mẹ và thầy cô đang
-            cùng trải qua.
+            Bạn không hề đơn độc. Đây là điều rất nhiều cha mẹ và thầy cô đang cùng trải qua.
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -802,7 +836,10 @@ function HowItWorks() {
     <section className="py-20 sm:py-28">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <CuteCloud className="hidden md:block absolute -top-4 right-8 w-20 opacity-80" />
-        <CuteStar className="hidden md:block absolute top-10 left-4 w-10 rotate-[10deg]" color="#A8E6CF" />
+        <CuteStar
+          className="hidden md:block absolute top-10 left-4 w-10 rotate-[10deg]"
+          color="#A8E6CF"
+        />
         <div className="max-w-2xl mx-auto text-center">
           <span
             className="inline-flex px-4 py-1.5 rounded-full text-ink text-sm font-medium"
@@ -834,11 +871,7 @@ function HowItWorks() {
                   className="relative w-32 h-32 rounded-full bg-white grid place-items-center shadow-lg"
                   style={{ boxShadow: `0 12px 32px -10px ${bg}` }}
                 >
-                  <Icon
-                    className="w-10 h-10"
-                    style={{ color: "var(--ink)" }}
-                    strokeWidth={2}
-                  />
+                  <Icon className="w-10 h-10" style={{ color: "var(--ink)" }} strokeWidth={2} />
                   <span
                     className="absolute -top-2 -right-2 w-10 h-10 rounded-full text-ink text-sm font-bold grid place-items-center shadow-md"
                     style={{ background: dot }}
@@ -848,9 +881,7 @@ function HowItWorks() {
                 </div>
               </div>
               <h3 className="mt-6 text-xl font-semibold text-ink">{title}</h3>
-              <p className="mt-3 text-ink/70 leading-relaxed max-w-xs mx-auto">
-                {desc}
-              </p>
+              <p className="mt-3 text-ink/70 leading-relaxed max-w-xs mx-auto">{desc}</p>
             </div>
           ))}
         </div>
@@ -883,17 +914,14 @@ function Community() {
           <div className="relative grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur text-ink text-sm font-medium">
-                <Heart className="w-4 h-4" style={{ color: "#D67B8B" }} />{" "}
-                Kết nối
+                <Heart className="w-4 h-4" style={{ color: "#D67B8B" }} /> Kết nối
               </span>
               <h2 className="mt-5 text-3xl sm:text-4xl font-bold text-ink leading-tight">
                 Không ai phải bước đi một mình
               </h2>
               <p className="mt-4 text-ink/80 leading-relaxed">
-                Tham gia thử thách{" "}
-                <strong className="text-ink">"7 Ngày Giao Tiếp Cùng Con"</strong>{" "}
-                miễn phí và đặt lịch trò chuyện với chuyên gia đã được Bino kiểm
-                định.
+                Tham gia thử thách <strong className="text-ink">"7 Ngày Giao Tiếp Cùng Con"</strong>{" "}
+                miễn phí và đặt lịch trò chuyện với chuyên gia đã được Bino kiểm định.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -982,8 +1010,7 @@ function Testimonials() {
       avatar: "var(--brand-mint)",
     },
     {
-      quote:
-        "Cộng đồng Bino là nơi tôi không phải giải thích quá nhiều. Mọi người đều hiểu.",
+      quote: "Cộng đồng Bino là nơi tôi không phải giải thích quá nhiều. Mọi người đều hiểu.",
       name: "Anh Tuấn Khôi",
       role: "Bố của bé Bin, 6 tuổi",
       bg: "var(--brand-blue-soft)",
@@ -1013,16 +1040,10 @@ function Testimonials() {
             >
               <div className="flex gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4"
-                    style={{ color: "#E8B84A", fill: "#E8B84A" }}
-                  />
+                  <Star key={i} className="w-4 h-4" style={{ color: "#E8B84A", fill: "#E8B84A" }} />
                 ))}
               </div>
-              <blockquote className="mt-4 text-ink leading-relaxed">
-                "{t.quote}"
-              </blockquote>
+              <blockquote className="mt-4 text-ink leading-relaxed">"{t.quote}"</blockquote>
               <figcaption className="mt-6 flex items-center gap-3">
                 <div
                   className="w-11 h-11 rounded-full grid place-items-center text-ink font-bold"
@@ -1090,8 +1111,7 @@ function Pricing() {
             Lựa chọn gói phù hợp với gia đình bạn
           </h2>
           <p className="mt-4 text-ink/70 leading-relaxed">
-            Bạn có thể bắt đầu miễn phí và nâng cấp bất cứ khi nào cần thêm sự
-            hỗ trợ.
+            Bạn có thể bắt đầu miễn phí và nâng cấp bất cứ khi nào cần thêm sự hỗ trợ.
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -1115,9 +1135,7 @@ function Pricing() {
                 </span>
               )}
               <h3 className="text-xl font-bold text-ink">{p.name}</h3>
-              <p className="mt-2 text-sm text-ink/70 leading-relaxed">
-                {p.desc}
-              </p>
+              <p className="mt-2 text-sm text-ink/70 leading-relaxed">{p.desc}</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-4xl font-bold text-ink">{p.price}</span>
                 {p.sub && <span className="text-ink/60">{p.sub}</span>}
@@ -1128,9 +1146,7 @@ function Pricing() {
                     <span
                       className="mt-0.5 w-5 h-5 rounded-full grid place-items-center shrink-0"
                       style={{
-                        background: p.featured
-                          ? "var(--brand-mint)"
-                          : "var(--brand-blue-soft)",
+                        background: p.featured ? "var(--brand-mint)" : "var(--brand-blue-soft)",
                       }}
                     >
                       <Check
@@ -1149,9 +1165,7 @@ function Pricing() {
                 to="/create-child"
                 className="mt-8 w-full py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md text-center block"
                 style={{
-                  background: p.featured
-                    ? "var(--brand-blue)"
-                    : "#FFFFFF",
+                  background: p.featured ? "var(--brand-blue)" : "#FFFFFF",
                   color: "var(--ink)",
                   border: p.featured ? "none" : "1px solid #E5E7EB",
                 }}
@@ -1204,7 +1218,11 @@ function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center overflow-hidden h-14">
-              <img src="/logo.png" alt="Bino Logo" className="h-32 my-[-36px] w-auto object-contain" />
+              <img
+                src="/logo.png"
+                alt="Bino Logo"
+                className="h-32 my-[-36px] w-auto object-contain"
+              />
             </div>
             <p className="mt-4 text-sm text-ink/70 leading-relaxed">
               Người bạn đồng hành thông minh trong quá trình can thiệp sớm.
@@ -1245,10 +1263,7 @@ function Footer() {
             © {new Date().getFullYear()} Bino. Mọi quyền được bảo lưu.
           </p>
           <p className="text-sm italic text-ink flex items-center gap-2">
-            <Heart
-              className="w-4 h-4"
-              style={{ color: "#D67B8B", fill: "#FFCAD4" }}
-            />
+            <Heart className="w-4 h-4" style={{ color: "#D67B8B", fill: "#FFCAD4" }} />
             Đồng hành cùng con từ những bước đi đầu tiên
           </p>
         </div>

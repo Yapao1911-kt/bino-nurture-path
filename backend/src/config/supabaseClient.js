@@ -13,12 +13,8 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
 // Kiểm tra xem biến môi trường đã được cấu hình chưa
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error(
-    "❌ Thiếu biến môi trường SUPABASE_URL hoặc SUPABASE_ANON_KEY."
-  );
-  console.error(
-    "   Vui lòng tạo file .env từ .env.example và điền thông tin Supabase."
-  );
+  console.error("❌ Thiếu biến môi trường SUPABASE_URL hoặc SUPABASE_ANON_KEY.");
+  console.error("   Vui lòng tạo file .env từ .env.example và điền thông tin Supabase.");
   process.exit(1);
 }
 
