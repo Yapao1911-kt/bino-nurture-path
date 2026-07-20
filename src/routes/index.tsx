@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { AIChatWidget } from "@/components/ai-chat-widget";
 import {
   Heart,
   Sparkles,
@@ -124,6 +126,87 @@ function CuteBear({ className = "" }: { className?: string }) {
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const [auth, setAuth] = useState<{
+    isLoggedIn: boolean;
+    userName: string | null;
+    role: string | null;
+  }>({
+    isLoggedIn: false,
+    userName: null,
+    role: null,
+  });
+
+  useEffect(() => {
+    // 1. Kiểm tra session giả lập trước
+    const simulatedRole = localStorage.getItem("bino_simulated_role");
+    const simulatedUser = localStorage.getItem("bino_simulated_user");
+
+    if (simulatedRole) {
+      setAuth({
+        isLoggedIn: true,
+        userName: simulatedUser || "Người dùng Demo",
+        role: simulatedRole,
+      });
+      return;
+    }
+
+    // 2. Nếu không có giả lập, kiểm tra Supabase Session thật
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setAuth({
+          isLoggedIn: true,
+          userName: session.user.user_metadata?.full_name || session.user.email || "Thành viên",
+          role: session.user.user_metadata?.role || "parent",
+        });
+      }
+    });
+
+    // Đăng ký thay đổi trạng thái
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const simRole = localStorage.getItem("bino_simulated_role");
+      const simUser = localStorage.getItem("bino_simulated_user");
+
+      if (simRole) {
+        setAuth({
+          isLoggedIn: true,
+          userName: simUser || "Người dùng Demo",
+          role: simRole,
+        });
+      } else if (session?.user) {
+        setAuth({
+          isLoggedIn: true,
+          userName: session.user.user_metadata?.full_name || session.user.email || "Thành viên",
+          role: session.user.user_metadata?.role || "parent",
+        });
+      } else {
+        setAuth({
+          isLoggedIn: false,
+          userName: null,
+          role: null,
+        });
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleSignOut = async () => {
+    localStorage.removeItem("bino_simulated_role");
+    localStorage.removeItem("bino_simulated_user");
+    localStorage.removeItem("bino_simulated_email");
+    await supabase.auth.signOut();
+    setAuth({
+      isLoggedIn: false,
+      userName: null,
+      role: null,
+    });
+    setOpen(false);
+  };
+
   const links = [
     { label: "Trang chủ", href: "#home" },
     { label: "Tính năng", href: "#features" },
@@ -131,6 +214,7 @@ function Navbar() {
     { label: "Cộng đồng", href: "#community" },
     { label: "Bảng giá", href: "#pricing" },
   ];
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-white">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3 flex items-center justify-between">
@@ -161,17 +245,45 @@ function Navbar() {
             );
           })}
         </ul>
-        <div className="hidden md:flex items-center gap-2">
-          <button className="px-5 py-2.5 text-sm font-medium text-ink hover:bg-white/60 rounded-full transition-colors">
-            Đăng nhập
-          </button>
-          <Link
-            to="/create-child"
-            className="px-5 py-2.5 text-sm font-semibold text-ink rounded-full shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md text-center"
-            style={{ background: "var(--brand-mint)" }}
-          >
-            Dùng thử miễn phí
-          </Link>
+        <div className="hidden md:flex items-center gap-3">
+          {auth.isLoggedIn ? (
+            <>
+              <div className="flex flex-col items-end mr-1 text-right">
+                <span className="text-sm font-bold text-ink">Chào, {auth.userName}</span>
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-400">
+                  {auth.role === "teacher" ? "Giáo viên" : "Phụ huynh"}
+                </span>
+              </div>
+              <Link
+                to="/create-child"
+                className="px-4 py-2 text-xs font-bold text-ink rounded-xl border border-slate-100 bg-white shadow-[2px_2px_0px_#eee] hover:border-slate-200 transition-all text-center"
+              >
+                Hồ sơ bé
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="px-4 py-2 text-xs font-semibold text-rose-500 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
+              >
+                Đăng xuất
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="px-5 py-2.5 text-sm font-medium text-ink hover:bg-white/60 rounded-full transition-colors text-center"
+              >
+                Đăng nhập
+              </Link>
+              <Link
+                to="/create-child"
+                className="px-5 py-2.5 text-sm font-semibold text-ink rounded-full shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md text-center"
+                style={{ background: "var(--brand-mint)" }}
+              >
+                Dùng thử miễn phí
+              </Link>
+            </>
+          )}
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
@@ -205,18 +317,48 @@ function Navbar() {
               </Link>
             );
           })}
-          <div className="pt-2 flex gap-2">
-            <button className="flex-1 px-4 py-2.5 text-sm rounded-full border border-ink/10 text-ink">
-              Đăng nhập
-            </button>
-            <Link
-              to="/create-child"
-              onClick={() => setOpen(false)}
-              className="flex-1 px-4 py-2.5 text-sm rounded-full text-ink font-semibold text-center"
-              style={{ background: "var(--brand-mint)" }}
-            >
-              Dùng thử
-            </Link>
+          <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+            {auth.isLoggedIn ? (
+              <>
+                <div className="px-4 py-1.5 flex flex-col">
+                  <span className="text-sm font-bold text-ink">Chào, {auth.userName}</span>
+                  <span className="text-xs text-slate-400">
+                    Vai trò: {auth.role === "teacher" ? "Giáo viên" : "Phụ huynh"}
+                  </span>
+                </div>
+                <Link
+                  to="/create-child"
+                  onClick={() => setOpen(false)}
+                  className="block text-center px-4 py-2.5 rounded-2xl text-ink font-semibold bg-brand-blue-soft"
+                >
+                  Tạo hồ sơ cho bé
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="block w-full text-center px-4 py-2.5 rounded-2xl text-rose-500 hover:bg-rose-50 font-semibold cursor-pointer"
+                >
+                  Đăng xuất
+                </button>
+              </>
+            ) : (
+              <div className="flex gap-2">
+                <Link
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="flex-1 px-4 py-2.5 text-sm rounded-full border border-ink/10 text-ink text-center"
+                >
+                  Đăng nhập
+                </Link>
+                <Link
+                  to="/create-child"
+                  onClick={() => setOpen(false)}
+                  className="flex-1 px-4 py-2.5 text-sm rounded-full text-ink font-semibold text-center"
+                  style={{ background: "var(--brand-mint)" }}
+                >
+                  Dùng thử
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -304,12 +446,13 @@ function Hero() {
               Bắt đầu miễn phí
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <a
-              href="#features"
+            <Link
+              to="/library"
+              search={{ tab: "materials" }}
               className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-ink font-bold border-2 border-slate-100 shadow-[6px_6px_0px_#f0f0f0] rotate-1 hover:rotate-0 transition-transform text-center"
             >
               Khám phá học liệu
-            </a>
+            </Link>
           </div>
 
         </div>
@@ -523,6 +666,7 @@ function Features() {
       desc: "AI dịu dàng xây dựng lộ trình tuần thích ứng theo biểu hiện và mục tiêu của con.",
       bg: "var(--brand-blue-soft)",
       accent: "var(--brand-blue)",
+      href: "/ai-assistant",
     },
     {
       icon: BookOpen,
@@ -530,6 +674,8 @@ function Features() {
       desc: "Flashcard, PECS, worksheet đa dạng — được chuyên gia chọn lọc kỹ.",
       bg: "var(--brand-mint-soft)",
       accent: "var(--brand-mint)",
+      href: "/library",
+      search: { tab: "materials" },
     },
     {
       icon: Palette,
@@ -545,6 +691,7 @@ function Features() {
       desc: "Biểu đồ theo dõi hành vi, từ mới và mức độ tương tác theo thời gian.",
       bg: "var(--brand-yellow-soft)",
       accent: "var(--brand-yellow)",
+      href: "/progress-tracker",
     },
     {
       icon: Users,
@@ -579,7 +726,7 @@ function Features() {
           </p>
         </div>
         <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map(({ icon: Icon, title, desc, bg, accent, href }) => (
+          {features.map(({ icon: Icon, title, desc, bg, accent, href, search }) => (
             <div
               key={title}
               className="group p-7 rounded-3xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg shadow-sm"
@@ -601,6 +748,7 @@ function Features() {
               {href ? (
                 <Link
                   to={href}
+                  search={search}
                   className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:gap-2.5 transition-all"
                 >
                   Mở ngay <ArrowRight className="w-4 h-4" />
@@ -1158,7 +1306,7 @@ function Index() {
       <HowItWorks />
       <Pricing />
       <Footer />
-      <FloatingMascot />
+      <AIChatWidget contextLabel="Trang chính Bino" />
     </main>
   );
 }

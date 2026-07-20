@@ -9,13 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProgressTrackerRouteImport } from './routes/progress-tracker'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LessonBuilderRouteImport } from './routes/lesson-builder'
 import { Route as CreateChildRouteImport } from './routes/create-child'
 import { Route as AiAssistantRouteImport } from './routes/ai-assistant'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LibraryIndexRouteImport } from './routes/library.index'
+import { Route as LibraryFlashcardsRouteImport } from './routes/library.flashcards'
 import { Route as ApiChildrenRouteImport } from './routes/api/children'
 
+const ProgressTrackerRoute = ProgressTrackerRouteImport.update({
+  id: '/progress-tracker',
+  path: '/progress-tracker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LibraryRoute = LibraryRouteImport.update({
   id: '/library',
   path: '/library',
@@ -41,6 +55,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LibraryIndexRoute = LibraryIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LibraryRoute,
+} as any)
+const LibraryFlashcardsRoute = LibraryFlashcardsRouteImport.update({
+  id: '/flashcards',
+  path: '/flashcards',
+  getParentRoute: () => LibraryRoute,
+} as any)
 const ApiChildrenRoute = ApiChildrenRouteImport.update({
   id: '/api/children',
   path: '/api/children',
@@ -52,16 +76,23 @@ export interface FileRoutesByFullPath {
   '/ai-assistant': typeof AiAssistantRoute
   '/create-child': typeof CreateChildRoute
   '/lesson-builder': typeof LessonBuilderRoute
-  '/library': typeof LibraryRoute
+  '/library': typeof LibraryRouteWithChildren
+  '/login': typeof LoginRoute
+  '/progress-tracker': typeof ProgressTrackerRoute
   '/api/children': typeof ApiChildrenRoute
+  '/library/flashcards': typeof LibraryFlashcardsRoute
+  '/library/': typeof LibraryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-assistant': typeof AiAssistantRoute
   '/create-child': typeof CreateChildRoute
   '/lesson-builder': typeof LessonBuilderRoute
-  '/library': typeof LibraryRoute
+  '/login': typeof LoginRoute
+  '/progress-tracker': typeof ProgressTrackerRoute
   '/api/children': typeof ApiChildrenRoute
+  '/library/flashcards': typeof LibraryFlashcardsRoute
+  '/library': typeof LibraryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,8 +100,12 @@ export interface FileRoutesById {
   '/ai-assistant': typeof AiAssistantRoute
   '/create-child': typeof CreateChildRoute
   '/lesson-builder': typeof LessonBuilderRoute
-  '/library': typeof LibraryRoute
+  '/library': typeof LibraryRouteWithChildren
+  '/login': typeof LoginRoute
+  '/progress-tracker': typeof ProgressTrackerRoute
   '/api/children': typeof ApiChildrenRoute
+  '/library/flashcards': typeof LibraryFlashcardsRoute
+  '/library/': typeof LibraryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -80,15 +115,22 @@ export interface FileRouteTypes {
     | '/create-child'
     | '/lesson-builder'
     | '/library'
+    | '/login'
+    | '/progress-tracker'
     | '/api/children'
+    | '/library/flashcards'
+    | '/library/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/ai-assistant'
     | '/create-child'
     | '/lesson-builder'
-    | '/library'
+    | '/login'
+    | '/progress-tracker'
     | '/api/children'
+    | '/library/flashcards'
+    | '/library'
   id:
     | '__root__'
     | '/'
@@ -96,7 +138,11 @@ export interface FileRouteTypes {
     | '/create-child'
     | '/lesson-builder'
     | '/library'
+    | '/login'
+    | '/progress-tracker'
     | '/api/children'
+    | '/library/flashcards'
+    | '/library/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -104,12 +150,28 @@ export interface RootRouteChildren {
   AiAssistantRoute: typeof AiAssistantRoute
   CreateChildRoute: typeof CreateChildRoute
   LessonBuilderRoute: typeof LessonBuilderRoute
-  LibraryRoute: typeof LibraryRoute
+  LibraryRoute: typeof LibraryRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  ProgressTrackerRoute: typeof ProgressTrackerRoute
   ApiChildrenRoute: typeof ApiChildrenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/progress-tracker': {
+      id: '/progress-tracker'
+      path: '/progress-tracker'
+      fullPath: '/progress-tracker'
+      preLoaderRoute: typeof ProgressTrackerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/library': {
       id: '/library'
       path: '/library'
@@ -145,6 +207,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/library/': {
+      id: '/library/'
+      path: '/'
+      fullPath: '/library/'
+      preLoaderRoute: typeof LibraryIndexRouteImport
+      parentRoute: typeof LibraryRoute
+    }
+    '/library/flashcards': {
+      id: '/library/flashcards'
+      path: '/flashcards'
+      fullPath: '/library/flashcards'
+      preLoaderRoute: typeof LibraryFlashcardsRouteImport
+      parentRoute: typeof LibraryRoute
+    }
     '/api/children': {
       id: '/api/children'
       path: '/api/children'
@@ -155,12 +231,27 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface LibraryRouteChildren {
+  LibraryFlashcardsRoute: typeof LibraryFlashcardsRoute
+  LibraryIndexRoute: typeof LibraryIndexRoute
+}
+
+const LibraryRouteChildren: LibraryRouteChildren = {
+  LibraryFlashcardsRoute: LibraryFlashcardsRoute,
+  LibraryIndexRoute: LibraryIndexRoute,
+}
+
+const LibraryRouteWithChildren =
+  LibraryRoute._addFileChildren(LibraryRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AiAssistantRoute: AiAssistantRoute,
   CreateChildRoute: CreateChildRoute,
   LessonBuilderRoute: LessonBuilderRoute,
-  LibraryRoute: LibraryRoute,
+  LibraryRoute: LibraryRouteWithChildren,
+  LoginRoute: LoginRoute,
+  ProgressTrackerRoute: ProgressTrackerRoute,
   ApiChildrenRoute: ApiChildrenRoute,
 }
 export const routeTree = rootRouteImport

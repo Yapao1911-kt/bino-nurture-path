@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Select,
@@ -21,6 +21,7 @@ interface Resource {
   format: string;
   accessLevel: "BASIC" | "PREMIUM";
   imageUrl: string;
+  flashcardHref?: string;
 }
 
 const allResources: Resource[] = [
@@ -145,27 +146,35 @@ const allResources: Resource[] = [
     id: "m5",
     title: "Bộ Flashcard Từ vựng hàng ngày",
     description:
-      "200+ thẻ hình ảnh về đồ vật, con vật, thức ăn giúp trẻ mở rộng vốn từ vựng.",
+      "25 thẻ hình ảnh về con vật và thực phẩm — có tiếng kêu hoặc để phụ huynh đọc.",
     category: "Học liệu",
     ageGroup: ["0-3 tuổi", "3-6 tuổi"],
     difficulty: ["Chậm ngôn ngữ", "Tự kỷ (ASD)"],
     format: "Hình ảnh",
     accessLevel: "BASIC",
-    imageUrl:
-      "https://images.unsplash.com/photo-1588702547923-7408f714e1d3?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/flashcards/meo.png",
+    flashcardHref: "/library/flashcards",
   },
 ];
 
 interface LearningLibraryProps {
+  initialTab?: "Kiến thức" | "Học liệu";
   userType: "free" | "premium";
   userEmail?: string;
 }
 
-export function LearningLibrary({ userType }: LearningLibraryProps) {
-  const [activeTab, setActiveTab] = useState("Kiến thức");
+export function LearningLibrary({
+  initialTab = "Kiến thức",
+  userType,
+}: LearningLibraryProps) {
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [ageFilter, setAgeFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [formatFilter, setFormatFilter] = useState("all");
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
 
   const clearFilters = () => {
     setAgeFilter("all");

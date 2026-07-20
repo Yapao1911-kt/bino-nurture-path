@@ -1,19 +1,5 @@
 import { Heart } from "lucide-react";
 
-function BinoMark({ className = "w-9 h-9" }: { className?: string }) {
-  return (
-    <span
-      className={`${className} rounded-3xl grid place-items-center shadow-sm`}
-      style={{
-        background:
-          "linear-gradient(135deg, var(--brand-blue, #8ECDF8) 0%, var(--brand-mint, #A8E6CF) 100%)",
-      }}
-    >
-      <Heart className="w-5 h-5 text-white" strokeWidth={2.5} />
-    </span>
-  );
-}
-
 export function SiteFooter() {
   const cols = [
     {
@@ -35,10 +21,11 @@ export function SiteFooter() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2.5">
-              <BinoMark />
-              <span className="text-xl font-bold text-slate-800">Bino</span>
-            </div>
+            <img
+              src="/logo.png"
+              alt="Bino Logo"
+              className="h-28 my-[-30px] w-auto object-contain"
+            />
             <p className="mt-4 text-sm text-slate-600 leading-relaxed">
               Người bạn đồng hành thông minh trong quá trình can thiệp sớm.
             </p>

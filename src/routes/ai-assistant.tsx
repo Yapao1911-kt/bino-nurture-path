@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   Sparkles,
-  Bot,
   ChevronDown,
   Heart,
   Save,
@@ -312,8 +311,13 @@ function AIAssistantPage() {
               <div className="absolute inset-0 -m-4 rounded-full animate-pulse opacity-30" style={{ background: "var(--brand-mint)" }} />
               
               {/* Center icon */}
-              <div className="relative w-24 h-24 rounded-3xl bg-white shadow-[0_8px_32px_rgba(0,0,0,0.06)] border border-slate-100 flex items-center justify-center animate-[breathe_3s_ease-in-out_infinite]">
-                <Bot className="w-12 h-12" style={{ color: "var(--brand-blue)" }} />
+              <div className="relative w-24 h-24 rounded-full bg-white shadow-[0_8px_32px_rgba(0,0,0,0.06)] border border-slate-100 flex items-center justify-center overflow-hidden animate-[breathe_3s_ease-in-out_infinite]">
+                <img
+                  src="/bino-ai-mascot.png"
+                  alt="Bino AI"
+                  className="w-full h-full object-contain p-1"
+                  draggable={false}
+                />
               </div>
             </div>
 

@@ -265,17 +265,46 @@ export default function CreateChildForm() {
       // Lấy token xác thực từ Supabase Client
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
+      const simulatedRole = localStorage.getItem("bino_simulated_role");
 
-      // Gọi Server Function của TanStack Start
-      const response = await createChildFn({
-        data: {
+      // Nếu đang chạy ở chế độ giả lập offline (hoặc chưa đăng nhập) thì xử lý lưu local luôn
+      if (!token || simulatedRole) {
+        const localChildren = JSON.parse(localStorage.getItem("bino_local_children") || "[]");
+        const mockChild = {
+          id: Math.random().toString(36).substring(2),
+          full_name: formData.name.trim(),
+          date_of_birth: dobString,
+          developmental_challenges: [challenge],
+          communication_level: "Bình thường",
+          created_at: new Date().toISOString()
+        };
+        localChildren.push(mockChild);
+        localStorage.setItem("bino_local_children", JSON.stringify(localChildren));
+
+        setApiResponse({
+          type: "success",
+          message: simulatedRole 
+            ? `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Đăng nhập tài khoản thật để đồng bộ đám mây.`
+            : `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Bạn có thể Đăng nhập để lưu trên cloud.`,
+        });
+        setFormData({ name: "", age: "", address: "", condition: "" });
+        setErrors({});
+        setHasSubmitted(false);
+        return;
+      }
+
+      // Gọi Server Function của TanStack Start với tùy chọn headers ở đối số thứ hai
+      const response = await createChildFn(
+        {
           full_name: formData.name.trim(),
           date_of_birth: dobString,
           developmental_challenges: [challenge],
           communication_level: "Bình thường", // Giá trị mặc định
         },
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      }) as Response;
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      ) as Response;
 
       const data = await response.json();
 
@@ -304,36 +333,10 @@ export default function CreateChildForm() {
     } catch (err: any) {
       // Xử lý lỗi mạng hoặc lỗi hệ thống khác
       console.error("Create child form error:", err);
-      
-      // Ở chế độ demo offline, nếu không có Supabase Session/JWT hoạt động,
-      // chúng ta sẽ giả lập tạo thành công và lưu vào localStorage để kiểm thử!
-      const savedRole = localStorage.getItem("bino_simulated_role") || "parent";
-      if (!localStorage.getItem("supabase.auth.token") || savedRole) {
-        const localChildren = JSON.parse(localStorage.getItem("bino_local_children") || "[]");
-        const mockChild = {
-          id: Math.random().toString(36).substring(2),
-          full_name: formData.name.trim(),
-          date_of_birth: dobString,
-          developmental_challenges: [challenge],
-          communication_level: "Bình thường",
-          created_at: new Date().toISOString()
-        };
-        localChildren.push(mockChild);
-        localStorage.setItem("bino_local_children", JSON.stringify(localChildren));
-
-        setApiResponse({
-          type: "success",
-          message: `Chế độ mô phỏng (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công!`,
-        });
-        setFormData({ name: "", age: "", address: "", condition: "" });
-        setErrors({});
-        setHasSubmitted(false);
-      } else {
-        setApiResponse({
-          type: "error",
-          message: "Không thể kết nối đến máy chủ hoặc chưa đăng nhập.",
-        });
-      }
+      setApiResponse({
+        type: "error",
+        message: "Không thể kết nối đến máy chủ hoặc đã xảy ra lỗi không xác định.",
+      });
     } finally {
       setIsLoading(false);
     }

@@ -1,7 +1,16 @@
+import { Link } from "@tanstack/react-router";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Lock, FileText, Video, Image as ImageIcon, Download, Play } from "lucide-react";
+import {
+  Lock,
+  FileText,
+  Video,
+  Image as ImageIcon,
+  Download,
+  Play,
+  Layers,
+} from "lucide-react";
 
 interface Resource {
   id: string;
@@ -13,6 +22,7 @@ interface Resource {
   format: string;
   accessLevel: "BASIC" | "PREMIUM";
   imageUrl: string;
+  flashcardHref?: string;
 }
 
 interface ResourceCardProps {
@@ -96,6 +106,13 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
           <Button variant="outline" className="w-full bg-slate-50 text-slate-500 cursor-not-allowed" disabled>
             <Lock className="w-4 h-4 mr-2" />
             Nâng cấp để {getActionText(resource.format).toLowerCase()}
+          </Button>
+        ) : resource.flashcardHref ? (
+          <Button className="w-full" asChild>
+            <Link to="/library/flashcards">
+              <Layers className="w-4 h-4 mr-2" />
+              Mở flashcard
+            </Link>
           </Button>
         ) : (
           <Button className="w-full">
