@@ -294,6 +294,7 @@ export default function CreateChildForm() {
       }
 
       // Gọi Server Function của TanStack Start với tùy chọn headers ở đối số thứ hai
+      // Nếu deploy Vercel mà không có token thì dùng offline
       const response = await createChildFn(
         {
           full_name: formData.name.trim(),
