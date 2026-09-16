@@ -71,10 +71,26 @@
   --color-brand-pink-soft: var(--brand-pink-soft);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
+  --color-amethyst: var(--amethyst);
+  --color-slate-blue: var(--slate-blue);
+  --color-summer-sky: var(--summer-sky);
+  --color-downy: var(--downy);
+  --color-pastel-green: var(--pastel-green);
+  --color-texas-rose: var(--texas-rose);
+  --color-mona-lisa: var(--mona-lisa);
+  --color-illusion: var(--illusion);
 }
 
 :root {
   --radius: 1.5rem;
+  --amethyst: #9956DE;
+  --slate-blue: #7274ED;
+  --summer-sky: #1FA7E1;
+  --downy: #6ED1CF;
+  --pastel-green: #75D06A;
+  --texas-rose: #FFB365;
+  --mona-lisa: #FF8B8B;
+  --illusion: #FB96BB;
   --brand-blue: #4EA3F7;
   --brand-blue-soft: #D5EAFD;
   --brand-mint: #48D09B;

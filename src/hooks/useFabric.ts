@@ -41,11 +41,23 @@ export interface UseFabricReturn {
   /** Thông tin active object (null nếu không chọn gì) */
   activeObject: ActiveObjectInfo | null;
   /** Thêm Text vào canvas */
-  addText: () => void;
+  addText: (customText?: string, fontSize?: number, fontWeight?: string | number) => void;
   /** Thêm hình chữ nhật */
   addRect: () => void;
   /** Thêm hình tròn */
   addCircle: () => void;
+  /** Thêm hình ngôi sao khen thưởng 5 cánh */
+  addStar: () => void;
+  /** Thêm hình trái tim yêu thương */
+  addHeart: () => void;
+  /** Thêm nhãn dán sticker / emoji */
+  addSticker: (emoji: string) => void;
+  /** Chèn mẫu giáo án thẻ PECS */
+  addPecsTemplate: () => void;
+  /** Chèn mẫu giáo án thẻ Flashcard */
+  addFlashcardTemplate: () => void;
+  /** Chèn mẫu lịch trình trực quan */
+  addScheduleTemplate: () => void;
   /** Thêm hình ảnh */
   addImage: (url: string) => Promise<void>;
   /** Đổi fill color cho active object */
@@ -54,8 +66,16 @@ export interface UseFabricReturn {
   setStrokeColor: (color: string) => void;
   /** Đổi font family cho active text */
   setFontFamily: (font: string) => void;
+  /** Đổi màu nền canvas */
+  setCanvasBackground: (color: string) => void;
   /** Xóa active object */
   deleteActive: () => void;
+  /** Xóa trắng canvas */
+  clearCanvas: () => void;
+  /** Đưa phần tử lên lớp trên */
+  bringForward: () => void;
+  /** Đưa phần tử xuống lớp dưới */
+  sendBackward: () => void;
 }
 
 // ============================================================
@@ -166,34 +186,42 @@ export function useFabric(
   // -------------------------------------------------------
   // INSERT: Thêm Text (IText — có thể edit trực tiếp trên canvas)
   // -------------------------------------------------------
-  const addText = useCallback(async () => {
-    const canvas = fabricRef.current;
-    if (!canvas) return;
+  const addText = useCallback(
+    async (
+      customText?: string,
+      fontSize: number = 24,
+      fontWeight: string | number = "normal"
+    ) => {
+      const canvas = fabricRef.current;
+      if (!canvas) return;
 
-    const fabric = await import("fabric");
-    const pos = randomPosition();
+      const fabric = await import("fabric");
+      const pos = randomPosition();
 
-    const text = new fabric.IText("Nhập văn bản...", {
-      left: pos.left,
-      top: pos.top,
-      fontFamily: "Inter",
-      fontSize: 24,
-      fill: "#4B5563",
-      // Cấu hình control points dịu dàng
-      cornerColor: "#8ECDF8",
-      cornerStyle: "circle",
-      cornerSize: 8,
-      transparentCorners: false,
-      borderColor: "#8ECDF8",
-      borderScaleFactor: 1.5,
-      padding: 8,
-    });
+      const text = new fabric.IText(customText || "Nhập văn bản...", {
+        left: pos.left,
+        top: pos.top,
+        fontFamily: "Inter",
+        fontSize,
+        fontWeight: fontWeight as any,
+        fill: "#1E293B",
+        // Cấu hình control points rõ nét
+        cornerColor: "#2563EB",
+        cornerStyle: "circle",
+        cornerSize: 8,
+        transparentCorners: false,
+        borderColor: "#2563EB",
+        borderScaleFactor: 1.5,
+        padding: 8,
+      });
 
-    canvas.add(text);
-    canvas.setActiveObject(text);
-    canvas.renderAll();
-    setActiveObject(extractInfo(text));
-  }, [randomPosition, extractInfo]);
+      canvas.add(text);
+      canvas.setActiveObject(text);
+      canvas.renderAll();
+      setActiveObject(extractInfo(text));
+    },
+    [randomPosition, extractInfo]
+  );
 
   // -------------------------------------------------------
   // INSERT: Thêm hình chữ nhật (Rect)
@@ -361,6 +389,346 @@ export function useFabric(
   );
 
   // -------------------------------------------------------
+  // INSERT: Thêm hình ngôi sao khen thưởng 5 cánh
+  // -------------------------------------------------------
+  const addStar = useCallback(async () => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+
+    const fabric = await import("fabric");
+    const pos = randomPosition();
+
+    const starPoints = [
+      { x: 50, y: 0 },
+      { x: 63, y: 35 },
+      { x: 100, y: 35 },
+      { x: 71, y: 57 },
+      { x: 82, y: 91 },
+      { x: 50, y: 70 },
+      { x: 18, y: 91 },
+      { x: 29, y: 57 },
+      { x: 0, y: 35 },
+      { x: 37, y: 35 },
+    ];
+
+    const star = new fabric.Polygon(starPoints, {
+      left: pos.left,
+      top: pos.top,
+      fill: "#FED85D",
+      stroke: "#D97706",
+      strokeWidth: 2,
+      cornerColor: "#2563EB",
+      cornerStyle: "circle",
+      cornerSize: 8,
+      transparentCorners: false,
+      borderColor: "#2563EB",
+      borderScaleFactor: 1.5,
+    });
+
+    canvas.add(star);
+    canvas.setActiveObject(star);
+    canvas.renderAll();
+    setActiveObject(extractInfo(star));
+  }, [randomPosition, extractInfo]);
+
+  // -------------------------------------------------------
+  // INSERT: Thêm hình trái tim yêu thương
+  // -------------------------------------------------------
+  const addHeart = useCallback(async () => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+
+    const fabric = await import("fabric");
+    const pos = randomPosition();
+
+    const heartPath = "M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q 10,60 10,30 z";
+    const heart = new fabric.Path(heartPath, {
+      left: pos.left,
+      top: pos.top,
+      scaleX: 1.2,
+      scaleY: 1.2,
+      fill: "#FF8DA1",
+      stroke: "#E11D48",
+      strokeWidth: 2,
+      cornerColor: "#2563EB",
+      cornerStyle: "circle",
+      cornerSize: 8,
+      transparentCorners: false,
+      borderColor: "#2563EB",
+      borderScaleFactor: 1.5,
+    });
+
+    canvas.add(heart);
+    canvas.setActiveObject(heart);
+    canvas.renderAll();
+    setActiveObject(extractInfo(heart));
+  }, [randomPosition, extractInfo]);
+
+  // -------------------------------------------------------
+  // INSERT: Thêm Sticker / Emoji mầm non
+  // -------------------------------------------------------
+  const addSticker = useCallback(async (emoji: string) => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+
+    const fabric = await import("fabric");
+    const pos = randomPosition();
+
+    const text = new fabric.IText(emoji, {
+      left: pos.left,
+      top: pos.top,
+      fontSize: 60,
+      cornerColor: "#2563EB",
+      cornerStyle: "circle",
+      cornerSize: 8,
+      transparentCorners: false,
+      borderColor: "#2563EB",
+    });
+
+    canvas.add(text);
+    canvas.setActiveObject(text);
+    canvas.renderAll();
+    setActiveObject(extractInfo(text));
+  }, [randomPosition, extractInfo]);
+
+  // -------------------------------------------------------
+  // TEMPLATE: Mẫu thẻ giao tiếp PECS
+  // -------------------------------------------------------
+  const addPecsTemplate = useCallback(async () => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+
+    const fabric = await import("fabric");
+
+    const card = new fabric.Rect({
+      left: 260,
+      top: 60,
+      width: 280,
+      height: 380,
+      fill: "#FFFFFF",
+      stroke: "#2563EB",
+      strokeWidth: 4,
+      rx: 20,
+      ry: 20,
+      cornerColor: "#2563EB",
+      cornerStyle: "circle",
+    });
+
+    const imageBox = new fabric.Rect({
+      left: 280,
+      top: 80,
+      width: 240,
+      height: 240,
+      fill: "#EFF6FF",
+      stroke: "#93C5FD",
+      strokeWidth: 2,
+      rx: 16,
+      ry: 16,
+    });
+
+    const iconText = new fabric.IText("🍎", {
+      left: 360,
+      top: 150,
+      fontSize: 80,
+    });
+
+    const labelBox = new fabric.Rect({
+      left: 280,
+      top: 340,
+      width: 240,
+      height: 80,
+      fill: "#DBEAFE",
+      stroke: "#3B82F6",
+      strokeWidth: 2,
+      rx: 14,
+      ry: 14,
+    });
+
+    const textLabel = new fabric.IText("QUẢ TÁO", {
+      left: 320,
+      top: 365,
+      fontFamily: "Inter",
+      fontSize: 26,
+      fontWeight: "bold",
+      fill: "#1E3A8A",
+    });
+
+    canvas.add(card, imageBox, iconText, labelBox, textLabel);
+    canvas.renderAll();
+  }, []);
+
+  // -------------------------------------------------------
+  // TEMPLATE: Mẫu thẻ Flashcard học từ vựng
+  // -------------------------------------------------------
+  const addFlashcardTemplate = useCallback(async () => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+
+    const fabric = await import("fabric");
+
+    const card = new fabric.Rect({
+      left: 200,
+      top: 80,
+      width: 400,
+      height: 360,
+      fill: "#FFFBEB",
+      stroke: "#D97706",
+      strokeWidth: 4,
+      rx: 24,
+      ry: 24,
+    });
+
+    const title = new fabric.IText("TỪ VỰNG HÔM NAY", {
+      left: 300,
+      top: 110,
+      fontFamily: "Inter",
+      fontSize: 18,
+      fontWeight: "bold",
+      fill: "#B45309",
+    });
+
+    const icon = new fabric.IText("⭐", {
+      left: 360,
+      top: 160,
+      fontSize: 84,
+    });
+
+    const word = new fabric.IText("NGÔI SAO", {
+      left: 310,
+      top: 290,
+      fontFamily: "Inter",
+      fontSize: 32,
+      fontWeight: "bold",
+      fill: "#78350F",
+    });
+
+    const sub = new fabric.IText("Bầu trời đêm lấp lánh", {
+      left: 315,
+      top: 350,
+      fontFamily: "Inter",
+      fontSize: 16,
+      fill: "#92400E",
+    });
+
+    canvas.add(card, title, icon, word, sub);
+    canvas.renderAll();
+  }, []);
+
+  // -------------------------------------------------------
+  // TEMPLATE: Mẫu lịch trình 3 bước trực quan
+  // -------------------------------------------------------
+  const addScheduleTemplate = useCallback(async () => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+
+    const fabric = await import("fabric");
+
+    const title = new fabric.IText("LỊCH TRÌNH BUỔI SÁNG CỦA BÉ", {
+      left: 220,
+      top: 40,
+      fontFamily: "Inter",
+      fontSize: 22,
+      fontWeight: "bold",
+      fill: "#1E293B",
+    });
+
+    const steps = [
+      { step: "1", emoji: "🛏️", label: "Thức dậy", color: "#EFF6FF", stroke: "#3B82F6", left: 100 },
+      { step: "2", emoji: "🪥", label: "Đánh răng", color: "#ECFDF5", stroke: "#10B981", left: 320 },
+      { step: "3", emoji: "🥣", label: "Ăn sáng", color: "#FFF7ED", stroke: "#F97316", left: 540 },
+    ];
+
+    const elementsToAdd: any[] = [title];
+
+    steps.forEach((s) => {
+      const box = new fabric.Rect({
+        left: s.left,
+        top: 100,
+        width: 170,
+        height: 280,
+        fill: s.color,
+        stroke: s.stroke,
+        strokeWidth: 3,
+        rx: 18,
+        ry: 18,
+      });
+
+      const stepBadge = new fabric.IText(`Bước ${s.step}`, {
+        left: s.left + 50,
+        top: 120,
+        fontFamily: "Inter",
+        fontSize: 16,
+        fontWeight: "bold",
+        fill: s.stroke,
+      });
+
+      const icon = new fabric.IText(s.emoji, {
+        left: s.left + 55,
+        top: 180,
+        fontSize: 60,
+      });
+
+      const label = new fabric.IText(s.label, {
+        left: s.left + 40,
+        top: 290,
+        fontFamily: "Inter",
+        fontSize: 18,
+        fontWeight: "bold",
+        fill: "#1E293B",
+      });
+
+      elementsToAdd.push(box, stepBadge, icon, label);
+    });
+
+    canvas.add(...elementsToAdd);
+    canvas.renderAll();
+  }, []);
+
+  // -------------------------------------------------------
+  // CANVAS: Đổi màu nền Canvas
+  // -------------------------------------------------------
+  const setCanvasBackground = useCallback((color: string) => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+    canvas.backgroundColor = color;
+    canvas.renderAll();
+  }, []);
+
+  // -------------------------------------------------------
+  // CANVAS: Xóa trắng toàn bộ
+  // -------------------------------------------------------
+  const clearCanvas = useCallback(() => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+    canvas.clear();
+    canvas.backgroundColor = "#FFFFFF";
+    canvas.renderAll();
+    setActiveObject(null);
+  }, []);
+
+  // -------------------------------------------------------
+  // LAYER: Đưa lên trên
+  // -------------------------------------------------------
+  const bringForward = useCallback(() => {
+    const canvas = fabricRef.current;
+    const obj = canvas?.getActiveObject();
+    if (!canvas || !obj) return;
+    canvas.bringObjectForward(obj);
+    canvas.renderAll();
+  }, []);
+
+  // -------------------------------------------------------
+  // LAYER: Đưa xuống dưới
+  // -------------------------------------------------------
+  const sendBackward = useCallback(() => {
+    const canvas = fabricRef.current;
+    const obj = canvas?.getActiveObject();
+    if (!canvas || !obj) return;
+    canvas.sendObjectBackwards(obj);
+    canvas.renderAll();
+  }, []);
+
+  // -------------------------------------------------------
   // DELETE: Xóa active object khỏi canvas
   // -------------------------------------------------------
   const deleteActive = useCallback(() => {
@@ -381,10 +749,20 @@ export function useFabric(
     addText,
     addRect,
     addCircle,
+    addStar,
+    addHeart,
+    addSticker,
+    addPecsTemplate,
+    addFlashcardTemplate,
+    addScheduleTemplate,
     addImage,
     setFillColor,
     setStrokeColor,
     setFontFamily,
+    setCanvasBackground,
     deleteActive,
+    clearCanvas,
+    bringForward,
+    sendBackward,
   };
 }
