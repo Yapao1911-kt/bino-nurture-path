@@ -1,24 +1,12 @@
 import { Link } from "@tanstack/react-router";
+import { ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Lock, FileText, Video, Image as ImageIcon, Download, Play, Layers } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
-
-interface Resource {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  ageGroup: string[];
-  difficulty: string[];
-  format: string;
-  accessLevel: "BASIC" | "PREMIUM";
-  imageUrl: string;
-  videoUrl?: string;
-  flashcardHref?: string;
-}
+import type { Resource } from "../lib/mock-data";
 
 interface ResourceCardProps {
   resource: Resource;
@@ -35,6 +23,8 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
   useEffect(() => {
     setImageSrc(resource.imageUrl);
   }, [resource.imageUrl]);
+
+  const articleUrl = resource.articleUrl && resource.articleUrl !== "#" ? resource.articleUrl : undefined;
 
   const getFormatIcon = (format: string) => {
     switch (format) {
@@ -61,10 +51,10 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
     return format === "Video" ? "Xem video" : "Tải xuống";
   };
 
-  const downloadUrl = resource.videoUrl ?? resource.imageUrl;
+  const downloadUrl = resource.videoUrl ?? articleUrl ?? resource.imageUrl;
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-all hover:shadow-md h-full">
+    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-[0_12px_24px_rgba(0,0,0,0.1)] hover:-translate-y-1.5 h-full rounded-[1.5rem] border-2 border-slate-100/80 bg-white">
       <div className="relative h-48 overflow-hidden bg-muted">
         <img
           src={imageSrc}
@@ -72,19 +62,10 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
           onError={() => setImageSrc(FALLBACK_IMAGE)}
           className="w-full h-full object-cover transition-transform hover:scale-105"
         />
-        <div className="absolute top-2 right-2 flex gap-2">
-          {resource.accessLevel === "PREMIUM" ? (
-            <Badge variant="default" className="bg-amber-500 hover:bg-amber-600 border-none">
-              <Lock className="w-3 h-3 mr-1" /> Premium
-            </Badge>
-          ) : (
-            <Badge
-              variant="secondary"
-              className="bg-white/90 text-slate-800 hover:bg-white border-none"
-            >
-              Basic
-            </Badge>
-          )}
+        <div className="absolute top-3 right-3 flex gap-2">
+          <div className="bg-white/90 backdrop-blur-sm p-1.5 rounded-2xl shadow-sm border border-slate-200/50">
+            <img src="/bino-ai-mascot.png" alt="Bino" className="w-6 h-6 object-contain drop-shadow-sm" />
+          </div>
         </div>
         <div className="absolute bottom-2 left-2">
           <Badge
@@ -123,21 +104,21 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
 
       <CardFooter className="p-4 pt-0 flex-none mt-auto">
         {isLocked ? (
-          <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white border-none" asChild>
+          <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white border-none rounded-xl font-bold shadow-sm" asChild>
             <Link to="/premium">
               <Lock className="w-4 h-4 mr-2" />
               Nâng cấp để {getActionText(resource.format).toLowerCase()}
             </Link>
           </Button>
         ) : resource.flashcardHref ? (
-          <Button className="w-full" asChild>
+          <Button className="w-full rounded-xl font-bold shadow-sm" asChild>
             <Link to="/library/flashcards" search={{ deck: resource.id }}>
               <Layers className="w-4 h-4 mr-2" />
               Mở flashcard
             </Link>
           </Button>
         ) : (
-          <Button className="w-full" onClick={() => setShowPreview(true)}>
+          <Button className="w-full rounded-xl font-bold shadow-sm" onClick={() => setShowPreview(true)}>
             {getActionIcon(resource.format)}
             Xem trước
           </Button>
@@ -157,7 +138,17 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
             }`}
           >
             {resource.format === "Video" ? (
-              resource.videoUrl ? (
+              resource.videoUrl && (resource.videoUrl.includes("youtube") || resource.videoUrl.includes("youtu.be")) ? (
+                <div className="w-full aspect-video">
+                  <iframe
+                    src={resource.videoUrl.replace("youtu.be/", "www.youtube.com/embed/").replace("watch?v=", "embed/").replace(/[?&]si=[^&]*/, "")}
+                    title={resource.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full rounded-md"
+                  />
+                </div>
+              ) : resource.videoUrl ? (
                 <video
                   src={resource.videoUrl}
                   poster={imageSrc}
@@ -188,13 +179,31 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
                   className="w-full h-48 object-cover rounded-md mb-4 shadow-sm"
                 />
                 <p className="text-slate-700 leading-relaxed">{resource.description}</p>
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-md text-sm text-blue-800 flex flex-col gap-2">
-                  <span className="font-semibold">Bản xem trước</span>
-                  <span>
-                    Đây là nội dung tóm tắt. Vui lòng tải xuống tài liệu để đọc toàn bộ bài viết
-                    chi tiết cùng các hướng dẫn chuyên sâu.
-                  </span>
-                </div>
+                {articleUrl ? (
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-md text-sm text-blue-800 flex flex-col gap-2">
+                    <span className="font-semibold">Nguồn bài viết</span>
+                    <span>
+                      Bài viết được tổng hợp từ nguồn uy tín. Nhấn nút bên dưới để đọc toàn bộ bài viết gốc.
+                    </span>
+                    <a
+                      href={articleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium mt-1"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Đọc bài viết gốc
+                    </a>
+                  </div>
+                ) : (
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-md text-sm text-blue-800 flex flex-col gap-2">
+                    <span className="font-semibold">Bản xem trước</span>
+                    <span>
+                      Đây là nội dung tóm tắt. Vui lòng tải xuống tài liệu để đọc toàn bộ bài viết
+                      chi tiết cùng các hướng dẫn chuyên sâu.
+                    </span>
+                  </div>
+                )}
               </div>
             ) : (
               <img

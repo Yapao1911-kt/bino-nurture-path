@@ -85,17 +85,24 @@ export function FlashcardViewer({
     setIsPlaying(false);
   }, [category, cards, isShuffled]);
 
+  const stopAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  }, []);
+
   // Hủy âm thanh khi unmount
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      stopAudio();
       if (autoplayTimerRef.current) {
         clearInterval(autoplayTimerRef.current);
       }
     };
-  }, []);
+  }, [stopAudio]);
 
   // Text-To-Speech (TTS) đọc tiếng Việt
   const speakVietnamese = useCallback((text: string) => {
@@ -253,11 +260,13 @@ export function FlashcardViewer({
   }, [activeTab, deck.length, current, activeCard, playVoice, speakVietnamese]);
 
   const goPrev = () => {
+    stopAudio();
     setIsFlipped(false);
     setCurrent((i) => Math.max(0, i - 1));
   };
 
   const goNext = () => {
+    stopAudio();
     setIsFlipped(false);
     setCurrent((i) => Math.min(deck.length - 1, i + 1));
   };
@@ -286,7 +295,10 @@ export function FlashcardViewer({
         {/* Tab switch buttons */}
         <div className="flex bg-slate-100/80 p-1.5 rounded-2xl self-start md:self-auto shadow-inner">
           <button
-            onClick={() => setActiveTab("flashcard")}
+            onClick={() => {
+              stopAudio();
+              setActiveTab("flashcard");
+            }}
             className={cn(
               "px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer",
               activeTab === "flashcard"
@@ -298,7 +310,10 @@ export function FlashcardViewer({
             Thẻ ghi nhớ
           </button>
           <button
-            onClick={() => setActiveTab("game")}
+            onClick={() => {
+              stopAudio();
+              setActiveTab("game");
+            }}
             className={cn(
               "px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all cursor-pointer",
               activeTab === "game" ? "bg-white text-ink shadow-sm" : "text-ink/60 hover:text-ink",
@@ -326,7 +341,10 @@ export function FlashcardViewer({
             ).map((item) => (
               <button
                 key={item.value}
-                onClick={() => setCategory(item.value)}
+                onClick={() => {
+                  stopAudio();
+                  setCategory(item.value);
+                }}
                 className={cn(
                   "px-3 py-1.5 rounded-xl text-xs font-semibold border-2 transition-all cursor-pointer",
                   category === item.value
@@ -683,7 +701,7 @@ export function FlashcardViewer({
 
       {/* TAB: TRÒ CHƠI GHÉP THẺ (Matching Game) */}
       {activeTab === "game" && (
-        <MatchingGame cards={deck.length > 0 ? deck : cards} speakCardFn={playVoice} />
+        <MatchingGame cards={deck.length > 0 ? deck : cards} speakCardFn={playVoice} stopAudioFn={stopAudio} />
       )}
     </div>
   );
@@ -705,9 +723,11 @@ interface Tile {
 function MatchingGame({
   cards,
   speakCardFn,
+  stopAudioFn,
 }: {
   cards: Flashcard[];
   speakCardFn: (card: Flashcard) => void;
+  stopAudioFn: () => void;
 }) {
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [firstSelected, setFirstSelected] = useState<Tile | null>(null);
@@ -787,6 +807,8 @@ function MatchingGame({
   // Xử lý click chọn ô
   const handleTileClick = (tile: Tile) => {
     if (!gameStarted || tile.isMatched || tile.isSelected || secondSelected) return;
+
+    stopAudioFn();
 
     // Đọc từ vựng khi nhấp nếu là ô chữ
     if (tile.type === "word") {
