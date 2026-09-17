@@ -14,7 +14,7 @@ export function SiteFooter() {
     {
       title: "Cộng đồng",
       links: [
-        { name: "Nhóm phụ huynh", url: "https://www.facebook.com/share/g/1LKLQuChhu/" },
+        { name: "Nhóm phụ huynh", url: "https://www.facebook.com/share/g/1CFpEpPmEq/" },
         { name: "Chuyên gia", url: "/experts" },
         { name: "Thử thách 7 ngày", url: "#" },
         { name: "Sự kiện", url: "#" },

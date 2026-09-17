@@ -221,7 +221,7 @@ function Navbar() {
     { label: "Trang chủ", href: "#home" },
     { label: "Tính năng", href: "#features" },
     { label: "Lesson Builder", href: "/lesson-builder" },
-    { label: "Cộng đồng", href: "https://www.facebook.com/share/g/1LKLQuChhu/" },
+    { label: "Cộng đồng", href: "https://www.facebook.com/share/g/1CFpEpPmEq/" },
     { label: "Chuyên gia", href: "/experts" },
     { label: "Premium", href: "/premium" },
   ];
@@ -794,7 +794,7 @@ function Features() {
       bg: "rgba(251, 150, 187, 0.12)",
       accent: "#FB96BB",
       shadow: "#DC779D",
-      href: "https://www.facebook.com/share/g/1LKLQuChhu/",
+      href: "https://www.facebook.com/share/g/1CFpEpPmEq/",
     },
     {
       icon: GraduationCap,
@@ -1017,17 +1017,20 @@ function Community() {
                 miễn phí và đặt lịch trò chuyện với chuyên gia đã được Bino kiểm định.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  to="/create-child"
+                <a
+                  href="https://www.facebook.com/share/g/1CFpEpPmEq/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-white font-extrabold transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg text-center cursor-pointer"
                   style={{
                     backgroundColor: "#7274ED",
                     boxShadow: "0 4px 0px #595BCF",
                   }}
                 >
-                  Tham gia thử thách
-                </Link>
-                <button
+                  <Users className="w-4 h-4 text-white" /> Tham gia nhóm cộng đồng
+                </a>
+                <Link
+                  to="/experts"
                   className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white font-extrabold shadow-sm hover:-translate-y-1 transition-all duration-300 border-2 cursor-pointer"
                   style={{
                     borderColor: "#1FA7E1",
@@ -1036,7 +1039,7 @@ function Community() {
                   }}
                 >
                   <Calendar className="w-4 h-4" /> Đặt lịch chuyên gia
-                </button>
+                </Link>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -1327,9 +1330,9 @@ function Footer() {
     {
       title: "Cộng đồng",
       links: [
-        { label: "Nhóm phụ huynh", href: "#" },
-        { label: "Chuyên gia", href: "#" },
-        { label: "Thử thách 7 ngày", href: "#" },
+        { label: "Nhóm phụ huynh", href: "https://www.facebook.com/share/g/1CFpEpPmEq/" },
+        { label: "Chuyên gia", href: "/experts" },
+        { label: "Thử thách 7 ngày", href: "#community" },
         { label: "Sự kiện", href: "#" },
       ],
     },
@@ -1361,9 +1364,19 @@ function Footer() {
               <ul className="mt-4 space-y-3">
                 {c.links.map((l) => {
                   const isHash = l.href.startsWith("#");
+                  const isExternal = l.href.startsWith("http");
                   return (
                     <li key={l.label}>
-                      {isHash ? (
+                      {isExternal ? (
+                        <a
+                          href={l.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-slate-600 hover:text-[#7274ED] transition-colors"
+                        >
+                          {l.label}
+                        </a>
+                      ) : isHash ? (
                         <a
                           href={l.href}
                           className="text-sm font-medium text-slate-600 hover:text-[#7274ED] transition-colors"
