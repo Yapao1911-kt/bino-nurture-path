@@ -318,6 +318,8 @@ export function FlashcardViewer({
             {(
               [
                 { value: "all", label: "Tất cả" },
+                { value: "emotion", label: "Cảm xúc 😊" },
+                { value: "action", label: "Hành động 🥣" },
                 { value: "animal", label: "Con vật 🐶" },
                 { value: "food", label: "Trái cây/Quả 🍎" },
               ] as const

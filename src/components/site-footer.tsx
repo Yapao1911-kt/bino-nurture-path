@@ -4,15 +4,30 @@ export function SiteFooter() {
   const cols = [
     {
       title: "Sản phẩm",
-      links: ["Tính năng", "Học liệu", "Lesson Builder", "Bảng giá"],
+      links: [
+        { name: "Tính năng", url: "#features" },
+        { name: "Học liệu", url: "/library" },
+        { name: "Lesson Builder", url: "/lesson-builder" },
+        { name: "Bảng giá", url: "#pricing" },
+      ],
     },
     {
       title: "Cộng đồng",
-      links: ["Nhóm phụ huynh", "Chuyên gia", "Thử thách 7 ngày", "Sự kiện"],
+      links: [
+        { name: "Nhóm phụ huynh", url: "https://www.facebook.com/share/g/1LKLQuChhu/" },
+        { name: "Chuyên gia", url: "/experts" },
+        { name: "Thử thách 7 ngày", url: "#" },
+        { name: "Sự kiện", url: "#" },
+      ],
     },
     {
       title: "Công ty",
-      links: ["Về Bino", "Sứ mệnh", "Tuyển dụng", "Liên hệ"],
+      links: [
+        { name: "Về Bino", url: "#" },
+        { name: "Sứ mệnh", url: "#" },
+        { name: "Tuyển dụng", url: "#" },
+        { name: "Liên hệ", url: "#" },
+      ],
     },
   ];
 
@@ -35,12 +50,14 @@ export function SiteFooter() {
               <h4 className="font-semibold text-slate-800">{c.title}</h4>
               <ul className="mt-4 space-y-3">
                 {c.links.map((l) => (
-                  <li key={l}>
+                  <li key={l.name}>
                     <a
-                      href="#"
+                      href={l.url}
+                      target={l.url.startsWith("http") ? "_blank" : undefined}
+                      rel={l.url.startsWith("http") ? "noopener noreferrer" : undefined}
                       className="text-sm text-slate-500 hover:text-slate-800 transition-colors"
                     >
-                      {l}
+                      {l.name}
                     </a>
                   </li>
                 ))}

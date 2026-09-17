@@ -5,32 +5,35 @@ import { ResourceCard } from "./resource-card";
 import { Filter, SearchX } from "lucide-react";
 import { Button } from "./ui/button";
 
+type LibraryTab = "Kiến thức" | "Học liệu";
+
 interface Resource {
   id: string;
   title: string;
   description: string;
-  category: string;
+  category: LibraryTab;
   ageGroup: string[];
   difficulty: string[];
   format: string;
   accessLevel: "BASIC" | "PREMIUM";
   imageUrl: string;
+  videoUrl?: string;
   flashcardHref?: string;
 }
 
 const allResources: Resource[] = [
   {
     id: "k1",
-    title: "Dấu hiệu nhận biết sớm tự kỷ ở trẻ",
+    title: "Video kể chuyện tương tác cho bé",
     description:
-      "Video hướng dẫn phụ huynh nhận biết các dấu hiệu sớm của rối loạn phổ tự kỷ ở trẻ nhỏ.",
+      "Video kể chuyện trực quan giúp bé luyện chú ý, lắng nghe và làm quen với các tình huống giao tiếp đơn giản.",
     category: "Kiến thức",
-    ageGroup: ["0-3 tuổi"],
-    difficulty: ["Tự kỷ (ASD)"],
+    ageGroup: ["0-3 tuổi", "3-6 tuổi"],
+    difficulty: ["Chậm ngôn ngữ", "Tự kỷ (ASD)"],
     format: "Video",
     accessLevel: "BASIC",
-    imageUrl:
-      "https://images.unsplash.com/photo-1576086274488-812163351996?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/bino-ai-mascot.png",
+    videoUrl: "/videos/video-ke-chuyen-h264.mp4",
   },
   {
     id: "k2",
@@ -49,7 +52,7 @@ const allResources: Resource[] = [
     id: "k3",
     title: "Phương pháp kích thích ngôn ngữ tại nhà",
     description:
-      "Các kỹ thuật đơn giản cha mẹ có thể áp dụng hàng ngày để giúp trẻ chậm nói phát triển ngôn ngữ.",
+      "Các kỹ thuật đơn giản cha mẹ có thể áp dụng hằng ngày để giúp trẻ chậm nói phát triển ngôn ngữ.",
     category: "Kiến thức",
     ageGroup: ["0-3 tuổi", "3-6 tuổi"],
     difficulty: ["Chậm ngôn ngữ"],
@@ -62,7 +65,7 @@ const allResources: Resource[] = [
     id: "k4",
     title: "Hiểu về khó khăn học tập",
     description:
-      "Video giải thích về các loại khó khăn học tập phổ biến như chứng khó đọc (Dyslexia), khó học toán.",
+      "Video giải thích về các loại khó khăn học tập phổ biến như chứng khó đọc, khó học toán.",
     category: "Kiến thức",
     ageGroup: ["6-12 tuổi"],
     difficulty: ["Khó khăn học tập"],
@@ -86,16 +89,16 @@ const allResources: Resource[] = [
   },
   {
     id: "m1",
-    title: "Flashcard Cảm xúc cơ bản",
+    title: "Flashcard Cảm xúc & Hành động cơ bản",
     description:
-      "Bộ thẻ hình ảnh giúp trẻ gọi tên và nhận biết các cảm xúc cơ bản (Vui, buồn, tức giận, sợ hãi).",
+      "Bộ thẻ hình ảnh minh họa sinh động giúp trẻ gọi tên cảm xúc và sinh hoạt hằng ngày: vui vẻ, khóc, ăn cơm, chải tóc, mặc áo.",
     category: "Học liệu",
-    ageGroup: ["3-6 tuổi"],
+    ageGroup: ["0-3 tuổi", "3-6 tuổi"],
     difficulty: ["Tự kỷ (ASD)", "Chậm ngôn ngữ"],
     format: "Hình ảnh",
     accessLevel: "BASIC",
-    imageUrl:
-      "https://images.unsplash.com/photo-1512314889357-e157c22f938d?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/flashcards/vui-ve.png",
+    flashcardHref: "/library/flashcards",
   },
   {
     id: "m2",
@@ -114,7 +117,7 @@ const allResources: Resource[] = [
     id: "m3",
     title: "Thẻ PECS Lịch trình sinh hoạt",
     description:
-      "Bộ thẻ giao tiếp trao đổi hình ảnh (PECS) hỗ trợ trẻ xây dựng lịch trình đánh răng, đi ngủ, ăn uống.",
+      "Bộ thẻ giao tiếp trao đổi hình ảnh hỗ trợ trẻ xây dựng lịch trình đánh răng, đi ngủ, ăn uống.",
     category: "Học liệu",
     ageGroup: ["3-6 tuổi", "0-3 tuổi"],
     difficulty: ["Tự kỷ (ASD)", "Chậm ngôn ngữ"],
@@ -127,7 +130,7 @@ const allResources: Resource[] = [
     id: "m4",
     title: "Storyboard Kỹ năng xã hội",
     description:
-      "Câu chuyện xã hội (Social Story) dạng hình ảnh hướng dẫn cách xếp hàng và chia sẻ đồ chơi.",
+      "Câu chuyện xã hội dạng hình ảnh hướng dẫn cách xếp hàng và chia sẻ đồ chơi.",
     category: "Học liệu",
     ageGroup: ["3-6 tuổi", "6-12 tuổi"],
     difficulty: ["Tự kỷ (ASD)"],
@@ -138,8 +141,9 @@ const allResources: Resource[] = [
   },
   {
     id: "m5",
-    title: "Bộ Flashcard Từ vựng hàng ngày",
-    description: "25 thẻ hình ảnh về con vật và thực phẩm — có tiếng kêu hoặc để phụ huynh đọc.",
+    title: "Bộ Flashcard Từ vựng hằng ngày",
+    description:
+      "25 thẻ hình ảnh về con vật và thực phẩm, có tiếng kêu hoặc giọng đọc để bé luyện nghe.",
     category: "Học liệu",
     ageGroup: ["0-3 tuổi", "3-6 tuổi"],
     difficulty: ["Chậm ngôn ngữ", "Tự kỷ (ASD)"],
@@ -151,13 +155,13 @@ const allResources: Resource[] = [
 ];
 
 interface LearningLibraryProps {
-  initialTab?: "Kiến thức" | "Học liệu";
+  initialTab?: LibraryTab;
   userType: "free" | "premium";
   userEmail?: string;
 }
 
 export function LearningLibrary({ initialTab = "Kiến thức", userType }: LearningLibraryProps) {
-  const [activeTab, setActiveTab] = useState(initialTab);
+  const [activeTab, setActiveTab] = useState<LibraryTab>(initialTab);
   const [ageFilter, setAgeFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [formatFilter, setFormatFilter] = useState("all");
@@ -189,7 +193,6 @@ export function LearningLibrary({ initialTab = "Kiến thức", userType }: Lear
 
   return (
     <div className="flex flex-col space-y-6">
-      {/* Filters */}
       <div className="bg-white p-4 rounded-lg shadow-sm border space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
@@ -251,18 +254,17 @@ export function LearningLibrary({ initialTab = "Kiến thức", userType }: Lear
         </div>
       </div>
 
-      {/* Tabs */}
       <Tabs
         value={activeTab}
-        onValueChange={(val) => setActiveTab(val as "Kiến thức" | "Học liệu")}
+        onValueChange={(val) => setActiveTab(val as LibraryTab)}
         className="w-full"
       >
         <TabsList className="grid w-full md:w-[420px] grid-cols-2 mb-6">
-          <TabsTrigger value="Kiến thức">📚 Thư viện Kiến thức</TabsTrigger>
-          <TabsTrigger value="Học liệu">🎯 Thư viện Học liệu</TabsTrigger>
+          <TabsTrigger value="Kiến thức">Thư viện Kiến thức</TabsTrigger>
+          <TabsTrigger value="Học liệu">Thư viện Học liệu</TabsTrigger>
         </TabsList>
 
-        {["Kiến thức", "Học liệu"].map((tab) => (
+        {(["Kiến thức", "Học liệu"] as const).map((tab) => (
           <TabsContent key={tab} value={tab} className="mt-0 outline-none">
             {filteredResources.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

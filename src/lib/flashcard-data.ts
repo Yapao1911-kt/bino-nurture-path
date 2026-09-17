@@ -1,4 +1,4 @@
-export type FlashcardCategory = "animal" | "food";
+export type FlashcardCategory = "animal" | "food" | "emotion" | "action";
 
 export interface Flashcard {
   id: string;
@@ -7,11 +7,54 @@ export interface Flashcard {
   image: string;
   /** Onomatopoeia shown on card, e.g. "Meo meo!" */
   soundText?: string;
-  /** Optional audio clip URL */
+  /** Optional sound effect URL */
   soundUrl?: string;
   /** Optional recorded pronunciation URL */
   voiceUrl?: string;
 }
+
+export const basicEmotionActionFlashcards: Flashcard[] = [
+  {
+    id: "khoc",
+    label: "Khóc",
+    category: "emotion",
+    image: "/flashcards/khoc.png",
+    soundText: "Hu hu...",
+    voiceUrl: "/flashcards/voices/khoc.mp3",
+  },
+  {
+    id: "vui-ve",
+    label: "Vui vẻ",
+    category: "emotion",
+    image: "/flashcards/vui-ve.png",
+    soundText: "Ha ha!",
+    voiceUrl: "/flashcards/voices/vui-ve.mp3",
+  },
+  {
+    id: "an-com",
+    label: "Ăn cơm",
+    category: "action",
+    image: "/flashcards/an-com.png",
+    soundText: "Ngon quá!",
+    voiceUrl: "/flashcards/voices/an-com.mp3",
+  },
+  {
+    id: "chai-toc",
+    label: "Chải tóc",
+    category: "action",
+    image: "/flashcards/chai-toc.png",
+    soundText: "Tóc mượt ghê!",
+    voiceUrl: "/flashcards/voices/chai-toc.mp3",
+  },
+  {
+    id: "mac-ao",
+    label: "Mặc áo",
+    category: "action",
+    image: "/flashcards/mac-ao.png",
+    soundText: "Áo đẹp quá!",
+    voiceUrl: "/flashcards/voices/mac-ao.mp3",
+  },
+];
 
 export const dailyVocabularyFlashcards: Flashcard[] = [
   {
@@ -21,6 +64,7 @@ export const dailyVocabularyFlashcards: Flashcard[] = [
     image: "/flashcards/meo.png",
     soundText: "Meo meo!",
     soundUrl: "/flashcards/sounds/meo.mp3",
+    voiceUrl: "/flashcards/voices/meo.mp3",
   },
   {
     id: "cho",
@@ -72,7 +116,7 @@ export const dailyVocabularyFlashcards: Flashcard[] = [
     category: "animal",
     image: "/flashcards/ngua.png",
     soundText: "Hí hí!",
-    soundUrl: "https://assets.mixkit.co/active_storage/sfx/682/682-preview.mp3",
+    voiceUrl: "/flashcards/voices/ngua.mp3",
   },
   {
     id: "khi",
@@ -94,12 +138,14 @@ export const dailyVocabularyFlashcards: Flashcard[] = [
     label: "Con kiến",
     category: "animal",
     image: "/flashcards/kien.png",
+    voiceUrl: "/flashcards/voices/kien.mp3",
   },
   {
     id: "tao",
     label: "Quả táo",
     category: "food",
     image: "/flashcards/tao.png",
+    voiceUrl: "/flashcards/voices/tao.mp3",
   },
   {
     id: "chuoi",
@@ -124,6 +170,7 @@ export const dailyVocabularyFlashcards: Flashcard[] = [
     label: "Quả dâu tây",
     category: "food",
     image: "/flashcards/dau-tay.png",
+    voiceUrl: "/flashcards/voices/dau-tay.mp3",
   },
   {
     id: "nho",
@@ -149,12 +196,14 @@ export const dailyVocabularyFlashcards: Flashcard[] = [
     label: "Quả ổi",
     category: "food",
     image: "/flashcards/oi.png",
+    voiceUrl: "/flashcards/voices/oi.mp3",
   },
   {
     id: "ca-chua",
     label: "Quả cà chua",
     category: "food",
     image: "/flashcards/ca-chua.png",
+    voiceUrl: "/flashcards/voices/ca-chua.mp3",
   },
   {
     id: "ca-rot",
@@ -187,5 +236,6 @@ export const dailyVocabularyFlashcards: Flashcard[] = [
     label: "Quả trứng",
     category: "food",
     image: "/flashcards/trung.png",
+    voiceUrl: "/flashcards/voices/trung.mp3",
   },
 ];

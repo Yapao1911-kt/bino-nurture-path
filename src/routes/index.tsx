@@ -228,8 +228,9 @@ function Navbar() {
     { label: "Trang chủ", href: "#home" },
     { label: "Tính năng", href: "#features" },
     { label: "Lesson Builder", href: "/lesson-builder" },
-    { label: "Cộng đồng", href: "#community" },
-    { label: "Bảng giá", href: "#pricing" },
+    { label: "Cộng đồng", href: "https://www.facebook.com/share/g/1LKLQuChhu/" },
+    { label: "Chuyên gia", href: "/experts" },
+    { label: "Premium", href: "/premium" },
   ];
 
   return (
@@ -245,9 +246,19 @@ function Navbar() {
         <ul className="hidden md:flex items-center gap-8">
           {links.map((l) => {
             const isHash = l.href.startsWith("#");
+            const isExternal = l.href.startsWith("http");
             return (
               <li key={l.href}>
-                {isHash ? (
+                {isExternal ? (
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-ink/70 hover:text-ink transition-colors"
+                  >
+                    {l.label}
+                  </a>
+                ) : isHash ? (
                   <a
                     href={l.href}
                     className="text-sm font-medium text-ink/70 hover:text-ink transition-colors"
@@ -318,7 +329,19 @@ function Navbar() {
         <div className="md:hidden border-t border-white bg-white/90 backdrop-blur-md px-4 py-4 space-y-1.5">
           {links.map((l) => {
             const isHash = l.href.startsWith("#");
-            return isHash ? (
+            const isExternal = l.href.startsWith("http");
+            return isExternal ? (
+              <a
+                key={l.href}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="block px-4 py-2.5 rounded-2xl text-ink hover:bg-brand-blue-soft"
+              >
+                {l.label}
+              </a>
+            ) : isHash ? (
               <a
                 key={l.href}
                 href={l.href}
@@ -733,6 +756,7 @@ function Features() {
       desc: "Kết nối, chia sẻ kinh nghiệm với nhóm phụ huynh đồng cảnh ngộ.",
       bg: "var(--brand-pink-soft)",
       accent: "var(--brand-pink)",
+      href: "https://www.facebook.com/share/g/1LKLQuChhu/",
     },
     {
       icon: GraduationCap,
@@ -740,6 +764,7 @@ function Features() {
       desc: "Đặt lịch với chuyên gia giáo dục đặc biệt & tâm lý đã kiểm duyệt.",
       bg: "var(--brand-mint-soft)",
       accent: "var(--brand-mint)",
+      href: "/experts",
     },
   ];
   return (
@@ -780,13 +805,24 @@ function Features() {
               <h3 className="mt-6 text-xl font-semibold text-ink">{title}</h3>
               <p className="mt-3 text-ink/70 leading-relaxed">{desc}</p>
               {href ? (
-                <Link
-                  to={href}
-                  search={search}
-                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:gap-2.5 transition-all"
-                >
-                  Mở ngay <ArrowRight className="w-4 h-4" />
-                </Link>
+                href.startsWith("http") ? (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:gap-2.5 transition-all"
+                  >
+                    Tham gia ngay <ArrowRight className="w-4 h-4" />
+                  </a>
+                ) : (
+                  <Link
+                    to={href}
+                    search={search}
+                    className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:gap-2.5 transition-all"
+                  >
+                    Mở ngay <ArrowRight className="w-4 h-4" />
+                  </Link>
+                )
               ) : (
                 <a
                   href="#"
@@ -1080,10 +1116,11 @@ function Pricing() {
       ],
       cta: "Bắt đầu miễn phí",
       featured: false,
+      href: "/create-child",
     },
     {
       name: "Gói Premium",
-      price: "199.000đ",
+      price: "180.000đ",
       sub: "/tháng",
       desc: "Toàn bộ sức mạnh của Bino cho hành trình cá nhân hóa.",
       features: [
@@ -1095,6 +1132,7 @@ function Pricing() {
       ],
       cta: "Dùng thử 14 ngày",
       featured: true,
+      href: "/premium",
     },
   ];
   return (
@@ -1162,7 +1200,7 @@ function Pricing() {
                 ))}
               </ul>
               <Link
-                to="/create-child"
+                to={p.href}
                 className="mt-8 w-full py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md text-center block"
                 style={{
                   background: p.featured ? "var(--brand-blue)" : "#FFFFFF",

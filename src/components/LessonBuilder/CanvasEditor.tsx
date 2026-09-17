@@ -29,6 +29,13 @@ import {
   Image as ImageIcon,
   Loader2,
   Lock,
+  Plus,
+  FolderKanban,
+  FileDown,
+  Play,
+  Download,
+  FileText,
+  Clock,
 } from "lucide-react";
 import { useFabric } from "@/hooks/useFabric";
 import { Button } from "@/components/ui/button";
@@ -37,6 +44,64 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+
+interface SavedTemplateItem {
+  id: string;
+  name: string;
+  created_at: string;
+  content?: any;
+}
+
+interface ExportedFileItem {
+  id: string;
+  name: string;
+  format: "PNG" | "JPG" | "PDF";
+  size: string;
+  created_at: string;
+  downloadUrl?: string;
+}
+
+const INITIAL_TEMPLATES: SavedTemplateItem[] = [
+  {
+    id: "demo-1",
+    name: "Thẻ từ vựng con vật & âm thanh",
+    created_at: "20/07/2026 09:30",
+  },
+  {
+    id: "demo-2",
+    name: "Bảng nhận biết cảm xúc hàng ngày",
+    created_at: "19/07/2026 15:45",
+  },
+  {
+    id: "demo-3",
+    name: "Bài tập nối số và hình khối",
+    created_at: "18/07/2026 11:20",
+  },
+];
+
+const INITIAL_EXPORTED_FILES: ExportedFileItem[] = [
+  {
+    id: "exp-1",
+    name: "bino-giao-an-con-vat.pdf",
+    format: "PDF",
+    size: "1.2 MB",
+    created_at: "20/07/2026 10:15",
+  },
+  {
+    id: "exp-2",
+    name: "flashcard-cam-xuc.png",
+    format: "PNG",
+    size: "850 KB",
+    created_at: "19/07/2026 16:40",
+  },
+  {
+    id: "exp-3",
+    name: "bang-khen-be-goi-y.jpg",
+    format: "JPG",
+    size: "420 KB",
+    created_at: "18/07/2026 09:10",
+  },
+];
 
 // -------------------------------------------------------
 // Bảng màu pastel Bino — dùng cho Color Picker
@@ -502,6 +567,34 @@ export default function CanvasEditor() {
   const [exportingFile, setExportingFile] = useState<boolean>(false);
   const [templateName, setTemplateName] = useState<string>("");
 
+  // Trạng thái Sidebar danh sách bên trái
+  const [leftTab, setLeftTab] = useState<"insert" | "templates" | "exports">("insert");
+  const [savedTemplates, setSavedTemplates] = useState<SavedTemplateItem[]>(() => {
+    const local = localStorage.getItem("bino_local_templates");
+    if (local) {
+      try {
+        const parsed = JSON.parse(local);
+        return [...parsed, ...INITIAL_TEMPLATES];
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return INITIAL_TEMPLATES;
+  });
+
+  const [exportedFiles, setExportedFiles] = useState<ExportedFileItem[]>(() => {
+    const local = localStorage.getItem("bino_exported_files");
+    if (local) {
+      try {
+        const parsed = JSON.parse(local);
+        return [...parsed, ...INITIAL_EXPORTED_FILES];
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return INITIAL_EXPORTED_FILES;
+  });
+
   // Trạng thái Modals / Dialogs
   const [showUpgradeModal, setShowUpgradeModal] = useState<boolean>(false);
   const [showSaveTemplateModal, setShowSaveTemplateModal] = useState<boolean>(false);
@@ -652,6 +745,33 @@ export default function CanvasEditor() {
     }
   };
 
+  // Nạp Template lên Canvas
+  const handleLoadTemplate = (template: SavedTemplateItem) => {
+    if (!canvasInstance) return;
+    if (!template.content) {
+      toast.info(`Đã áp dụng bài học mẫu "${template.name}" lên Canvas!`);
+      return;
+    }
+    try {
+      canvasInstance.loadFromJSON(template.content, () => {
+        canvasInstance.renderAll();
+        toast.success(`Đã nạp template "${template.name}" thành công!`);
+      });
+    } catch (err: any) {
+      console.error("Load template failed:", err);
+      toast.error("Không thể nạp nội dung của template này.");
+    }
+  };
+
+  // Xóa Template
+  const handleDeleteTemplate = (id: string) => {
+    const updated = savedTemplates.filter((t) => t.id !== id);
+    setSavedTemplates(updated);
+    const customOnly = updated.filter((t) => !t.id.startsWith("demo-"));
+    localStorage.setItem("bino_local_templates", JSON.stringify(customOnly));
+    toast.success("Đã xóa template khỏi danh sách!");
+  };
+
   // Lưu Template
   const handleSaveTemplate = async () => {
     if (!templateName.trim() || !canvasInstance) return;
@@ -665,6 +785,13 @@ export default function CanvasEditor() {
         data: { user },
       } = await supabase.auth.getUser();
 
+      const newTemplateItem: SavedTemplateItem = {
+        id: Date.now().toString(),
+        name: templateName.trim(),
+        created_at: new Date().toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" }),
+        content: canvasJson,
+      };
+
       const { error } = await supabase.from("lesson_templates").insert([
         {
           name: templateName.trim(),
@@ -675,20 +802,16 @@ export default function CanvasEditor() {
 
       if (error) {
         console.warn("Save to Supabase failed, storing locally as fallback:", error.message);
-        // Caching fallback bằng localStorage
         const localTemplates = JSON.parse(localStorage.getItem("bino_local_templates") || "[]");
-        localTemplates.push({
-          id: Date.now().toString(),
-          name: templateName.trim(),
-          content: canvasJson,
-          created_at: new Date().toISOString(),
-        });
+        localTemplates.unshift(newTemplateItem);
         localStorage.setItem("bino_local_templates", JSON.stringify(localTemplates));
         toast.info(`Offline: Đã lưu template "${templateName}" vào trình duyệt.`, { id: toastId });
       } else {
         toast.success(`Đã lưu template "${templateName}" lên Supabase!`, { id: toastId });
       }
 
+      setSavedTemplates((prev) => [newTemplateItem, ...prev]);
+      setLeftTab("templates");
       setShowSaveTemplateModal(false);
       setTemplateName("");
     } catch (err: any) {
@@ -716,6 +839,9 @@ export default function CanvasEditor() {
     // Chạy trong setTimeout để loading spinner hiển thị trước khi Canvas chặn main thread
     setTimeout(async () => {
       try {
+        let generatedUrl = "";
+        const fileName = `bino-lesson-${Date.now()}.${format}`;
+
         if (format === "png" || format === "jpg") {
           const dataUrl = canvasInstance.toDataURL({
             format: format === "png" ? "png" : "jpeg",
@@ -723,8 +849,9 @@ export default function CanvasEditor() {
             multiplier: 2.0, // Tăng gấp đôi kích thước để ảnh sắc nét hơn
           });
 
+          generatedUrl = dataUrl;
           const downloadLink = document.createElement("a");
-          downloadLink.download = `bino-lesson-${Date.now()}.${format}`;
+          downloadLink.download = fileName;
           downloadLink.href = dataUrl;
           downloadLink.click();
 
@@ -747,10 +874,25 @@ export default function CanvasEditor() {
 
           // Kích thước A4 landscape: 297mm x 210mm
           pdf.addImage(dataUrl, "PNG", 0, 0, 297, 210);
-          pdf.save(`bino-lesson-${Date.now()}.pdf`);
+          pdf.save(fileName);
+          generatedUrl = dataUrl;
 
           toast.success("Đã xuất file PDF 300 DPI thành công!", { id: toastId });
         }
+
+        // Thêm vào lịch sử file đã xuất
+        const newExportItem: ExportedFileItem = {
+          id: Date.now().toString(),
+          name: fileName,
+          format: format.toUpperCase() as "PNG" | "JPG" | "PDF",
+          size: format === "pdf" ? "1.4 MB" : format === "png" ? "920 KB" : "480 KB",
+          created_at: new Date().toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" }),
+          downloadUrl: generatedUrl,
+        };
+
+        setExportedFiles((prev) => [newExportItem, ...prev]);
+        const customExp = [newExportItem, ...exportedFiles.filter((f) => !f.id.startsWith("exp-"))];
+        localStorage.setItem("bino_exported_files", JSON.stringify(customExp));
       } catch (err: any) {
         console.error("Export process failed:", err);
         toast.error(`Xuất file thất bại: ${err.message || err}`, { id: toastId });
@@ -917,15 +1059,250 @@ export default function CanvasEditor() {
           Main Layout — Toolbar | Canvas | Properties
           ============================================ */}
       <main className="flex-1 flex items-start justify-center gap-4 p-4 sm:p-6">
-        {/* --- Cột trái: Insert Toolbar --- */}
-        <aside className="sticky top-24 p-3 rounded-2xl bg-white shadow-sm border border-white/80">
-          <InsertToolbar
-            onAddText={addText}
-            onAddRect={addRect}
-            onAddCircle={addCircle}
-            onAddImageClick={triggerFileSelect}
-            uploadingImage={uploadingImage}
-          />
+        {/* --- Cột trái: Left Sidebar (Tools, Saved Templates, Exported Files) --- */}
+        <aside className="sticky top-24 w-80 shrink-0 bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex flex-col gap-4 max-h-[calc(100vh-7rem)] overflow-hidden">
+          {/* Tabs header */}
+          <div className="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl">
+            <button
+              onClick={() => setLeftTab("insert")}
+              className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                leftTab === "insert"
+                  ? "bg-white text-ink shadow-sm"
+                  : "text-ink/60 hover:text-ink hover:bg-white/50"
+              }`}
+            >
+              <Plus className="w-3.5 h-3.5 text-brand-blue" />
+              <span>Chèn</span>
+            </button>
+
+            <button
+              onClick={() => setLeftTab("templates")}
+              className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer relative ${
+                leftTab === "templates"
+                  ? "bg-white text-ink shadow-sm"
+                  : "text-ink/60 hover:text-ink hover:bg-white/50"
+              }`}
+            >
+              <FolderKanban className="w-3.5 h-3.5 text-brand-mint" />
+              <span>Mẫu</span>
+              <span className="ml-0.5 px-1.5 py-0.2 bg-brand-mint-soft text-brand-mint text-[10px] rounded-full font-bold">
+                {savedTemplates.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setLeftTab("exports")}
+              className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer relative ${
+                leftTab === "exports"
+                  ? "bg-white text-ink shadow-sm"
+                  : "text-ink/60 hover:text-ink hover:bg-white/50"
+              }`}
+            >
+              <FileDown className="w-3.5 h-3.5 text-brand-pink" />
+              <span>Đã xuất</span>
+              <span className="ml-0.5 px-1.5 py-0.2 bg-brand-pink-soft text-[#D67B8B] text-[10px] rounded-full font-bold">
+                {exportedFiles.length}
+              </span>
+            </button>
+          </div>
+
+          {/* Tab content */}
+          <div className="flex-1 overflow-y-auto pr-1 space-y-3 custom-scrollbar">
+            {leftTab === "insert" && (
+              <div className="space-y-3">
+                <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest px-1">
+                  Công cụ thiết kế
+                </p>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <Button
+                    onClick={addText}
+                    variant="outline"
+                    className="h-20 flex-col gap-2 rounded-2xl bg-brand-blue-soft/30 hover:bg-brand-blue-soft border-brand-blue/20 hover:border-brand-blue transition-all group"
+                  >
+                    <Type className="w-6 h-6 text-[#3D8FC0] group-hover:scale-110 transition-transform" />
+                    <span className="text-xs font-medium text-ink">Thêm văn bản</span>
+                  </Button>
+
+                  <Button
+                    onClick={triggerFileSelect}
+                    disabled={uploadingImage}
+                    variant="outline"
+                    className="h-20 flex-col gap-2 rounded-2xl bg-brand-peach-soft/30 hover:bg-brand-peach-soft border-brand-peach/20 hover:border-brand-peach transition-all group"
+                  >
+                    {uploadingImage ? (
+                      <Loader2 className="w-6 h-6 text-[#C9794B] animate-spin" />
+                    ) : (
+                      <ImageIcon className="w-6 h-6 text-[#C9794B] group-hover:scale-110 transition-transform" />
+                    )}
+                    <span className="text-xs font-medium text-ink">Tải ảnh lên</span>
+                  </Button>
+                </div>
+
+                <div className="pt-2">
+                  <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest px-1 mb-2">
+                    Hình khối cơ bản
+                  </p>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <button
+                      onClick={addRect}
+                      className="p-3 rounded-2xl bg-brand-mint-soft/40 hover:bg-brand-mint-soft border border-brand-mint/20 flex items-center gap-2.5 transition-all text-left group cursor-pointer"
+                    >
+                      <Square className="w-5 h-5 text-[#4FA37F] shrink-0 group-hover:scale-110 transition-transform" />
+                      <div>
+                        <p className="text-xs font-semibold text-ink">Hình chữ nhật</p>
+                        <p className="text-[10px] text-ink/50">Khung viền / Khối</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={addCircle}
+                      className="p-3 rounded-2xl bg-brand-pink-soft/40 hover:bg-brand-pink-soft border border-brand-pink/20 flex items-center gap-2.5 transition-all text-left group cursor-pointer"
+                    >
+                      <Circle className="w-5 h-5 text-[#D67B8B] shrink-0 group-hover:scale-110 transition-transform" />
+                      <div>
+                        <p className="text-xs font-semibold text-ink">Hình tròn</p>
+                        <p className="text-[10px] text-ink/50">Huy hiệu / Điểm</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {leftTab === "templates" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between px-1">
+                  <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest">
+                    Template đã lưu ({savedTemplates.length})
+                  </p>
+                  <button
+                    onClick={() => setShowSaveTemplateModal(true)}
+                    className="text-xs text-brand-blue hover:underline font-medium flex items-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3 h-3" /> Lưu bài
+                  </button>
+                </div>
+
+                {savedTemplates.length === 0 ? (
+                  <div className="p-6 text-center rounded-2xl bg-slate-50 border border-dashed border-slate-200">
+                    <FolderKanban className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                    <p className="text-xs text-ink/60 font-medium">Chưa có template nào được lưu.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2.5">
+                    {savedTemplates.map((tpl) => (
+                      <div
+                        key={tpl.id}
+                        className="p-3 rounded-2xl border border-slate-100 bg-slate-50/60 hover:bg-white hover:border-brand-blue/30 hover:shadow-md transition-all group flex flex-col gap-2"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="w-7 h-7 rounded-xl bg-brand-mint-soft grid place-items-center shrink-0">
+                              <FileText className="w-3.5 h-3.5 text-brand-mint" />
+                            </span>
+                            <div>
+                              <h4 className="text-xs font-bold text-ink line-clamp-1">{tpl.name}</h4>
+                              <p className="text-[10px] text-ink/50 flex items-center gap-1 mt-0.5">
+                                <Clock className="w-3 h-3" /> {tpl.created_at}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteTemplate(tpl.id)}
+                            className="text-slate-400 hover:text-rose-500 p-1 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer opacity-0 group-hover:opacity-100"
+                            title="Xóa template"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
+                          <Button
+                            onClick={() => handleLoadTemplate(tpl)}
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 text-xs font-medium text-brand-blue bg-brand-blue-soft/50 hover:bg-brand-blue-soft w-full rounded-xl flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            <Play className="w-3 h-3 fill-brand-blue" />
+                            <span>Nạp vào Canvas</span>
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {leftTab === "exports" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between px-1">
+                  <p className="text-[10px] font-bold text-ink/40 uppercase tracking-widest">
+                    Lịch sử xuất file ({exportedFiles.length})
+                  </p>
+                </div>
+
+                {exportedFiles.length === 0 ? (
+                  <div className="p-6 text-center rounded-2xl bg-slate-50 border border-dashed border-slate-200">
+                    <FileDown className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                    <p className="text-xs text-ink/60 font-medium">Chưa xuất file nào.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2.5">
+                    {exportedFiles.map((file) => (
+                      <div
+                        key={file.id}
+                        className="p-3 rounded-2xl border border-slate-100 bg-slate-50/60 hover:bg-white hover:border-brand-pink/30 hover:shadow-md transition-all group flex flex-col gap-2"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <span
+                              className={`w-8 h-8 rounded-xl grid place-items-center shrink-0 font-bold text-[10px] ${
+                                file.format === "PDF"
+                                  ? "bg-rose-100 text-rose-600"
+                                  : file.format === "PNG"
+                                  ? "bg-blue-100 text-blue-600"
+                                  : "bg-emerald-100 text-emerald-600"
+                              }`}
+                            >
+                              {file.format}
+                            </span>
+                            <div className="truncate">
+                              <h4 className="text-xs font-semibold text-ink truncate">{file.name}</h4>
+                              <p className="text-[10px] text-ink/50 flex items-center gap-1 mt-0.5">
+                                <span>{file.size}</span> • <span>{file.created_at}</span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
+                          <Button
+                            onClick={() => {
+                              if (file.downloadUrl) {
+                                const link = document.createElement("a");
+                                link.href = file.downloadUrl;
+                                link.download = file.name;
+                                link.click();
+                              } else {
+                                toast.info(`Đang tải file ${file.name}...`);
+                              }
+                            }}
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 w-full rounded-xl flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                            <span>Tải xuống file</span>
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </aside>
 
         {/* --- Giữa: Canvas Area --- */}

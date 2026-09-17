@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Lock, FileText, Video, Image as ImageIcon, Download, Play, Layers } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
 
 interface Resource {
   id: string;
@@ -14,6 +16,7 @@ interface Resource {
   format: string;
   accessLevel: "BASIC" | "PREMIUM";
   imageUrl: string;
+  videoUrl?: string;
   flashcardHref?: string;
 }
 
@@ -22,8 +25,16 @@ interface ResourceCardProps {
   userType: "free" | "premium";
 }
 
+const FALLBACK_IMAGE = "/bino-ai-mascot.png";
+
 export function ResourceCard({ resource, userType }: ResourceCardProps) {
   const isLocked = resource.accessLevel === "PREMIUM" && userType === "free";
+  const [showPreview, setShowPreview] = useState(false);
+  const [imageSrc, setImageSrc] = useState(resource.imageUrl);
+
+  useEffect(() => {
+    setImageSrc(resource.imageUrl);
+  }, [resource.imageUrl]);
 
   const getFormatIcon = (format: string) => {
     switch (format) {
@@ -50,12 +61,15 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
     return format === "Video" ? "Xem video" : "Tải xuống";
   };
 
+  const downloadUrl = resource.videoUrl ?? resource.imageUrl;
+
   return (
     <Card className="flex flex-col overflow-hidden transition-all hover:shadow-md h-full">
       <div className="relative h-48 overflow-hidden bg-muted">
         <img
-          src={resource.imageUrl}
+          src={imageSrc}
           alt={resource.title}
+          onError={() => setImageSrc(FALLBACK_IMAGE)}
           className="w-full h-full object-cover transition-transform hover:scale-105"
         />
         <div className="absolute top-2 right-2 flex gap-2">
@@ -109,28 +123,120 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
 
       <CardFooter className="p-4 pt-0 flex-none mt-auto">
         {isLocked ? (
-          <Button
-            variant="outline"
-            className="w-full bg-slate-50 text-slate-500 cursor-not-allowed"
-            disabled
-          >
-            <Lock className="w-4 h-4 mr-2" />
-            Nâng cấp để {getActionText(resource.format).toLowerCase()}
+          <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white border-none" asChild>
+            <Link to="/premium">
+              <Lock className="w-4 h-4 mr-2" />
+              Nâng cấp để {getActionText(resource.format).toLowerCase()}
+            </Link>
           </Button>
         ) : resource.flashcardHref ? (
           <Button className="w-full" asChild>
-            <Link to="/library/flashcards">
+            <Link to="/library/flashcards" search={{ deck: resource.id }}>
               <Layers className="w-4 h-4 mr-2" />
               Mở flashcard
             </Link>
           </Button>
         ) : (
-          <Button className="w-full">
+          <Button className="w-full" onClick={() => setShowPreview(true)}>
             {getActionIcon(resource.format)}
-            {getActionText(resource.format)}
+            Xem trước
           </Button>
         )}
       </CardFooter>
+
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{resource.title}</DialogTitle>
+          </DialogHeader>
+          <div
+            className={`py-4 flex flex-col bg-slate-50 rounded-lg overflow-hidden min-h-[300px] ${
+              resource.format === "Bài viết"
+                ? "items-start justify-start"
+                : "items-center justify-center"
+            }`}
+          >
+            {resource.format === "Video" ? (
+              resource.videoUrl ? (
+                <video
+                  src={resource.videoUrl}
+                  poster={imageSrc}
+                  controls
+                  preload="metadata"
+                  className="w-full max-h-[70vh] bg-black rounded-md"
+                />
+              ) : (
+                <div className="relative w-full aspect-video bg-black flex items-center justify-center group">
+                  <img
+                    src={imageSrc}
+                    alt={resource.title}
+                    className="w-full h-full object-cover opacity-70"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <Play className="w-8 h-8 text-white fill-white ml-1" />
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : resource.format === "Bài viết" ? (
+              <div className="w-full px-6 pb-2 text-left">
+                <img
+                  src={imageSrc}
+                  alt={resource.title}
+                  onError={() => setImageSrc(FALLBACK_IMAGE)}
+                  className="w-full h-48 object-cover rounded-md mb-4 shadow-sm"
+                />
+                <p className="text-slate-700 leading-relaxed">{resource.description}</p>
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-md text-sm text-blue-800 flex flex-col gap-2">
+                  <span className="font-semibold">Bản xem trước</span>
+                  <span>
+                    Đây là nội dung tóm tắt. Vui lòng tải xuống tài liệu để đọc toàn bộ bài viết
+                    chi tiết cùng các hướng dẫn chuyên sâu.
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <img
+                src={imageSrc}
+                alt={resource.title}
+                onError={() => setImageSrc(FALLBACK_IMAGE)}
+                className="max-h-[60vh] object-contain rounded-md shadow-sm"
+              />
+            )}
+          </div>
+          <DialogFooter className="flex items-center sm:justify-between w-full">
+            <p className="text-sm text-slate-500 mr-auto hidden sm:block">
+              {resource.format} · {resource.category}
+            </p>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                onClick={() => setShowPreview(false)}
+                className="flex-1 sm:flex-none"
+              >
+                Đóng
+              </Button>
+              <Button
+                className="flex-1 sm:flex-none"
+                onClick={() => {
+                  const a = document.createElement("a");
+                  a.href = downloadUrl;
+                  a.download = resource.title;
+                  a.target = "_blank";
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  setShowPreview(false);
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Tải xuống
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
