@@ -259,9 +259,19 @@ export function LearningLibrary({ initialTab = "Kiến thức", userType }: Lear
         onValueChange={(val) => setActiveTab(val as LibraryTab)}
         className="w-full"
       >
-        <TabsList className="grid w-full md:w-[420px] grid-cols-2 mb-6">
-          <TabsTrigger value="Kiến thức">Thư viện Kiến thức</TabsTrigger>
-          <TabsTrigger value="Học liệu">Thư viện Học liệu</TabsTrigger>
+        <TabsList className="grid w-full md:w-[440px] grid-cols-2 mb-6 h-12 p-1.5 rounded-2xl bg-slate-100 border border-slate-200">
+          <TabsTrigger
+            value="Kiến thức"
+            className="rounded-xl font-bold transition-all data-[state=active]:bg-[#7274ED] data-[state=active]:text-white data-[state=active]:shadow-md"
+          >
+            📚 Thư viện Kiến thức
+          </TabsTrigger>
+          <TabsTrigger
+            value="Học liệu"
+            className="rounded-xl font-bold transition-all data-[state=active]:bg-[#1FA7E1] data-[state=active]:text-white data-[state=active]:shadow-md"
+          >
+            🎯 Thư viện Học liệu
+          </TabsTrigger>
         </TabsList>
 
         {(["Kiến thức", "Học liệu"] as const).map((tab) => (

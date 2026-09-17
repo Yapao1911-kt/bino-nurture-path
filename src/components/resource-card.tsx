@@ -74,14 +74,11 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
         />
         <div className="absolute top-2 right-2 flex gap-2">
           {resource.accessLevel === "PREMIUM" ? (
-            <Badge variant="default" className="bg-amber-500 hover:bg-amber-600 border-none">
+            <Badge variant="default" className="bg-[#FFB365] text-white hover:bg-[#E59845] border-none font-bold">
               <Lock className="w-3 h-3 mr-1" /> Premium
             </Badge>
           ) : (
-            <Badge
-              variant="secondary"
-              className="bg-white/90 text-slate-800 hover:bg-white border-none"
-            >
+            <Badge variant="secondary" className="bg-[#6ED1CF] text-white hover:bg-[#4BB3B1] border-none font-bold">
               Basic
             </Badge>
           )}
@@ -105,11 +102,7 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
             </Badge>
           ))}
           {resource.difficulty.map((diff) => (
-            <Badge
-              key={diff}
-              variant="outline"
-              className="text-xs bg-blue-50 text-blue-700 border-blue-200"
-            >
+            <Badge key={diff} variant="outline" className="text-xs bg-[#1FA7E1]/10 text-[#1FA7E1] border-[#1FA7E1]/30 font-semibold">
               {diff}
             </Badge>
           ))}
