@@ -88,14 +88,14 @@ function CuteBear({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 140 140" className={className} aria-hidden>
       {/* Ears */}
-      <circle cx="40" cy="42" r="16" fill="#FFD3B6" />
-      <circle cx="100" cy="42" r="16" fill="#FFD3B6" />
-      <circle cx="40" cy="42" r="8" fill="#FFEBDC" />
-      <circle cx="100" cy="42" r="8" fill="#FFEBDC" />
+      <circle cx="40" cy="42" r="16" fill="#FFB365" />
+      <circle cx="100" cy="42" r="16" fill="#FFB365" />
+      <circle cx="40" cy="42" r="8" fill="#FFF5EA" />
+      <circle cx="100" cy="42" r="8" fill="#FFF5EA" />
       {/* Head */}
-      <circle cx="70" cy="78" r="44" fill="#FFD3B6" />
+      <circle cx="70" cy="78" r="44" fill="#FFB365" />
       {/* Snout */}
-      <ellipse cx="70" cy="92" rx="22" ry="16" fill="#FFEBDC" />
+      <ellipse cx="70" cy="92" rx="22" ry="16" fill="#FFF5EA" />
       {/* Eyes */}
       <circle cx="56" cy="74" r="4" fill="#4B5563" />
       <circle cx="84" cy="74" r="4" fill="#4B5563" />
@@ -112,8 +112,8 @@ function CuteBear({ className = "" }: { className?: string }) {
         strokeLinecap="round"
       />
       {/* Blush */}
-      <circle cx="48" cy="88" r="5" fill="#FFCAD4" opacity="0.7" />
-      <circle cx="92" cy="88" r="5" fill="#FFCAD4" opacity="0.7" />
+      <circle cx="48" cy="88" r="5" fill="#FB96BB" opacity="0.7" />
+      <circle cx="92" cy="88" r="5" fill="#FB96BB" opacity="0.7" />
     </svg>
   );
 }
@@ -123,7 +123,7 @@ function CuteBear({ className = "" }: { className?: string }) {
 // -------------------------------------------------------
 function CuteStar({
   className = "",
-  color = "#FFF3B0",
+  color = "#FFB365",
 }: {
   className?: string;
   color?: string;
@@ -349,26 +349,26 @@ export default function CreateChildForm() {
           ============================================ */}
       <div
         className="absolute top-10 -left-20 w-96 h-96 rounded-full blur-3xl"
-        style={{ backgroundColor: "#DCEFFB", opacity: 0.55 }}
+        style={{ backgroundColor: "rgba(31, 167, 225, 0.15)", opacity: 0.55 }}
       />
       <div
         className="absolute -top-10 right-0 w-96 h-96 rounded-full blur-3xl"
-        style={{ backgroundColor: "#E2F6EC", opacity: 0.55 }}
+        style={{ backgroundColor: "rgba(110, 209, 207, 0.15)", opacity: 0.55 }}
       />
       <div
         className="absolute bottom-10 left-1/3 w-80 h-80 rounded-full blur-3xl"
-        style={{ backgroundColor: "#FFE6EB", opacity: 0.55 }}
+        style={{ backgroundColor: "rgba(255, 139, 139, 0.15)", opacity: 0.55 }}
       />
       <div
         className="absolute bottom-20 right-10 w-64 h-64 rounded-full blur-3xl"
-        style={{ backgroundColor: "#FFF8D6", opacity: 0.45 }}
+        style={{ backgroundColor: "rgba(255, 179, 101, 0.15)", opacity: 0.45 }}
       />
 
       {/* Floating cute illustrations */}
       <CuteStar className="hidden sm:block absolute top-28 left-[6%] w-12 rotate-[-12deg] animate-[float_5s_ease-in-out_infinite]" />
       <CuteStar
         className="hidden sm:block absolute bottom-32 right-[10%] w-10 rotate-[18deg] opacity-80"
-        color="#FFD3B6"
+        color="#FFB365"
       />
       <CuteBear className="hidden lg:block absolute bottom-16 left-[5%] w-24 opacity-70 rotate-[-8deg] animate-[float_7s_ease-in-out_infinite]" />
 
@@ -399,13 +399,13 @@ export default function CreateChildForm() {
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-tight">
             <span
-              className="inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#c7e8f5] rotate-1"
+              className="inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#1FA7E1] rotate-1"
               style={{ background: "var(--brand-blue-soft)" }}
             >
               Tạo hồ sơ
             </span>{" "}
             <span
-              className="inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#d4f0e1] -rotate-1 mt-2 sm:mt-0"
+              className="inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#75D06A] -rotate-1 mt-2 sm:mt-0"
               style={{ background: "var(--brand-mint-soft)" }}
             >
               cho bé yêu
@@ -431,7 +431,7 @@ export default function CreateChildForm() {
               }
             >
               {apiResponse.type === "success" ? (
-                <CheckCircle2 className="h-5 w-5" style={{ color: "#4FA37F" }} />
+                <CheckCircle2 className="h-5 w-5" style={{ color: "#75D06A" }} />
               ) : (
                 <AlertCircle className="h-5 w-5" />
               )}
@@ -453,7 +453,7 @@ export default function CreateChildForm() {
           <div className="absolute -top-3 -right-3 w-16 h-16 rounded-full grid place-items-center shadow-md z-10"
             style={{ background: "var(--brand-pink-soft)" }}
           >
-            <Heart className="w-7 h-7" style={{ color: "#D67B8B" }} />
+            <Heart className="w-7 h-7" style={{ color: "#FF8B8B" }} />
           </div>
 
           <CardHeader className="pb-2 pt-8 px-6 sm:px-8">
@@ -478,7 +478,7 @@ export default function CreateChildForm() {
                     className="w-7 h-7 rounded-lg grid place-items-center"
                     style={{ background: "var(--brand-blue-soft)" }}
                   >
-                    <Baby className="w-3.5 h-3.5" style={{ color: "#3D8FC0" }} />
+                    <Baby className="w-3.5 h-3.5" style={{ color: "#1FA7E1" }} />
                   </span>
                   Tên của trẻ <span className="text-red-400">*</span>
                 </Label>
@@ -514,7 +514,7 @@ export default function CreateChildForm() {
                     className="w-7 h-7 rounded-lg grid place-items-center"
                     style={{ background: "var(--brand-peach-soft)" }}
                   >
-                    <Sparkles className="w-3.5 h-3.5" style={{ color: "#C9794B" }} />
+                    <Sparkles className="w-3.5 h-3.5" style={{ color: "#FFB365" }} />
                   </span>
                   Tuổi <span className="text-red-400">*</span>
                 </Label>
@@ -551,7 +551,7 @@ export default function CreateChildForm() {
                     className="w-7 h-7 rounded-lg grid place-items-center"
                     style={{ background: "var(--brand-mint-soft)" }}
                   >
-                    <MapPin className="w-3.5 h-3.5" style={{ color: "#4FA37F" }} />
+                    <MapPin className="w-3.5 h-3.5" style={{ color: "#75D06A" }} />
                   </span>
                   Địa chỉ
                 </Label>
@@ -573,7 +573,7 @@ export default function CreateChildForm() {
                     className="w-7 h-7 rounded-lg grid place-items-center"
                     style={{ background: "var(--brand-pink-soft)" }}
                   >
-                    <Stethoscope className="w-3.5 h-3.5" style={{ color: "#D67B8B" }} />
+                    <Stethoscope className="w-3.5 h-3.5" style={{ color: "#FF8B8B" }} />
                   </span>
                   Tình trạng của trẻ
                 </Label>
@@ -608,10 +608,10 @@ export default function CreateChildForm() {
                   type="submit"
                   disabled={isLoading}
                   size="lg"
-                  className={`w-full h-14 rounded-2xl text-base font-bold shadow-[6px_6px_0px_#6eb0db] transition-all duration-300 ease-out ${
+                  className={`w-full h-14 rounded-2xl text-base font-bold shadow-[6px_6px_0px_#595BCF] transition-all duration-300 ease-out ${
                     isLoading
                       ? "opacity-70 cursor-not-allowed"
-                      : "hover:-translate-y-1 hover:shadow-[8px_8px_0px_#6eb0db] active:translate-y-0 active:shadow-[4px_4px_0px_#6eb0db]"
+                      : "hover:-translate-y-1 hover:shadow-[8px_8px_0px_#595BCF] active:translate-y-0 active:shadow-[4px_4px_0px_#595BCF]"
                   }`}
                   style={{
                     background: "var(--brand-blue)",
@@ -643,10 +643,10 @@ export default function CreateChildForm() {
         {/* Decorative floating chip — giống style Hero */}
         <div className="flex justify-center mt-8">
           <div
-            className="px-5 py-2.5 rounded-2xl bg-white border-2 border-white shadow-[4px_4px_0px_#A8E6CF] flex items-center gap-2 rotate-[3deg] animate-fade-in"
+            className="px-5 py-2.5 rounded-2xl bg-white border-2 border-white shadow-[4px_4px_0px_#75D06A] flex items-center gap-2 rotate-[3deg] animate-fade-in"
             style={{ animationDelay: "0.3s" }}
           >
-            <Heart className="w-4 h-4" style={{ color: "#D67B8B" }} />
+            <Heart className="w-4 h-4" style={{ color: "#FF8B8B" }} />
             <span className="text-xs font-semibold text-ink">
               Mỗi đứa trẻ đều đặc biệt 💛
             </span>

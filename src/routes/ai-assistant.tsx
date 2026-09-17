@@ -29,7 +29,7 @@ const mockRoadmapData = {
       description: "Dùng thẻ hình ảnh các khuôn mặt cảm xúc. Bé chọn thẻ khớp với biểu cảm của bạn hoặc búp bê.",
       duration: "15 phút",
       color: "brand-yellow-soft",
-      accentColor: "#C99A2E",
+      accentColor: "#FFB365",
       icon: Smile,
     },
     {
@@ -38,7 +38,7 @@ const mockRoadmapData = {
       description: "Đặt 3 đồ vật quen thuộc trước mặt bé. Hướng dẫn bé chạm vào đồ vật theo yêu cầu.",
       duration: "20 phút",
       color: "brand-mint-soft",
-      accentColor: "#4FA37F",
+      accentColor: "#6ED1CF",
       icon: Star,
     },
     {
@@ -47,7 +47,7 @@ const mockRoadmapData = {
       description: "Đọc to truyện tranh, chỉ tay vào từng hình minh họa. Khuyến khích bé lặp lại từ khóa.",
       duration: "15 phút",
       color: "brand-pink-soft",
-      accentColor: "#D67B8B",
+      accentColor: "#FF8B8B",
       icon: Heart,
     },
     {
@@ -56,7 +56,7 @@ const mockRoadmapData = {
       description: "Hát cùng bé bài có điệp khúc đơn giản. Khuyến khích bé vỗ tay theo nhịp.",
       duration: "10 phút",
       color: "brand-blue-soft",
-      accentColor: "#3D8FC0",
+      accentColor: "#1FA7E1",
       icon: Lightbulb,
     },
     {
@@ -65,7 +65,7 @@ const mockRoadmapData = {
       description: "Cho bé cầm bút chì màu, vẽ theo nét ngang dọc đơn giản. Khen ngợi mỗi nỗ lực.",
       duration: "20 phút",
       color: "brand-peach-soft",
-      accentColor: "#C9794B",
+      accentColor: "#9956DE",
       icon: Sparkles,
     },
   ],
@@ -184,7 +184,7 @@ function AIAssistantPage() {
       {/* Cute floating elements */}
       <CuteCloudSmall className="absolute top-28 right-[12%] w-16 opacity-70 animate-[float_7s_ease-in-out_infinite] pointer-events-none" />
       <CuteStarSmall className="absolute top-48 left-[8%] w-8 rotate-[-10deg] animate-[float_5s_ease-in-out_infinite_1s] pointer-events-none" />
-      <CuteStarSmall className="absolute bottom-32 right-[15%] w-6 rotate-[15deg] animate-[float_6s_ease-in-out_infinite_2s] pointer-events-none" color="#FFD3B6" />
+      <CuteStarSmall className="absolute bottom-32 right-[15%] w-6 rotate-[15deg] animate-[float_6s_ease-in-out_infinite_2s] pointer-events-none" color="#FFB365" />
 
       {/* Top decorative bar */}
       <div className="w-full h-1.5" style={{ background: "linear-gradient(90deg, var(--brand-blue) 0%, var(--brand-mint) 40%, var(--brand-peach) 70%, var(--brand-pink) 100%)" }} />
