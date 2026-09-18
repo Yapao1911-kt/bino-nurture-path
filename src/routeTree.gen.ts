@@ -9,58 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProgressTrackerRouteImport } from './routes/progress-tracker'
-import { Route as PremiumRouteImport } from './routes/premium'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as LibraryRouteImport } from './routes/library'
-import { Route as LessonBuilderRouteImport } from './routes/lesson-builder'
-import { Route as ExpertsRouteImport } from './routes/experts'
-import { Route as CreateChildRouteImport } from './routes/create-child'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as AiAssistantRouteImport } from './routes/ai-assistant'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AiAssistantRouteImport } from './routes/ai-assistant'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CreateChildRouteImport } from './routes/create-child'
+import { Route as ExpertsRouteImport } from './routes/experts'
+import { Route as LessonBuilderRouteImport } from './routes/lesson-builder'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PremiumRouteImport } from './routes/premium'
+import { Route as ProgressTrackerRouteImport } from './routes/progress-tracker'
+import { Route as ApiChildrenRouteImport } from './routes/api/children'
 import { Route as LibraryIndexRouteImport } from './routes/library.index'
 import { Route as LibraryFlashcardsRouteImport } from './routes/library.flashcards'
-import { Route as ApiChildrenRouteImport } from './routes/api/children'
 
-const ProgressTrackerRoute = ProgressTrackerRouteImport.update({
-  id: '/progress-tracker',
-  path: '/progress-tracker',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PremiumRoute = PremiumRouteImport.update({
-  id: '/premium',
-  path: '/premium',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LibraryRoute = LibraryRouteImport.update({
-  id: '/library',
-  path: '/library',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LessonBuilderRoute = LessonBuilderRouteImport.update({
-  id: '/lesson-builder',
-  path: '/lesson-builder',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExpertsRoute = ExpertsRouteImport.update({
-  id: '/experts',
-  path: '/experts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreateChildRoute = CreateChildRouteImport.update({
-  id: '/create-child',
-  path: '/create-child',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiAssistantRoute = AiAssistantRouteImport.update({
@@ -68,9 +33,49 @@ const AiAssistantRoute = AiAssistantRouteImport.update({
   path: '/ai-assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateChildRoute = CreateChildRouteImport.update({
+  id: '/create-child',
+  path: '/create-child',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExpertsRoute = ExpertsRouteImport.update({
+  id: '/experts',
+  path: '/experts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LessonBuilderRoute = LessonBuilderRouteImport.update({
+  id: '/lesson-builder',
+  path: '/lesson-builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PremiumRoute = PremiumRouteImport.update({
+  id: '/premium',
+  path: '/premium',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressTrackerRoute = ProgressTrackerRouteImport.update({
+  id: '/progress-tracker',
+  path: '/progress-tracker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChildrenRoute = ApiChildrenRouteImport.update({
+  id: '/api/children',
+  path: '/api/children',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryIndexRoute = LibraryIndexRouteImport.update({
@@ -82,11 +87,6 @@ const LibraryFlashcardsRoute = LibraryFlashcardsRouteImport.update({
   id: '/flashcards',
   path: '/flashcards',
   getParentRoute: () => LibraryRoute,
-} as any)
-const ApiChildrenRoute = ApiChildrenRouteImport.update({
-  id: '/api/children',
-  path: '/api/children',
-  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -197,60 +197,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/progress-tracker': {
-      id: '/progress-tracker'
-      path: '/progress-tracker'
-      fullPath: '/progress-tracker'
-      preLoaderRoute: typeof ProgressTrackerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/premium': {
-      id: '/premium'
-      path: '/premium'
-      fullPath: '/premium'
-      preLoaderRoute: typeof PremiumRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/library': {
-      id: '/library'
-      path: '/library'
-      fullPath: '/library'
-      preLoaderRoute: typeof LibraryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lesson-builder': {
-      id: '/lesson-builder'
-      path: '/lesson-builder'
-      fullPath: '/lesson-builder'
-      preLoaderRoute: typeof LessonBuilderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/experts': {
-      id: '/experts'
-      path: '/experts'
-      fullPath: '/experts'
-      preLoaderRoute: typeof ExpertsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/create-child': {
-      id: '/create-child'
-      path: '/create-child'
-      fullPath: '/create-child'
-      preLoaderRoute: typeof CreateChildRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-assistant': {
@@ -260,11 +211,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiAssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-child': {
+      id: '/create-child'
+      path: '/create-child'
+      fullPath: '/create-child'
+      preLoaderRoute: typeof CreateChildRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/experts': {
+      id: '/experts'
+      path: '/experts'
+      fullPath: '/experts'
+      preLoaderRoute: typeof ExpertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lesson-builder': {
+      id: '/lesson-builder'
+      path: '/lesson-builder'
+      fullPath: '/lesson-builder'
+      preLoaderRoute: typeof LessonBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/premium': {
+      id: '/premium'
+      path: '/premium'
+      fullPath: '/premium'
+      preLoaderRoute: typeof PremiumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress-tracker': {
+      id: '/progress-tracker'
+      path: '/progress-tracker'
+      fullPath: '/progress-tracker'
+      preLoaderRoute: typeof ProgressTrackerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/children': {
+      id: '/api/children'
+      path: '/api/children'
+      fullPath: '/api/children'
+      preLoaderRoute: typeof ApiChildrenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library/': {
@@ -280,13 +287,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/library/flashcards'
       preLoaderRoute: typeof LibraryFlashcardsRouteImport
       parentRoute: typeof LibraryRoute
-    }
-    '/api/children': {
-      id: '/api/children'
-      path: '/api/children'
-      fullPath: '/api/children'
-      preLoaderRoute: typeof ApiChildrenRouteImport
-      parentRoute: typeof rootRouteImport
     }
   }
 }

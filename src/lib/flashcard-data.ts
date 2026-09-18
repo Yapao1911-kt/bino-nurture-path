@@ -1,4 +1,4 @@
-export type FlashcardCategory = "animal" | "food" | "emotion" | "action";
+export type FlashcardCategory = "animal" | "food" | "emotion" | "action" | "object" | "other";
 
 export interface Flashcard {
   id: string;
@@ -11,6 +11,8 @@ export interface Flashcard {
   soundUrl?: string;
   /** Optional recorded pronunciation URL */
   voiceUrl?: string;
+  /** Optional custom creation flag */
+  isCustom?: boolean;
 }
 
 export const basicEmotionActionFlashcards: Flashcard[] = [
@@ -239,3 +241,63 @@ export const dailyVocabularyFlashcards: Flashcard[] = [
     voiceUrl: "/flashcards/voices/trung.mp3",
   },
 ];
+
+export const FLASHCARD_STORAGE_KEY = "bino_user_flashcards_v1";
+
+export function getAllDefaultFlashcards(): Flashcard[] {
+  return [...basicEmotionActionFlashcards, ...dailyVocabularyFlashcards];
+}
+
+export function loadStoredFlashcards(): Flashcard[] {
+  if (typeof window === "undefined") return getAllDefaultFlashcards();
+  try {
+    const raw = localStorage.getItem(FLASHCARD_STORAGE_KEY);
+    if (!raw) {
+      const defaults = getAllDefaultFlashcards();
+      localStorage.setItem(FLASHCARD_STORAGE_KEY, JSON.stringify(defaults));
+      return defaults;
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed;
+    }
+  } catch (e) {
+    console.error("Failed to load stored flashcards", e);
+  }
+  return getAllDefaultFlashcards();
+}
+
+export function saveStoredFlashcards(cards: Flashcard[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(FLASHCARD_STORAGE_KEY, JSON.stringify(cards));
+  } catch (e) {
+    console.error("Failed to save stored flashcards", e);
+  }
+}
+
+export function speakVietnamese(text: string) {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const clean = text.replace(/^Con\s+/i, "").replace(/^Quả\s+/i, "").trim();
+  const utterance = new SpeechSynthesisUtterance(clean || text);
+  utterance.lang = "vi-VN";
+  utterance.rate = 0.85;
+  const voices = window.speechSynthesis.getVoices();
+  const viVoice = voices.find((v) => v.lang.includes("vi-VN") || v.lang.includes("vi_VN"));
+  if (viVoice) {
+    utterance.voice = viVoice;
+  }
+  window.speechSynthesis.speak(utterance);
+}
+
+export function playFlashcardSound(card: Flashcard) {
+  if (card.voiceUrl || card.soundUrl) {
+    const audio = new Audio(card.voiceUrl || card.soundUrl);
+    audio.play().catch(() => {
+      speakVietnamese(card.label);
+    });
+  } else {
+    speakVietnamese(card.label);
+  }
+}

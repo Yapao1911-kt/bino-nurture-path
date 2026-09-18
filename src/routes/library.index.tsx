@@ -31,9 +31,9 @@ function LibraryPage() {
             </Link>
             <div className="text-xs text-muted-foreground">
               {mockUser.isPremium ? (
-                <span className="text-green-600 font-semibold">Premium</span>
+                <span className="text-[#75D06A] font-bold">👑 Premium</span>
               ) : (
-                <span className="text-amber-600 font-semibold">Free User</span>
+                <span className="text-[#FFB365] font-bold">⭐ Free User</span>
               )}
             </div>
           </div>
