@@ -111,6 +111,43 @@ async function main() {
       imageUrl:
         "https://images.unsplash.com/photo-1610484826967-09c5720778c7?q=80&w=600&auto=format&fit=crop",
     },
+    {
+      id: "m-vitreemkhuyettat-182",
+      title: "Các dạng khuyết tật ở trẻ: Biểu hiện và hướng can thiệp",
+      description:
+        "Tổng quan 6 dạng khuyết tật ở trẻ theo quy định hiện hành (vận động, nghe nói, thị giác, thần kinh - tâm thần, trí tuệ), dấu hiệu nhận biết sớm và phương pháp can thiệp phục hồi chức năng giúp trẻ hòa nhập cộng đồng.",
+      category: "Học liệu",
+      ageGroup: JSON.stringify(["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"]),
+      difficulty: JSON.stringify(["Khó khăn học tập", "Chậm ngôn ngữ", "Tự kỷ (ASD)"]),
+      format: "Bài viết",
+      accessLevel: "BASIC",
+      imageUrl: "https://vitreemkhuyettat.org/qvtekt/Upload/news/cac-dang-khuyet-tat-o-tre-1.jpg",
+    },
+    {
+      id: "m-rongviet-tangdong",
+      title: "Những kỹ thuật tương tác với trẻ tăng động",
+      description:
+        "Cẩm nang kỹ thuật thực hành cho cha mẹ và thầy cô: xây dựng môi trường học tập linh hoạt, khen ngợi tự kiểm soát, hỗ trợ 1 kèm 1 và cơ chế phối hợp chặt chẽ gia đình - nhà trường.",
+      category: "Học liệu",
+      ageGroup: JSON.stringify(["3-6 tuổi", "6-12 tuổi"]),
+      difficulty: JSON.stringify(["Tăng động giảm chú ý (ADHD)"]),
+      format: "Bài viết",
+      accessLevel: "BASIC",
+      imageUrl:
+        "https://rongviet.edu.vn/images/bai-viet/cac-hoat-dong/can-thiep-giao-duc/tham-khao/full-nhung-ky-thuat-tuong-tac-voi-tre-tang-dong-1.jpg",
+    },
+    {
+      id: "m-byt-phcn-14",
+      title: "Tài liệu số 14: Phục hồi chức năng trẻ chậm phát triển trí tuệ",
+      description:
+        "Cẩm nang chuyên sâu của Bộ Y tế về PHCN dựa vào cộng đồng: hướng dẫn theo dõi bảng mốc phát triển 0-15 tuổi, 7 bài tập vận động trị liệu, hoạt động trị liệu tự phục vụ và kỹ thuật giao tiếp sớm.",
+      category: "Học liệu",
+      ageGroup: JSON.stringify(["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"]),
+      difficulty: JSON.stringify(["Chậm ngôn ngữ", "Khó khăn học tập", "Tự kỷ (ASD)"]),
+      format: "PDF",
+      accessLevel: "BASIC",
+      imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop",
+    },
   ];
 
   for (const resource of resources) {

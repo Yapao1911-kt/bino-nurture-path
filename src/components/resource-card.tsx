@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Lock, FileText, Video, Image as ImageIcon, Download, Play, Layers } from "lucide-react";
+import { Lock, FileText, Video, Image as ImageIcon, Download, Play, Layers, ExternalLink, Globe, Sparkles } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
 
 interface Resource {
   id: string;
   title: string;
   description: string;
-  category: string;
+  category: string | string[];
   ageGroup: string[];
   difficulty: string[];
   format: string;
@@ -18,6 +18,9 @@ interface Resource {
   imageUrl: string;
   videoUrl?: string;
   flashcardHref?: string;
+  externalUrl?: string;
+  sourceName?: string;
+  keyPoints?: string[];
 }
 
 interface ResourceCardProps {
@@ -107,6 +110,12 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
             </Badge>
           ))}
         </div>
+        {resource.sourceName && (
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1 font-medium">
+            <Globe className="w-3.5 h-3.5 text-[#1FA7E1] shrink-0" />
+            <span className="truncate">{resource.sourceName}</span>
+          </div>
+        )}
         <h3 className="font-semibold text-lg line-clamp-2 leading-tight">{resource.title}</h3>
       </CardHeader>
 
@@ -129,6 +138,28 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
               Mở flashcard
             </Link>
           </Button>
+        ) : resource.externalUrl ? (
+          <div className="grid grid-cols-2 gap-2 w-full">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs"
+              onClick={() => setShowPreview(true)}
+            >
+              <FileText className="w-3.5 h-3.5 mr-1" />
+              Xem tóm tắt
+            </Button>
+            <Button
+              size="sm"
+              className="text-xs bg-[#1FA7E1] hover:bg-[#1994c8] text-white"
+              asChild
+            >
+              <a href={resource.externalUrl} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-3.5 h-3.5 mr-1" />
+                Mở bài viết
+              </a>
+            </Button>
+          </div>
         ) : (
           <Button className="w-full" onClick={() => setShowPreview(true)}>
             {getActionIcon(resource.format)}
@@ -138,17 +169,25 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
       </CardFooter>
 
       <Dialog open={showPreview} onOpenChange={setShowPreview}>
-        <DialogContent className="sm:max-w-3xl">
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{resource.title}</DialogTitle>
+            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+              {resource.sourceName && (
+                <Badge variant="secondary" className="text-xs bg-sky-50 text-sky-700 border border-sky-200">
+                  <Globe className="w-3 h-3 mr-1 text-[#1FA7E1]" />
+                  {resource.sourceName}
+                </Badge>
+              )}
+              <Badge variant="outline" className="text-xs">
+                {resource.format}
+              </Badge>
+            </div>
+            <DialogTitle className="text-xl font-bold text-slate-900 leading-snug">
+              {resource.title}
+            </DialogTitle>
           </DialogHeader>
-          <div
-            className={`py-4 flex flex-col bg-slate-50 rounded-lg overflow-hidden min-h-[300px] ${
-              resource.format === "Bài viết"
-                ? "items-start justify-start"
-                : "items-center justify-center"
-            }`}
-          >
+
+          <div className="py-2 space-y-4">
             {resource.format === "Video" ? (
               resource.videoUrl ? (
                 <video
@@ -156,10 +195,10 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
                   poster={imageSrc}
                   controls
                   preload="metadata"
-                  className="w-full max-h-[70vh] bg-black rounded-md"
+                  className="w-full max-h-[60vh] bg-black rounded-lg"
                 />
               ) : (
-                <div className="relative w-full aspect-video bg-black flex items-center justify-center group">
+                <div className="relative w-full aspect-video bg-black rounded-lg flex items-center justify-center overflow-hidden">
                   <img
                     src={imageSrc}
                     alt={resource.title}
@@ -172,35 +211,71 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
                   </div>
                 </div>
               )
-            ) : resource.format === "Bài viết" ? (
-              <div className="w-full px-6 pb-2 text-left">
+            ) : (
+              <div className="relative w-full h-52 sm:h-64 rounded-xl overflow-hidden bg-slate-100 border">
                 <img
                   src={imageSrc}
                   alt={resource.title}
                   onError={() => setImageSrc(FALLBACK_IMAGE)}
-                  className="w-full h-48 object-cover rounded-md mb-4 shadow-sm"
+                  className="w-full h-full object-cover"
                 />
-                <p className="text-slate-700 leading-relaxed">{resource.description}</p>
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-md text-sm text-blue-800 flex flex-col gap-2">
-                  <span className="font-semibold">Bản xem trước</span>
-                  <span>
-                    Đây là nội dung tóm tắt. Vui lòng tải xuống tài liệu để đọc toàn bộ bài viết
-                    chi tiết cùng các hướng dẫn chuyên sâu.
-                  </span>
-                </div>
               </div>
-            ) : (
-              <img
-                src={imageSrc}
-                alt={resource.title}
-                onError={() => setImageSrc(FALLBACK_IMAGE)}
-                className="max-h-[60vh] object-contain rounded-md shadow-sm"
-              />
+            )}
+
+            <div className="flex flex-wrap gap-1.5">
+              {resource.ageGroup.map((age) => (
+                <Badge key={age} variant="outline" className="text-xs bg-slate-50">
+                  {age}
+                </Badge>
+              ))}
+              {resource.difficulty.map((diff) => (
+                <Badge
+                  key={diff}
+                  variant="outline"
+                  className="text-xs bg-[#1FA7E1]/10 text-[#1FA7E1] border-[#1FA7E1]/30 font-semibold"
+                >
+                  {diff}
+                </Badge>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-slate-700 text-sm leading-relaxed">{resource.description}</p>
+            </div>
+
+            {resource.keyPoints && resource.keyPoints.length > 0 && (
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm space-y-2.5">
+                <div className="font-semibold text-slate-900 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-500" />
+                  Nội dung trọng tâm & Kỹ thuật can thiệp:
+                </div>
+                <ul className="space-y-2 text-slate-700 text-xs sm:text-sm pl-1">
+                  {resource.keyPoints.map((point, idx) => (
+                    <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                      <span className="text-[#1FA7E1] font-bold shrink-0">•</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {resource.externalUrl && (
+              <div className="p-3.5 bg-sky-50 border border-sky-100 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm text-sky-900">
+                <span>Đọc bài viết đầy đủ với đầy đủ nội dung chuyên sâu từ nguồn chính thức.</span>
+                <Button size="sm" className="bg-[#1FA7E1] hover:bg-[#1994c8] text-white shrink-0" asChild>
+                  <a href={resource.externalUrl} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
+                    Truy cập nguồn
+                  </a>
+                </Button>
+              </div>
             )}
           </div>
-          <DialogFooter className="flex items-center sm:justify-between w-full">
-            <p className="text-sm text-slate-500 mr-auto hidden sm:block">
-              {resource.format} · {resource.category}
+
+          <DialogFooter className="flex items-center sm:justify-between w-full pt-3 border-t">
+            <p className="text-xs text-slate-500 mr-auto hidden sm:block">
+              {resource.format} · {Array.isArray(resource.category) ? resource.category.join(", ") : resource.category}
             </p>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <Button
@@ -210,22 +285,34 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
               >
                 Đóng
               </Button>
-              <Button
-                className="flex-1 sm:flex-none"
-                onClick={() => {
-                  const a = document.createElement("a");
-                  a.href = downloadUrl;
-                  a.download = resource.title;
-                  a.target = "_blank";
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  setShowPreview(false);
-                }}
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Tải xuống
-              </Button>
+              {resource.externalUrl ? (
+                <Button
+                  className="flex-1 sm:flex-none bg-[#1FA7E1] hover:bg-[#1994c8] text-white"
+                  asChild
+                >
+                  <a href={resource.externalUrl} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Mở bài viết gốc
+                  </a>
+                </Button>
+              ) : (
+                <Button
+                  className="flex-1 sm:flex-none"
+                  onClick={() => {
+                    const a = document.createElement("a");
+                    a.href = downloadUrl;
+                    a.download = resource.title;
+                    a.target = "_blank";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setShowPreview(false);
+                  }}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Tải xuống
+                </Button>
+              )}
             </div>
           </DialogFooter>
         </DialogContent>

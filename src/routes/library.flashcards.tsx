@@ -1,9 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Layers } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { FlashcardViewer } from "../components/flashcard-viewer";
 import { SiteFooter } from "../components/site-footer";
-import { basicEmotionActionFlashcards, dailyVocabularyFlashcards } from "../lib/flashcard-data";
+import {
+  type Flashcard,
+  loadStoredFlashcards,
+  basicEmotionActionFlashcards,
+  dailyVocabularyFlashcards,
+} from "../lib/flashcard-data";
 
 type SearchParams = {
   deck?: string;
@@ -20,15 +26,28 @@ export const Route = createFileRoute("/library/flashcards")({
 
 function FlashcardsPage() {
   const { deck } = Route.useSearch();
+  const [allStoredCards, setAllStoredCards] = useState<Flashcard[]>([]);
+
+  useEffect(() => {
+    setAllStoredCards(loadStoredFlashcards());
+  }, []);
 
   const isBasicDeck = deck === "m1";
-  const cards = isBasicDeck ? basicEmotionActionFlashcards : dailyVocabularyFlashcards;
+  const defaultCards = isBasicDeck ? basicEmotionActionFlashcards : dailyVocabularyFlashcards;
+
+  const cards =
+    allStoredCards.length > 0
+      ? isBasicDeck
+        ? allStoredCards.filter((c) => c.category === "emotion" || c.category === "action")
+        : allStoredCards
+      : defaultCards;
+
   const title = isBasicDeck
     ? "Flashcard Cảm xúc & Hành động cơ bản"
-    : "Bộ Flashcard Từ vựng hằng ngày";
+    : "Kho Flashcard Toàn diện & Luyện tập Quizlet";
   const description = isBasicDeck
     ? "Học tập qua thẻ hình ảnh minh họa sinh động về cảm xúc và sinh hoạt hằng ngày."
-    : "Học từ vựng qua hình ảnh, tiếng kêu và giọng đọc để bé luyện nghe.";
+    : "Học từ vựng qua hình ảnh, tiếng kêu, giọng đọc tiếng Việt và mini-game ghép thẻ.";
 
   return (
     <div className="min-h-screen bg-background">
@@ -37,7 +56,7 @@ function FlashcardsPage() {
           <Link to="/library" search={{ tab: "materials" }}>
             <Button variant="ghost" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Quay lại thư viện
+              Quay lại thư viện học liệu
             </Button>
           </Link>
 
