@@ -1,0 +1,180 @@
+import { c as createServerRpc } from "./createServerRpc-DwUn7Ikn.mjs";
+import { a as createServerFn, g as getRequest } from "./server-DzLy7LQ_.mjs";
+import { c as createClient } from "../_libs/supabase__supabase-js.mjs";
+import "../_libs/seroval.mjs";
+import "../_libs/react.mjs";
+import "node:async_hooks";
+import "../_libs/h3-v2.mjs";
+import "../_libs/rou3.mjs";
+import "../_libs/srvx.mjs";
+import "node:stream";
+import "../_libs/tanstack__router-core.mjs";
+import "../_libs/tanstack__history.mjs";
+import "../_libs/cookie-es.mjs";
+import "../_libs/seroval-plugins.mjs";
+import "node:stream/web";
+import "../_libs/tanstack__react-router.mjs";
+import "../_libs/react-dom.mjs";
+import "util";
+import "async_hooks";
+import "stream";
+import "crypto";
+import "../_libs/isbot.mjs";
+import "../_libs/supabase__postgrest-js.mjs";
+import "../_libs/supabase__realtime-js.mjs";
+import "../_libs/supabase__phoenix.mjs";
+import "../_libs/supabase__storage-js.mjs";
+import "../_libs/iceberg-js.mjs";
+import "../_libs/supabase__auth-js.mjs";
+import "tslib";
+import "../_libs/supabase__functions-js.mjs";
+const supabaseUrl = process.env.VITE_SUPABASE_URL || "https://akgrbwyrlqvxhzgoykpt.supabase.co";
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_HmZ1YfIHkXCG8u_U1VZysg_pt-GsXGF";
+const createChildFn_createServerFn_handler = createServerRpc({
+  id: "6269509e4819da66e4e98eb89a24db957367e609b0fc9ed37941f356a1d4c1d8",
+  name: "createChildFn",
+  filename: "src/routes/api/children.ts"
+}, (opts) => createChildFn.__executeServer(opts));
+const createChildFn = createServerFn({
+  method: "POST"
+}).inputValidator((data) => data).handler(createChildFn_createServerFn_handler, async ({
+  data
+}) => {
+  try {
+    const request = getRequest();
+    const authHeader = request.headers.get("Authorization");
+    const token = authHeader?.split(" ")[1];
+    if (!token) {
+      return new Response(JSON.stringify({
+        message: "Không tìm thấy mã xác thực JWT. Vui lòng đăng nhập lại."
+      }), {
+        status: 401,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    }
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false
+      }
+    });
+    const {
+      data: {
+        user
+      },
+      error: authError
+    } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return new Response(JSON.stringify({
+        message: "Mã xác thực JWT không hợp lệ hoặc đã hết hạn."
+      }), {
+        status: 401,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    }
+    const parentId = user.id;
+    const {
+      data: profile
+    } = await supabase.from("profiles").select("role").eq("id", parentId).maybeSingle();
+    const userRole = (profile?.role || user.user_metadata?.role || "parent").toLowerCase();
+    const allowedRoles = ["parent", "teacher", "premium", "admin"];
+    if (!allowedRoles.includes(userRole)) {
+      return new Response(JSON.stringify({
+        message: "Tài khoản của bạn không có quyền thực hiện hành động này."
+      }), {
+        status: 403,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    }
+    const {
+      full_name,
+      date_of_birth,
+      developmental_challenges,
+      communication_level
+    } = data;
+    const validationErrors = [];
+    if (!full_name || typeof full_name !== "string" || !full_name.trim()) {
+      validationErrors.push("Họ tên của trẻ (full_name) là bắt buộc.");
+    }
+    if (!date_of_birth) {
+      validationErrors.push("Ngày sinh của trẻ (date_of_birth) là bắt buộc.");
+    } else {
+      const dob = new Date(date_of_birth);
+      if (isNaN(dob.getTime())) {
+        validationErrors.push("Ngày sinh không hợp lệ.");
+      } else {
+        const today = /* @__PURE__ */ new Date();
+        today.setHours(23, 59, 59, 999);
+        if (dob > today) {
+          validationErrors.push("Ngày sinh của trẻ không được lớn hơn ngày hiện tại.");
+        }
+      }
+    }
+    if (!developmental_challenges || !Array.isArray(developmental_challenges) || developmental_challenges.length === 0) {
+      validationErrors.push("Khó khăn phát triển (developmental_challenges) là bắt buộc.");
+    } else if (developmental_challenges.some((c) => typeof c !== "string" || !c.trim())) {
+      validationErrors.push("Tất cả các khó khăn phát triển phải là chuỗi hợp lệ.");
+    }
+    if (!communication_level || typeof communication_level !== "string" || !communication_level.trim()) {
+      validationErrors.push("Mức độ giao tiếp của trẻ (communication_level) là bắt buộc.");
+    }
+    if (validationErrors.length > 0) {
+      return new Response(JSON.stringify({
+        errors: validationErrors
+      }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    }
+    const {
+      data: newChild,
+      error: insertError
+    } = await supabase.from("children").insert([{
+      parent_id: parentId,
+      full_name: full_name.trim(),
+      date_of_birth,
+      developmental_challenges,
+      communication_level: communication_level.trim()
+    }]).select().single();
+    if (insertError) {
+      console.error("Database insert error:", insertError.message);
+      return new Response(JSON.stringify({
+        message: "Lỗi cơ sở dữ liệu khi lưu thông tin trẻ.",
+        details: insertError.message
+      }), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    }
+    return new Response(JSON.stringify(newChild), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+  } catch (err) {
+    console.error("Server Function createChildFn error:", err);
+    return new Response(JSON.stringify({
+      message: "Lỗi hệ thống máy chủ nội bộ.",
+      error: err.message
+    }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+  }
+});
+export {
+  createChildFn_createServerFn_handler
+};

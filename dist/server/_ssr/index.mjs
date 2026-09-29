@@ -1,0 +1,199 @@
+let lastCapturedError;
+const TTL_MS = 5e3;
+function record(error) {
+  lastCapturedError = { error, at: Date.now() };
+}
+if (typeof globalThis.addEventListener === "function") {
+  globalThis.addEventListener("error", (event) => record(event.error ?? event));
+  globalThis.addEventListener(
+    "unhandledrejection",
+    (event) => record(event.reason)
+  );
+}
+function consumeLastCapturedError() {
+  if (!lastCapturedError) return void 0;
+  if (Date.now() - lastCapturedError.at > TTL_MS) {
+    lastCapturedError = void 0;
+    return void 0;
+  }
+  const { error } = lastCapturedError;
+  lastCapturedError = void 0;
+  return error;
+}
+function renderErrorPage() {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>This page didn't load</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font: 15px/1.5 system-ui, -apple-system, sans-serif; background: #fafafa; color: #111; display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 1.5rem; }
+      .card { max-width: 28rem; width: 100%; text-align: center; padding: 2rem; }
+      h1 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+      p { color: #4b5563; margin: 0 0 1.5rem; }
+      .actions { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+      a, button { padding: 0.5rem 1rem; border-radius: 0.375rem; font: inherit; cursor: pointer; text-decoration: none; border: 1px solid transparent; }
+      .primary { background: #111; color: #fff; }
+      .secondary { background: #fff; color: #111; border-color: #d1d5db; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>This page didn't load</h1>
+      <p>Something went wrong on our end. You can try refreshing or head back home.</p>
+      <div class="actions">
+        <button class="primary" onclick="location.reload()">Try again</button>
+        <a class="secondary" href="/">Go home</a>
+      </div>
+    </div>
+  </body>
+</html>`;
+}
+let serverEntryPromise;
+async function getServerEntry() {
+  if (!serverEntryPromise) {
+    serverEntryPromise = import("./server-DzLy7LQ_.mjs").then((n) => n.s).then(
+      (m) => m.default ?? m
+    );
+  }
+  return serverEntryPromise;
+}
+function brandedErrorResponse() {
+  return new Response(renderErrorPage(), {
+    status: 500,
+    headers: { "content-type": "text/html; charset=utf-8" }
+  });
+}
+function jsonResponse(data, init) {
+  return new Response(JSON.stringify(data), {
+    ...init,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      ...init?.headers
+    }
+  });
+}
+function getServerSetting(env, key, fallback) {
+  if (env && typeof env === "object" && key in env) {
+    const value = env[key];
+    if (typeof value === "string" && value.trim()) return value;
+  }
+  if (typeof process !== "undefined") {
+    const value = process.env[key];
+    if (value?.trim()) return value;
+  }
+  return fallback;
+}
+async function handleOllamaChat(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ message: "Yêu cầu chat không hợp lệ." }, { status: 400 });
+  }
+  const messages = body.messages?.filter(
+    (message) => (message.role === "user" || message.role === "assistant") && typeof message.text === "string" && message.text.trim()
+  );
+  if (!messages?.length || typeof body.systemPrompt !== "string" || !body.systemPrompt.trim()) {
+    return jsonResponse({ message: "Thiếu nội dung hội thoại cho Bino." }, { status: 400 });
+  }
+  const model = getServerSetting(env, "OLLAMA_MODEL", "llama3");
+  const baseUrl = getServerSetting(env, "OLLAMA_BASE_URL", "http://127.0.0.1:11434");
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12e4);
+  try {
+    const response = await fetch(`${baseUrl}/api/chat`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model,
+        stream: false,
+        messages: [
+          { role: "system", content: body.systemPrompt },
+          ...messages.map((message) => ({
+            role: message.role,
+            content: message.text
+          }))
+        ],
+        options: {
+          temperature: 0.7,
+          num_predict: 512
+        }
+      })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      return jsonResponse(
+        {
+          message: `Ollama trả về lỗi ${response.status}.`,
+          details: errorText
+        },
+        { status: 502 }
+      );
+    }
+    const data = await response.json();
+    const reply = data.message?.content?.trim();
+    if (!reply) {
+      return jsonResponse(
+        { message: data.error || "Ollama chưa trả về nội dung." },
+        { status: 502 }
+      );
+    }
+    return jsonResponse({ reply, model });
+  } catch (error) {
+    const message = error instanceof Error && error.name === "AbortError" ? "Ollama phản hồi quá lâu." : "Không kết nối được Ollama trên máy local.";
+    return jsonResponse({ message }, { status: 502 });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+function isCatastrophicSsrErrorBody(body, responseStatus) {
+  let payload;
+  try {
+    payload = JSON.parse(body);
+  } catch {
+    return false;
+  }
+  if (!payload || Array.isArray(payload) || typeof payload !== "object") {
+    return false;
+  }
+  const fields = payload;
+  const expectedKeys = /* @__PURE__ */ new Set(["message", "status", "unhandled"]);
+  if (!Object.keys(fields).every((key) => expectedKeys.has(key))) {
+    return false;
+  }
+  return fields.unhandled === true && fields.message === "HTTPError" && (fields.status === void 0 || fields.status === responseStatus);
+}
+async function normalizeCatastrophicSsrResponse(response) {
+  if (response.status < 500) return response;
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) return response;
+  const body = await response.clone().text();
+  if (!isCatastrophicSsrErrorBody(body, response.status)) {
+    return response;
+  }
+  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
+  return brandedErrorResponse();
+}
+const server = {
+  async fetch(request, env, ctx) {
+    try {
+      const url = new URL(request.url);
+      if (url.pathname === "/api/ollama-chat" && request.method === "POST") {
+        return await handleOllamaChat(request, env);
+      }
+      const handler = await getServerEntry();
+      const response = await handler.fetch(request, env, ctx);
+      return await normalizeCatastrophicSsrResponse(response);
+    } catch (error) {
+      console.error(error);
+      return brandedErrorResponse();
+    }
+  }
+};
+export {
+  server as default,
+  renderErrorPage as r
+};

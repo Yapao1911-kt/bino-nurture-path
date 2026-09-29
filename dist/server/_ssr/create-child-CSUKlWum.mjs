@@ -1,0 +1,579 @@
+import { j as jsxRuntimeExports, r as reactExports } from "../_libs/react.mjs";
+import { s as supabase } from "./supabase-BG92hIum.mjs";
+import { c as createChildFn } from "./router-BF6gDh8M.mjs";
+import { I as Input } from "./input-DwaGuH4D.mjs";
+import { A as Alert, b as AlertTitle, a as AlertDescription, L as Label } from "./alert-BUJEp_BX.mjs";
+import { C as Card, d as CardHeader, e as CardTitle, b as CardDescription, a as CardContent } from "./card-SSxiJ3nX.mjs";
+import { B as Button } from "./button-BXrfXN_b.mjs";
+import { S as Select, c as SelectTrigger, d as SelectValue, a as SelectContent, b as SelectItem } from "./select-l5z66tJ0.mjs";
+import "../_libs/seroval.mjs";
+import { A as ArrowLeft, a8 as Sparkles, n as CircleCheck, m as CircleAlert, H as Heart, B as Baby, O as MapPin, ab as Stethoscope, K as LoaderCircle } from "../_libs/lucide-react.mjs";
+import "../_libs/supabase__supabase-js.mjs";
+import "../_libs/supabase__postgrest-js.mjs";
+import "../_libs/supabase__realtime-js.mjs";
+import "../_libs/supabase__phoenix.mjs";
+import "../_libs/supabase__storage-js.mjs";
+import "../_libs/iceberg-js.mjs";
+import "../_libs/supabase__auth-js.mjs";
+import "tslib";
+import "../_libs/supabase__functions-js.mjs";
+import "../_libs/tanstack__query-core.mjs";
+import "../_libs/tanstack__react-query.mjs";
+import "../_libs/tanstack__react-router.mjs";
+import "../_libs/tanstack__router-core.mjs";
+import "../_libs/tanstack__history.mjs";
+import "../_libs/cookie-es.mjs";
+import "../_libs/seroval-plugins.mjs";
+import "node:stream/web";
+import "node:stream";
+import "../_libs/react-dom.mjs";
+import "util";
+import "async_hooks";
+import "stream";
+import "crypto";
+import "../_libs/isbot.mjs";
+import "./server-DzLy7LQ_.mjs";
+import "node:async_hooks";
+import "../_libs/h3-v2.mjs";
+import "../_libs/rou3.mjs";
+import "../_libs/srvx.mjs";
+import "../_libs/radix-ui__react-label.mjs";
+import "../_libs/radix-ui__react-primitive.mjs";
+import "../_libs/radix-ui__react-slot.mjs";
+import "../_libs/radix-ui__react-compose-refs.mjs";
+import "../_libs/class-variance-authority.mjs";
+import "../_libs/clsx.mjs";
+import "../_libs/tailwind-merge.mjs";
+import "../_libs/radix-ui__react-select.mjs";
+import "../_libs/radix-ui__number.mjs";
+import "../_libs/radix-ui__primitive.mjs";
+import "../_libs/radix-ui__react-collection.mjs";
+import "../_libs/radix-ui__react-context.mjs";
+import "../_libs/radix-ui__react-direction.mjs";
+import "../_libs/@radix-ui/react-dismissable-layer+[...].mjs";
+import "../_libs/@radix-ui/react-use-callback-ref+[...].mjs";
+import "../_libs/@radix-ui/react-use-escape-keydown+[...].mjs";
+import "../_libs/radix-ui__react-focus-guards.mjs";
+import "../_libs/radix-ui__react-focus-scope.mjs";
+import "../_libs/radix-ui__react-id.mjs";
+import "../_libs/@radix-ui/react-use-layout-effect+[...].mjs";
+import "../_libs/radix-ui__react-popper.mjs";
+import "../_libs/floating-ui__react-dom.mjs";
+import "../_libs/floating-ui__dom.mjs";
+import "../_libs/floating-ui__core.mjs";
+import "../_libs/floating-ui__utils.mjs";
+import "../_libs/radix-ui__react-arrow.mjs";
+import "../_libs/radix-ui__react-use-size.mjs";
+import "../_libs/radix-ui__react-portal.mjs";
+import "../_libs/@radix-ui/react-use-controllable-state+[...].mjs";
+import "../_libs/radix-ui__react-use-previous.mjs";
+import "../_libs/@radix-ui/react-visually-hidden+[...].mjs";
+import "../_libs/aria-hidden.mjs";
+import "../_libs/react-remove-scroll.mjs";
+import "../_libs/react-remove-scroll-bar.mjs";
+import "../_libs/react-style-singleton.mjs";
+import "../_libs/get-nonce.mjs";
+import "../_libs/use-sidecar.mjs";
+import "../_libs/use-callback-ref.mjs";
+const CONDITION_OPTIONS = [
+  { value: "normal", label: "Phát triển bình thường" },
+  { value: "autism", label: "Rối loạn phổ tự kỷ (ASD)" },
+  { value: "adhd", label: "Tăng động giảm chú ý (ADHD)" },
+  { value: "speech_delay", label: "Chậm nói / Chậm ngôn ngữ" },
+  { value: "intellectual", label: "Chậm phát triển trí tuệ" },
+  { value: "down_syndrome", label: "Hội chứng Down" },
+  { value: "cerebral_palsy", label: "Bại não" },
+  { value: "other", label: "Khác" }
+];
+function CuteBear({ className = "" }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { viewBox: "0 0 140 140", className, "aria-hidden": true, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "40", cy: "42", r: "16", fill: "#FFB365" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "100", cy: "42", r: "16", fill: "#FFB365" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "40", cy: "42", r: "8", fill: "#FFF5EA" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "100", cy: "42", r: "8", fill: "#FFF5EA" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "70", cy: "78", r: "44", fill: "#FFB365" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("ellipse", { cx: "70", cy: "92", rx: "22", ry: "16", fill: "#FFF5EA" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "56", cy: "74", r: "4", fill: "#4B5563" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "84", cy: "74", r: "4", fill: "#4B5563" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "57.5", cy: "72.5", r: "1.2", fill: "#FFFFFF" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "85.5", cy: "72.5", r: "1.2", fill: "#FFFFFF" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("ellipse", { cx: "70", cy: "88", rx: "4", ry: "3", fill: "#4B5563" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M62 96 Q70 104 78 96",
+        stroke: "#4B5563",
+        strokeWidth: "2.4",
+        fill: "none",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "48", cy: "88", r: "5", fill: "#FB96BB", opacity: "0.7" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "92", cy: "88", r: "5", fill: "#FB96BB", opacity: "0.7" })
+  ] });
+}
+function CuteStar({
+  className = "",
+  color = "#FFB365"
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { viewBox: "0 0 64 64", className, "aria-hidden": true, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M32 6 L39 24 L58 26 L43 38 L48 56 L32 46 L16 56 L21 38 L6 26 L25 24 Z",
+        fill: color,
+        stroke: "#4B5563",
+        strokeOpacity: "0.15",
+        strokeWidth: "1.5",
+        strokeLinejoin: "round"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "26", cy: "32", r: "1.8", fill: "#4B5563" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "38", cy: "32", r: "1.8", fill: "#4B5563" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M28 38 Q32 41 36 38",
+        stroke: "#4B5563",
+        strokeWidth: "1.6",
+        fill: "none",
+        strokeLinecap: "round"
+      }
+    )
+  ] });
+}
+function CreateChildForm() {
+  const [formData, setFormData] = reactExports.useState({
+    name: "",
+    age: "",
+    address: "",
+    condition: ""
+  });
+  const [errors, setErrors] = reactExports.useState({});
+  const [isLoading, setIsLoading] = reactExports.useState(false);
+  const [apiResponse, setApiResponse] = reactExports.useState(null);
+  const [hasSubmitted, setHasSubmitted] = reactExports.useState(false);
+  function validateForm() {
+    const newErrors = {};
+    if (!formData.name.trim()) {
+      newErrors.name = "Vui lòng nhập tên của trẻ.";
+    }
+    if (!formData.age) {
+      newErrors.age = "Vui lòng nhập tuổi của trẻ.";
+    } else {
+      const ageNum = parseInt(formData.age, 10);
+      if (isNaN(ageNum) || ageNum < 0 || ageNum > 18) {
+        newErrors.age = "Tuổi phải là số nguyên từ 0 đến 18.";
+      }
+    }
+    return newErrors;
+  }
+  function handleInputChange(field, value) {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (hasSubmitted) {
+      const updatedData = { ...formData, [field]: value };
+      const tempErrors = { ...errors };
+      if (field === "name" && updatedData.name.trim()) {
+        delete tempErrors.name;
+      }
+      if (field === "age") {
+        const ageNum = parseInt(updatedData.age, 10);
+        if (updatedData.age && !isNaN(ageNum) && ageNum >= 0 && ageNum <= 18) {
+          delete tempErrors.age;
+        }
+      }
+      setErrors(tempErrors);
+    }
+  }
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setHasSubmitted(true);
+    const validationErrors = validateForm();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+    setIsLoading(true);
+    setApiResponse(null);
+    const ageNum = parseInt(formData.age, 10);
+    const currentYear = (/* @__PURE__ */ new Date()).getFullYear();
+    const birthYear = currentYear - ageNum;
+    const dobString = `${birthYear}-01-01`;
+    const selectedCondition = CONDITION_OPTIONS.find((opt) => opt.value === formData.condition);
+    const challenge = selectedCondition?.label || formData.condition || "Phát triển bình thường";
+    try {
+      const {
+        data: { session }
+      } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      const simulatedRole = localStorage.getItem("bino_simulated_role");
+      if (!token || simulatedRole) {
+        const localChildren = JSON.parse(localStorage.getItem("bino_local_children") || "[]");
+        const mockChild = {
+          id: Math.random().toString(36).substring(2),
+          full_name: formData.name.trim(),
+          date_of_birth: dobString,
+          developmental_challenges: [challenge],
+          communication_level: "Bình thường",
+          created_at: (/* @__PURE__ */ new Date()).toISOString()
+        };
+        localChildren.push(mockChild);
+        localStorage.setItem("bino_local_children", JSON.stringify(localChildren));
+        setApiResponse({
+          type: "success",
+          message: simulatedRole ? `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Đăng nhập tài khoản thật để đồng bộ đám mây.` : `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Bạn có thể Đăng nhập để lưu trên cloud.`
+        });
+        setFormData({ name: "", age: "", address: "", condition: "" });
+        setErrors({});
+        setHasSubmitted(false);
+        return;
+      }
+      const response = await createChildFn({
+        data: {
+          full_name: formData.name.trim(),
+          date_of_birth: dobString,
+          developmental_challenges: [challenge],
+          communication_level: "Bình thường"
+          // Giá trị mặc định
+        }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setApiResponse({
+          type: "success",
+          message: "Tạo hồ sơ cho trẻ thành công!"
+        });
+        setFormData({ name: "", age: "", address: "", condition: "" });
+        setErrors({});
+        setHasSubmitted(false);
+      } else {
+        const errorMessages = data.errors ? data.errors.join(". ") : data.message || "Đã xảy ra lỗi khi tạo hồ sơ.";
+        setApiResponse({
+          type: "error",
+          message: errorMessages
+        });
+      }
+    } catch (err) {
+      console.error("Create child form error:", err);
+      setApiResponse({
+        type: "error",
+        message: "Không thể kết nối đến máy chủ hoặc đã xảy ra lỗi không xác định."
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      className: "min-h-screen relative overflow-hidden",
+      style: { background: "var(--background)" },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: "absolute top-10 -left-20 w-96 h-96 rounded-full blur-3xl",
+            style: { backgroundColor: "rgba(31, 167, 225, 0.15)", opacity: 0.55 }
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: "absolute -top-10 right-0 w-96 h-96 rounded-full blur-3xl",
+            style: { backgroundColor: "rgba(110, 209, 207, 0.15)", opacity: 0.55 }
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: "absolute bottom-10 left-1/3 w-80 h-80 rounded-full blur-3xl",
+            style: { backgroundColor: "rgba(255, 139, 139, 0.15)", opacity: 0.55 }
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: "absolute bottom-20 right-10 w-64 h-64 rounded-full blur-3xl",
+            style: { backgroundColor: "rgba(255, 179, 101, 0.15)", opacity: 0.45 }
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CuteStar, { className: "hidden sm:block absolute top-28 left-[6%] w-12 rotate-[-12deg] animate-[float_5s_ease-in-out_infinite]" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          CuteStar,
+          {
+            className: "hidden sm:block absolute bottom-32 right-[10%] w-10 rotate-[18deg] opacity-80",
+            color: "#FFB365"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CuteBear, { className: "hidden lg:block absolute bottom-16 left-[5%] w-24 opacity-70 rotate-[-8deg] animate-[float_7s_ease-in-out_infinite]" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-10 animate-fade-in", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "a",
+              {
+                href: "/",
+                className: "inline-flex items-center gap-2 text-sm font-medium text-ink/60 hover:text-ink transition-colors mb-6",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-4 h-4" }),
+                  "Quay về trang chủ"
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center mb-5", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "span",
+              {
+                className: "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border-2 text-ink text-sm font-semibold shadow-[4px_4px_0px_rgba(168,230,207,0.4)] -rotate-2 hover:rotate-0 transition-transform",
+                style: { borderColor: "var(--brand-mint)" },
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-4 h-4", style: { color: "var(--brand-mint)" } }),
+                  "Tạo hồ sơ mới"
+                ]
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-tight", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "span",
+                {
+                  className: "inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#1FA7E1] rotate-1",
+                  style: { background: "var(--brand-blue-soft)" },
+                  children: "Tạo hồ sơ"
+                }
+              ),
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "span",
+                {
+                  className: "inline-block px-3 py-1 rounded-xl shadow-[6px_6px_0px_#75D06A] -rotate-1 mt-2 sm:mt-0",
+                  style: { background: "var(--brand-mint-soft)" },
+                  children: "cho bé yêu"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-5 text-ink/70 leading-relaxed max-w-md mx-auto", children: "Nhập thông tin cơ bản để Bino có thể xây dựng lộ trình phù hợp nhất cho con." })
+          ] }),
+          apiResponse && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-6 animate-fade-in", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Alert,
+            {
+              variant: apiResponse.type === "error" ? "destructive" : "default",
+              className: apiResponse.type === "success" ? "border-2 border-[var(--brand-mint)] bg-[var(--brand-mint-soft)] text-ink" : "",
+              children: [
+                apiResponse.type === "success" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "h-5 w-5", style: { color: "#75D06A" } }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "h-5 w-5" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTitle, { className: "font-semibold", children: apiResponse.type === "success" ? "🎉 Thành công!" : "⚠️ Có lỗi xảy ra" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDescription, { children: apiResponse.message })
+              ]
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "relative rounded-[2rem] border-0 bg-white shadow-[12px_12px_0px_#f3f3f3] rotate-0 hover:rotate-0 transition-transform animate-fade-in", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "absolute -top-3 -right-3 w-16 h-16 rounded-full grid place-items-center shadow-md z-10",
+                style: { background: "var(--brand-pink-soft)" },
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Heart, { className: "w-7 h-7", style: { color: "#FF8B8B" } })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2 pt-8 px-6 sm:px-8", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(CardTitle, { className: "text-xl font-bold text-ink flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Baby, { className: "w-5 h-5", style: { color: "var(--brand-blue)" } }),
+                "Thông tin hồ sơ trẻ"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(CardDescription, { className: "text-ink/60", children: [
+                "Các trường có dấu ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-red-400 font-semibold", children: "*" }),
+                " là bắt buộc nhập."
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "px-6 sm:px-8 pb-8", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "space-y-6", noValidate: true, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Label,
+                  {
+                    htmlFor: "child-name",
+                    className: "text-sm font-semibold text-ink flex items-center gap-2",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "span",
+                        {
+                          className: "w-7 h-7 rounded-lg grid place-items-center",
+                          style: { background: "var(--brand-blue-soft)" },
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Baby, { className: "w-3.5 h-3.5", style: { color: "#1FA7E1" } })
+                        }
+                      ),
+                      "Tên của trẻ ",
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-red-400", children: "*" })
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    id: "child-name",
+                    type: "text",
+                    placeholder: "Ví dụ: Bé Minh An",
+                    value: formData.name,
+                    onChange: (e) => handleInputChange("name", e.target.value),
+                    disabled: isLoading,
+                    className: `h-12 rounded-xl bg-[var(--brand-blue-soft)]/30 border-2 px-4 text-ink placeholder:text-ink/40 transition-all duration-200 focus:bg-white focus:border-[var(--brand-blue)] focus:shadow-[0_0_0_3px_rgba(142,205,248,0.2)] ${errors.name ? "border-red-300 bg-red-50/50 focus:border-red-400 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]" : "border-transparent"}`
+                  }
+                ),
+                errors.name && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-red-500 flex items-center gap-1.5 animate-fade-in", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-3.5 h-3.5 shrink-0" }),
+                  errors.name
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Label,
+                  {
+                    htmlFor: "child-age",
+                    className: "text-sm font-semibold text-ink flex items-center gap-2",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "span",
+                        {
+                          className: "w-7 h-7 rounded-lg grid place-items-center",
+                          style: { background: "var(--brand-peach-soft)" },
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-3.5 h-3.5", style: { color: "#FFB365" } })
+                        }
+                      ),
+                      "Tuổi ",
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-red-400", children: "*" })
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    id: "child-age",
+                    type: "number",
+                    min: 0,
+                    max: 18,
+                    placeholder: "Ví dụ: 5",
+                    value: formData.age,
+                    onChange: (e) => handleInputChange("age", e.target.value),
+                    disabled: isLoading,
+                    className: `h-12 rounded-xl bg-[var(--brand-peach-soft)]/30 border-2 px-4 text-ink placeholder:text-ink/40 transition-all duration-200 focus:bg-white focus:border-[var(--brand-peach)] focus:shadow-[0_0_0_3px_rgba(255,211,182,0.25)] ${errors.age ? "border-red-300 bg-red-50/50 focus:border-red-400 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]" : "border-transparent"}`
+                  }
+                ),
+                errors.age && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-red-500 flex items-center gap-1.5 animate-fade-in", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-3.5 h-3.5 shrink-0" }),
+                  errors.age
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Label,
+                  {
+                    htmlFor: "child-address",
+                    className: "text-sm font-semibold text-ink flex items-center gap-2",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "span",
+                        {
+                          className: "w-7 h-7 rounded-lg grid place-items-center",
+                          style: { background: "var(--brand-mint-soft)" },
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(MapPin, { className: "w-3.5 h-3.5", style: { color: "#75D06A" } })
+                        }
+                      ),
+                      "Địa chỉ"
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    id: "child-address",
+                    type: "text",
+                    placeholder: "Ví dụ: 123 Đường ABC, Quận 1, TP.HCM",
+                    value: formData.address,
+                    onChange: (e) => handleInputChange("address", e.target.value),
+                    disabled: isLoading,
+                    className: "h-12 rounded-xl bg-[var(--brand-mint-soft)]/30 border-2 border-transparent px-4 text-ink placeholder:text-ink/40 transition-all duration-200 focus:bg-white focus:border-[var(--brand-mint)] focus:shadow-[0_0_0_3px_rgba(168,230,207,0.25)]"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { className: "text-sm font-semibold text-ink flex items-center gap-2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "span",
+                    {
+                      className: "w-7 h-7 rounded-lg grid place-items-center",
+                      style: { background: "var(--brand-pink-soft)" },
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(Stethoscope, { className: "w-3.5 h-3.5", style: { color: "#FF8B8B" } })
+                    }
+                  ),
+                  "Tình trạng của trẻ"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Select,
+                  {
+                    value: formData.condition,
+                    onValueChange: (value) => handleInputChange("condition", value),
+                    disabled: isLoading,
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        SelectTrigger,
+                        {
+                          id: "child-condition",
+                          className: "h-12 rounded-xl bg-[var(--brand-pink-soft)]/30 border-2 border-transparent px-4 text-ink transition-all duration-200 focus:bg-white focus:border-[var(--brand-pink)] focus:shadow-[0_0_0_3px_rgba(255,202,212,0.25)] data-[placeholder]:text-ink/40",
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Chọn tình trạng phát triển..." })
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { className: "rounded-xl border-2 border-[var(--brand-pink-soft)] shadow-lg", children: CONDITION_OPTIONS.map((option) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        SelectItem,
+                        {
+                          value: option.value,
+                          className: "rounded-lg cursor-pointer focus:bg-[var(--brand-pink-soft)] py-2.5",
+                          children: option.label
+                        },
+                        option.value
+                      )) })
+                    ]
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  type: "submit",
+                  disabled: isLoading,
+                  size: "lg",
+                  className: `w-full h-14 rounded-2xl text-base font-bold shadow-[6px_6px_0px_#595BCF] transition-all duration-300 ease-out ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:-translate-y-1 hover:shadow-[8px_8px_0px_#595BCF] active:translate-y-0 active:shadow-[4px_4px_0px_#595BCF]"}`,
+                  style: {
+                    background: "var(--brand-blue)",
+                    color: "white"
+                  },
+                  children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-5 h-5 animate-spin" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Đang xử lý..." })
+                  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Heart, { className: "w-5 h-5" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Tạo hồ sơ cho bé" })
+                  ] })
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-xs text-ink/50 leading-relaxed", children: "Thông tin sẽ được bảo mật và chỉ sử dụng để xây dựng lộ trình phù hợp cho trẻ." })
+            ] }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center mt-8", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: "px-5 py-2.5 rounded-2xl bg-white border-2 border-white shadow-[4px_4px_0px_#75D06A] flex items-center gap-2 rotate-[3deg] animate-fade-in",
+              style: { animationDelay: "0.3s" },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Heart, { className: "w-4 h-4", style: { color: "#FF8B8B" } }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-semibold text-ink", children: "Mỗi đứa trẻ đều đặc biệt 💛" })
+              ]
+            }
+          ) })
+        ] })
+      ]
+    }
+  );
+}
+function CreateChildPage() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(CreateChildForm, {});
+}
+export {
+  CreateChildPage as component
+};
