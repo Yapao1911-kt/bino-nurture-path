@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 8082",
-    "build": "npx prisma generate && vite build",
+    "build": "npx prisma generate && vite build && mkdir -p .vercel/output/functions/__server.func/node_modules && cp -RL node_modules/@prisma node_modules/.prisma node_modules/bcryptjs node_modules/nodemailer .vercel/output/functions/__server.func/node_modules/",
     "build:dev": "vite build --mode development",
     "postinstall": "npx prisma generate",
     "preview": "vite preview",
