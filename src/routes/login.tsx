@@ -77,7 +77,12 @@ function LoginPage() {
       localStorage.removeItem("bino_simulated_email");
 
       const { loginUser } = await import("@/lib/auth-rpc");
-      await loginUser({ data: { email: email.trim(), password: password.trim() } });
+      const res = await loginUser({ data: { email: email.trim(), password: password.trim() } });
+      if (res.user) {
+        localStorage.setItem("bino_simulated_role", res.user.role || "parent");
+        localStorage.setItem("bino_simulated_user", res.user.name || "Người dùng");
+        localStorage.setItem("bino_simulated_email", res.user.email || email.trim());
+      }
 
       setSuccess("Đăng nhập thành công! Đang chuyển hướng...");
       setTimeout(() => {
@@ -132,42 +137,7 @@ function LoginPage() {
   };
 
   // Đăng nhập giả lập để chạy thử nhanh (Offline/Demo Mode)
-  const handleSimulatedLogin = (simulatedRole: "parent" | "teacher") => {
-    setIsLoading(true);
-    setError(null);
-    setSuccess(null);
-
-    setTimeout(async () => {
-      try {
-        // Đăng xuất session thật nếu có
-        await supabase.auth.signOut();
-      } catch (e) {
-        // Ignore
-      }
-
-      // Thiết lập thông tin demo trong LocalStorage
-      localStorage.setItem("bino_simulated_role", simulatedRole);
-      localStorage.setItem(
-        "bino_simulated_user",
-        simulatedRole === "parent" ? "Mẹ Bé Minh An (Demo)" : "Cô giáo Mai Anh (Demo)",
-      );
-      localStorage.setItem(
-        "bino_simulated_email",
-        simulatedRole === "parent" ? "parent.demo@bino.edu.vn" : "teacher.demo@bino.edu.vn",
-      );
-
-      // Kích hoạt thay đổi auth state bằng cách reload nhẹ hoặc redirect
-      setSuccess(
-        `Đăng nhập thành công ở chế độ Demo với vai trò ${simulatedRole === "parent" ? "Phụ huynh" : "Giáo viên"}!`,
-      );
-      setIsLoading(false);
-
-      setTimeout(() => {
-        navigate({ to: "/" });
-      }, 1000);
-    }, 600);
-  };
-
+  
   return (
     <div
       className="min-h-screen relative overflow-hidden flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
@@ -403,48 +373,8 @@ function LoginPage() {
               </form>
             )}
 
-            {/* Quick Demo Logins Section */}
-            <div className="relative my-6 text-center">
-              <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-slate-100"></span>
-              <span className="relative px-3 bg-white text-xs font-semibold text-slate-400">
-                HOẶC DÙNG THỬ NHANH
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => handleSimulatedLogin("parent")}
-                disabled={isLoading}
-                className="h-12 rounded-2xl border-2 border-slate-100 shadow-[2px_2px_0px_#eee] hover:border-[var(--brand-blue)] hover:bg-blue-50/20 text-xs font-bold flex flex-col items-center justify-center pt-2.5 pb-2"
-              >
-                <Baby className="w-4 h-4 text-blue-500 mb-0.5" />
-                <span>Bản Phụ huynh</span>
-              </Button>
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => handleSimulatedLogin("teacher")}
-                disabled={isLoading}
-                className="h-12 rounded-2xl border-2 border-slate-100 shadow-[2px_2px_0px_#eee] hover:border-[var(--brand-mint)] hover:bg-emerald-50/20 text-xs font-bold flex flex-col items-center justify-center pt-2.5 pb-2"
-              >
-                <GraduationCap className="w-4 h-4 text-emerald-500 mb-0.5" />
-                <span>Bản Giáo viên</span>
-              </Button>
-            </div>
-          </CardContent>
+                      </CardContent>
         </Card>
-
-        {/* Friendly Tip footer */}
-        <div className="flex justify-center">
-          <div className="px-5 py-2.5 rounded-2xl bg-white border-2 border-white shadow-[4px_4px_0px_var(--brand-yellow-soft)] flex items-center gap-2 rotate-1">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-semibold text-ink">
-              Hệ thống dùng thử không yêu cầu email thật!
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   );

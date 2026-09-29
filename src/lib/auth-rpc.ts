@@ -32,6 +32,7 @@ export const registerUser = createServerFn({ method: "POST" })
         name: fullName,
         role,
         verificationToken,
+        isEmailVerified: true, // AUTO VERIFY CHO HỆ THỐNG THẬT KHI CHƯA CÓ EMAIL
       },
     });
 
@@ -41,7 +42,7 @@ export const registerUser = createServerFn({ method: "POST" })
       console.error("Failed to send verification email:", err);
     }
 
-    return { success: true, message: "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác thực tài khoản." };
+    return { success: true, message: "Đăng ký thành công! Bạn có thể đăng nhập ngay." };
   });
 
 export const loginUser = createServerFn({ method: "POST" })
