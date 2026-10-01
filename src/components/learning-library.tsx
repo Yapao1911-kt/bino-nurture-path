@@ -93,7 +93,7 @@ const allResources: Resource[] = [
     difficulty: ["Chậm nói / Chậm ngôn ngữ", "Chậm phát triển trí tuệ", "Rối loạn phổ tự kỷ (ASD)"],
     format: "PDF",
     accessLevel: "BASIC",
-    imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/intellectual-disability.png",
     sourceName: "Bộ Y tế & Ủy ban Y tế Hà Lan - Việt Nam (MCNV)",
     keyPoints: [
       "Bảng chuẩn mốc phát triển thần kinh - vận động và ngôn ngữ - giao tiếp trẻ em từ 1 tháng đến 15 tuổi.",
@@ -113,7 +113,7 @@ const allResources: Resource[] = [
     difficulty: ["Hội chứng Down"],
     format: "Bài viết",
     accessLevel: "BASIC",
-    imageUrl: "https://hellobacsi.com/wp-content/uploads/2019/07/tim-hieu-hoi-chung-down-o-thai-nhi-1.jpg",
+    imageUrl: "/down-syndrome.png",
     externalUrl: "https://hellobacsi.com/nuoi-day-con/nhi-khoa/roi-loan-hanh-vi-phat-trien/tim-hieu-hoi-chung-down-o-thai-nhi/",
     sourceName: "Hello Bacsi",
     keyPoints: [
@@ -132,7 +132,7 @@ const allResources: Resource[] = [
     difficulty: ["Chậm nói / Chậm ngôn ngữ"],
     format: "Bài viết",
     accessLevel: "BASIC",
-    imageUrl: "https://tamanhhospital.vn/wp-content/uploads/2023/10/tre-cham-phat-trien-ngon-ngu-1.jpg",
+    imageUrl: "/language-delay-1.png",
     externalUrl: "https://tamanhhospital.vn/cach-day-tre-cham-phat-trien-ngon-ngu/",
     sourceName: "Bệnh viện Tâm Anh",
     keyPoints: [
@@ -151,7 +151,7 @@ const allResources: Resource[] = [
     difficulty: ["Chậm nói / Chậm ngôn ngữ"],
     format: "Bài viết",
     accessLevel: "BASIC",
-    imageUrl: "https://ngaymoiedu.com/wp-content/uploads/2021/04/tre-cham-noi.jpg",
+    imageUrl: "/language-delay-2.png",
     externalUrl: "https://ngaymoiedu.com/bai-viet/bai-tap-day-tre-cham-noi-tai-nha.html",
     sourceName: "Ngày Mới Education",
     keyPoints: [
@@ -170,7 +170,7 @@ const allResources: Resource[] = [
     difficulty: ["Chậm phát triển trí tuệ"],
     format: "PDF",
     accessLevel: "BASIC",
-    imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/intellectual-disability.png",
     externalUrl: "https://caritasvietnam.org/datafiles/files/1591167191_14_phcn_tre-cham-phat-trien-tri-tue.pdf",
     sourceName: "Caritas Việt Nam",
     keyPoints: [
@@ -189,7 +189,7 @@ const allResources: Resource[] = [
     difficulty: ["Chậm nói / Chậm ngôn ngữ"],
     format: "Bài viết",
     accessLevel: "BASIC",
-    imageUrl: "https://donghanhviet.vn/wp-content/uploads/2021/08/ngon-ngu-ky-hieu.jpg",
+    imageUrl: "/sign-language.png",
     externalUrl: "https://donghanhviet.vn/dac-diem-cua-ngon-ngu-ky-hieu-viet-nam/",
     sourceName: "Đồng Hành Việt",
     keyPoints: [

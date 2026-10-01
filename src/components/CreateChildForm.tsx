@@ -6,17 +6,8 @@
 // ============================================================
 
 import { useState } from "react";
-import {
-  Heart,
-  Baby,
-  MapPin,
-  Stethoscope,
-  Loader2,
-  CheckCircle2,
-  AlertCircle,
-  Sparkles,
-  ArrowLeft,
-} from "lucide-react";
+import { Heart, Baby, MapPin, Stethoscope, Loader2, CheckCircle2, AlertCircle, Sparkles, ArrowLeft } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabase";
 import { createChildFn } from "@/routes/api/children";
 import { Input } from "@/components/ui/input";
@@ -149,6 +140,7 @@ function CuteStar({
 // COMPONENT CHÍNH: CreateChildForm
 // ============================================================
 export default function CreateChildForm() {
+  const navigate = useNavigate();
   // -------------------------------------------------------
   // State Management — Quản lý trạng thái với useState
   // -------------------------------------------------------
@@ -278,8 +270,8 @@ export default function CreateChildForm() {
         setApiResponse({
           type: "success",
           message: simulatedRole
-            ? `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Đăng nhập tài khoản thật để đồng bộ đám mây.`
-            : `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Bạn có thể Đăng nhập để lưu trên cloud.`,
+            ? `Đã tạo hồ sơ cho bé thành công! Đăng nhập tài khoản thật để đồng bộ đám mây`
+            : `Đã tạo hồ sơ cho bé thành công! Đăng nhập tài khoản thật để đồng bộ đám mây`,
         });
         setFormData({ name: "", age: "",  condition: "" });
         setErrors({});
