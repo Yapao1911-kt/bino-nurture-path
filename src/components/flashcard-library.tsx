@@ -642,7 +642,7 @@ export function FlashcardLibrary() {
                               Gợi ý tương tác cùng con:
                             </div>
                             <p className="leading-relaxed">
-                              Chỉ vào thẻ và hỏi bé: <em>"{card.label} làm như thế nào nhỉ?"</em> hoặc khuyến khích bé nói lặp lại từ này 2-3 lần.
+                              Khuyến khích bé nói lặp lại từ này 2-3 lần.
                             </p>
                           </div>
                         </div>

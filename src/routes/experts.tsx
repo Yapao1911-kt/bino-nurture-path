@@ -28,7 +28,7 @@ const EXPERTS = [
     experience: "12 năm kinh nghiệm",
     rating: 5.0,
     reviews: 215,
-    specialties: ["Khó khăn học tập", "Rối loạn giấc ngủ", "Theo dõi phát triển"],
+    specialties: ["Chậm phát triển trí tuệ", "Rối loạn giấc ngủ", "Theo dõi phát triển"],
     imageUrl:
       "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=600&auto=format&fit=crop",
     price: "600.000đ/giờ",

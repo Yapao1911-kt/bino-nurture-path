@@ -34,7 +34,7 @@ const allResources: Resource[] = [
       "Video kể chuyện trực quan giúp bé luyện chú ý, lắng nghe và làm quen với các tình huống giao tiếp đơn giản.",
     category: "Kiến thức",
     ageGroup: ["0-3 tuổi", "3-6 tuổi"],
-    difficulty: ["Chậm ngôn ngữ", "Tự kỷ (ASD)"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ", "Rối loạn phổ tự kỷ (ASD)"],
     format: "Video",
     accessLevel: "BASIC",
     imageUrl: "/bino-ai-mascot.png",
@@ -47,7 +47,7 @@ const allResources: Resource[] = [
       "Tổng quan 6 dạng khuyết tật ở trẻ theo quy định hiện hành (vận động, nghe nói, thị giác, thần kinh - tâm thần, trí tuệ), dấu hiệu nhận biết sớm và phương pháp can thiệp phục hồi chức năng giúp trẻ hòa nhập cộng đồng.",
     category: "Kiến thức",
     ageGroup: ["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"],
-    difficulty: ["Khó khăn học tập", "Chậm ngôn ngữ", "Tự kỷ (ASD)"],
+    difficulty: ["Chậm phát triển trí tuệ", "Chậm nói / Chậm ngôn ngữ", "Rối loạn phổ tự kỷ (ASD)"],
     format: "Bài viết",
     accessLevel: "BASIC",
     imageUrl: "https://vitreemkhuyettat.org/qvtekt/Upload/news/cac-dang-khuyet-tat-o-tre-1.jpg",
@@ -90,7 +90,7 @@ const allResources: Resource[] = [
       "Cẩm nang chuyên sâu của Bộ Y tế về PHCN dựa vào cộng đồng: hướng dẫn theo dõi bảng mốc phát triển 0-15 tuổi, 7 bài tập vận động trị liệu, hoạt động trị liệu tự phục vụ và kỹ thuật giao tiếp sớm.",
     category: "Kiến thức",
     ageGroup: ["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"],
-    difficulty: ["Chậm ngôn ngữ", "Khó khăn học tập", "Tự kỷ (ASD)"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ", "Chậm phát triển trí tuệ", "Rối loạn phổ tự kỷ (ASD)"],
     format: "PDF",
     accessLevel: "BASIC",
     imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop",
@@ -102,6 +102,103 @@ const allResources: Resource[] = [
       "Kích thích giao tiếp sớm: Rèn phản xạ nhìn/nghe, kỹ năng 'bắt chước & lần lượt' (chơi ú oà, lăn bóng, chơi giả vờ), học từ vựng qua cặp thẻ tranh đối lập.",
     ],
   },
+,
+
+  {
+    id: "new-1",
+    title: "Cách nhận biết bệnh down ở trẻ sơ sinh mà mẹ cần lưu ý",
+    description: "Những thông tin cơ bản và các dấu hiệu nhận biết sớm hội chứng Down ở trẻ sơ sinh và thai nhi, giúp cha mẹ có sự chuẩn bị tốt nhất.",
+    category: "Kiến thức",
+    ageGroup: ["0-3 tuổi"],
+    difficulty: ["Hội chứng Down"],
+    format: "Bài viết",
+    accessLevel: "BASIC",
+    imageUrl: "https://hellobacsi.com/wp-content/uploads/2019/07/tim-hieu-hoi-chung-down-o-thai-nhi-1.jpg",
+    externalUrl: "https://hellobacsi.com/nuoi-day-con/nhi-khoa/roi-loan-hanh-vi-phat-trien/tim-hieu-hoi-chung-down-o-thai-nhi/",
+    sourceName: "Hello Bacsi",
+    keyPoints: [
+      "Tổng quan về hội chứng Down và nguyên nhân do dư thừa NST số 21.",
+      "Dấu hiệu nhận biết sớm qua siêu âm thai kỳ và các xét nghiệm tầm soát.",
+      "Đặc điểm thể chất của trẻ sơ sinh mắc hội chứng Down (Khuôn mặt, trương lực cơ).",
+      "Lời khuyên về can thiệp sớm và cách chăm sóc đặc biệt."
+    ],
+  },
+  {
+    id: "new-2",
+    title: "CÁCH DẠY TRẺ CHẬM PHÁT TRIỂN NGÔN NGỮ CHA MẸ NÊN BIẾT",
+    description: "Cẩm nang hướng dẫn cha mẹ các phương pháp tiếp cận và tương tác để giúp trẻ phát triển khả năng ngôn ngữ một cách tự nhiên và hiệu quả.",
+    category: "Kiến thức",
+    ageGroup: ["0-3 tuổi", "3-6 tuổi"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ"],
+    format: "Bài viết",
+    accessLevel: "BASIC",
+    imageUrl: "https://tamanhhospital.vn/wp-content/uploads/2023/10/tre-cham-phat-trien-ngon-ngu-1.jpg",
+    externalUrl: "https://tamanhhospital.vn/cach-day-tre-cham-phat-trien-ngon-ngu/",
+    sourceName: "Bệnh viện Tâm Anh",
+    keyPoints: [
+      "Nguyên tắc dạy trẻ chậm nói: Trò chuyện thường xuyên, sử dụng ngôn ngữ cơ thể và tạo môi trường giao tiếp tích cực.",
+      "Kết hợp chơi và học: Các trò chơi tương tác như giả vờ, hát, đọc sách giúp trẻ ghi nhớ từ vựng dễ hơn.",
+      "Tầm quan trọng của việc hạn chế thiết bị điện tử.",
+      "Vai trò của chuyên gia ngôn ngữ trị liệu."
+    ],
+  },
+  {
+    id: "new-3",
+    title: "Bài tập dạy trẻ chậm nói tại nhà",
+    description: "Tổng hợp các bài tập thực hành đơn giản và dễ áp dụng tại nhà giúp cha mẹ rèn luyện kỹ năng phát âm và giao tiếp cho trẻ.",
+    category: "Kiến thức",
+    ageGroup: ["0-3 tuổi", "3-6 tuổi"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ"],
+    format: "Bài viết",
+    accessLevel: "BASIC",
+    imageUrl: "https://ngaymoiedu.com/wp-content/uploads/2021/04/tre-cham-noi.jpg",
+    externalUrl: "https://ngaymoiedu.com/bai-viet/bai-tap-day-tre-cham-noi-tai-nha.html",
+    sourceName: "Ngày Mới Education",
+    keyPoints: [
+      "Bài tập luyện cơ quan phát âm: Mát xa cơ miệng, tập thổi bong bóng, chu môi.",
+      "Bài tập bắt chước âm thanh: Tiếng kêu con vật, tiếng còi xe.",
+      "Bài tập chỉ tay và gọi tên đồ vật xung quanh.",
+      "Bài tập phát triển vốn từ qua tranh ảnh và hoạt động hàng ngày."
+    ],
+  },
+  {
+    id: "new-4",
+    title: "Phục hồi chức năng trẻ chậm phát triển trí tuệ",
+    description: "Tài liệu chuyên môn chi tiết hướng dẫn phương pháp phục hồi chức năng và giáo dục đặc biệt dành cho trẻ chậm phát triển trí tuệ.",
+    category: "Kiến thức",
+    ageGroup: ["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"],
+    difficulty: ["Chậm phát triển trí tuệ"],
+    format: "PDF",
+    accessLevel: "BASIC",
+    imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop",
+    externalUrl: "https://caritasvietnam.org/datafiles/files/1591167191_14_phcn_tre-cham-phat-trien-tri-tue.pdf",
+    sourceName: "Caritas Việt Nam",
+    keyPoints: [
+      "Đánh giá mức độ chậm phát triển trí tuệ.",
+      "Kế hoạch can thiệp cá nhân hóa (IEP) cho trẻ.",
+      "Kỹ năng tự phục vụ, giao tiếp và xã hội.",
+      "Hỗ trợ tâm lý cho gia đình và trẻ."
+    ],
+  },
+  {
+    id: "new-5",
+    title: "Đặc điểm của ngôn ngữ ký hiệu Việt Nam",
+    description: "Tìm hiểu về ngôn ngữ ký hiệu, một công cụ giao tiếp quan trọng hỗ trợ trẻ khiếm thính và trẻ gặp khó khăn trong ngôn ngữ nói.",
+    category: "Kiến thức",
+    ageGroup: ["3-6 tuổi", "6-12 tuổi"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ"],
+    format: "Bài viết",
+    accessLevel: "BASIC",
+    imageUrl: "https://donghanhviet.vn/wp-content/uploads/2021/08/ngon-ngu-ky-hieu.jpg",
+    externalUrl: "https://donghanhviet.vn/dac-diem-cua-ngon-ngu-ky-hieu-viet-nam/",
+    sourceName: "Đồng Hành Việt",
+    keyPoints: [
+      "Sự phong phú và đa dạng của ngôn ngữ ký hiệu theo từng vùng miền.",
+      "Cấu trúc ngữ pháp cơ bản của ngôn ngữ ký hiệu Việt Nam.",
+      "Lợi ích của ngôn ngữ ký hiệu trong việc phát triển tư duy.",
+      "Khuyến khích giao tiếp phi ngôn ngữ kết hợp biểu cảm khuôn mặt."
+    ],
+  }
 ];
 
 interface LearningLibraryProps {
@@ -238,12 +335,11 @@ export function LearningLibrary({ initialTab = "Kiến thức", userType }: Lear
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tất cả vấn đề</SelectItem>
-                  <SelectItem value="Tự kỷ (ASD)">Tự kỷ (ASD)</SelectItem>
-                  <SelectItem value="Tăng động giảm chú ý (ADHD)">
-                    Tăng động giảm chú ý (ADHD)
-                  </SelectItem>
-                  <SelectItem value="Chậm ngôn ngữ">Chậm ngôn ngữ</SelectItem>
-                  <SelectItem value="Khó khăn học tập">Khó khăn học tập</SelectItem>
+                  <SelectItem value="Rối loạn phổ tự kỷ (ASD)">Rối loạn phổ tự kỷ (ASD)</SelectItem>
+                  <SelectItem value="Tăng động giảm chú ý (ADHD)">Tăng động giảm chú ý (ADHD)</SelectItem>
+                  <SelectItem value="Chậm nói / Chậm ngôn ngữ">Chậm nói / Chậm ngôn ngữ</SelectItem>
+                  <SelectItem value="Chậm phát triển trí tuệ">Chậm phát triển trí tuệ</SelectItem>
+                  <SelectItem value="Hội chứng Down">Hội chứng Down</SelectItem>
                 </SelectContent>
               </Select>
 

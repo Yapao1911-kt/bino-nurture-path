@@ -1,9 +1,9 @@
 export type AgeGroup = "0-3 tuổi" | "3-6 tuổi" | "6-12 tuổi";
 export type DifficultyType =
-  | "Tự kỷ (ASD)"
+  | "Rối loạn phổ tự kỷ (ASD)"
   | "Tăng động giảm chú ý (ADHD)"
-  | "Chậm ngôn ngữ"
-  | "Khó khăn học tập";
+  | "Chậm nói / Chậm ngôn ngữ"
+  | "Chậm phát triển trí tuệ";
 export type FileFormat = "Video" | "Bài viết" | "PDF" | "Hình ảnh";
 export type ResourceCategory = "Kiến thức" | "Học liệu";
 export type AccessLevel = "BASIC" | "PREMIUM";
@@ -34,7 +34,7 @@ export const mockResources: Resource[] = [
       "Video hướng dẫn phụ huynh nhận biết các dấu hiệu sớm của rối loạn phổ tự kỷ ở trẻ nhỏ.",
     category: "Kiến thức",
     ageGroup: ["0-3 tuổi"],
-    difficulty: ["Tự kỷ (ASD)"],
+    difficulty: ["Rối loạn phổ tự kỷ (ASD)"],
     format: "Video",
     accessLevel: "BASIC",
     imageUrl:
@@ -50,7 +50,7 @@ export const mockResources: Resource[] = [
       "Bộ thẻ hình ảnh giúp trẻ gọi tên và nhận biết các cảm xúc cơ bản (Vui, buồn, tức giận, sợ hãi).",
     category: "Học liệu",
     ageGroup: ["3-6 tuổi"],
-    difficulty: ["Tự kỷ (ASD)", "Chậm ngôn ngữ"],
+    difficulty: ["Rối loạn phổ tự kỷ (ASD)", "Chậm nói / Chậm ngôn ngữ"],
     format: "Hình ảnh",
     accessLevel: "BASIC",
     imageUrl:
@@ -76,7 +76,7 @@ export const mockResources: Resource[] = [
       "Bộ thẻ giao tiếp trao đổi hình ảnh (PECS) hỗ trợ trẻ xây dựng lịch trình đánh răng, đi ngủ, ăn uống.",
     category: "Học liệu",
     ageGroup: ["3-6 tuổi", "0-3 tuổi"],
-    difficulty: ["Tự kỷ (ASD)", "Chậm ngôn ngữ"],
+    difficulty: ["Rối loạn phổ tự kỷ (ASD)", "Chậm nói / Chậm ngôn ngữ"],
     format: "PDF",
     accessLevel: "PREMIUM",
     imageUrl:
@@ -89,7 +89,7 @@ export const mockResources: Resource[] = [
       "Câu chuyện xã hội (Social Story) dạng hình ảnh hướng dẫn cách xếp hàng và chia sẻ đồ chơi.",
     category: "Học liệu",
     ageGroup: ["3-6 tuổi", "6-12 tuổi"],
-    difficulty: ["Tự kỷ (ASD)"],
+    difficulty: ["Rối loạn phổ tự kỷ (ASD)"],
     format: "Hình ảnh",
     accessLevel: "BASIC",
     imageUrl:
@@ -102,7 +102,7 @@ export const mockResources: Resource[] = [
       "Tổng quan 6 dạng khuyết tật ở trẻ theo quy định hiện hành (vận động, nghe nói, thị giác, thần kinh - tâm thần, trí tuệ), dấu hiệu nhận biết sớm và phương pháp can thiệp phục hồi chức năng giúp trẻ hòa nhập cộng đồng.",
     category: "Học liệu",
     ageGroup: ["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"],
-    difficulty: ["Khó khăn học tập", "Chậm ngôn ngữ", "Tự kỷ (ASD)"],
+    difficulty: ["Chậm phát triển trí tuệ", "Chậm nói / Chậm ngôn ngữ", "Rối loạn phổ tự kỷ (ASD)"],
     format: "Bài viết",
     accessLevel: "BASIC",
     imageUrl: "https://vitreemkhuyettat.org/qvtekt/Upload/news/cac-dang-khuyet-tat-o-tre-1.jpg",
@@ -145,7 +145,7 @@ export const mockResources: Resource[] = [
       "Cẩm nang chuyên sâu của Bộ Y tế về PHCN dựa vào cộng đồng: hướng dẫn theo dõi bảng mốc phát triển 0-15 tuổi, 7 bài tập vận động trị liệu, hoạt động trị liệu tự phục vụ và kỹ thuật giao tiếp sớm.",
     category: "Học liệu",
     ageGroup: ["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"],
-    difficulty: ["Chậm ngôn ngữ", "Khó khăn học tập", "Tự kỷ (ASD)"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ", "Chậm phát triển trí tuệ", "Rối loạn phổ tự kỷ (ASD)"],
     format: "PDF",
     accessLevel: "BASIC",
     imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop",

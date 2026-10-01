@@ -157,7 +157,7 @@ export default function CreateChildForm() {
   const [formData, setFormData] = useState<ChildFormData>({
     name: "",
     age: "",
-    address: "",
+    
     condition: "",
   });
 
@@ -281,9 +281,10 @@ export default function CreateChildForm() {
             ? `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Đăng nhập tài khoản thật để đồng bộ đám mây.`
             : `Chế độ dùng thử (Offline): Đã tạo hồ sơ cho bé "${formData.name.trim()}" thành công! Bạn có thể Đăng nhập để lưu trên cloud.`,
         });
-        setFormData({ name: "", age: "", address: "", condition: "" });
+        setFormData({ name: "", age: "",  condition: "" });
         setErrors({});
         setHasSubmitted(false);
+        setTimeout(() => { navigate({ to: "/" }); }, 1500);
         return;
       }
 
@@ -308,9 +309,10 @@ export default function CreateChildForm() {
         });
 
         // Reset form sau khi tạo thành công
-        setFormData({ name: "", age: "", address: "", condition: "" });
+        setFormData({ name: "", age: "",  condition: "" });
         setErrors({});
         setHasSubmitted(false);
+        setTimeout(() => { navigate({ to: "/" }); }, 1500);
       } else {
         // Lỗi từ Server Function
         const errorMessages = data.errors
@@ -466,7 +468,9 @@ export default function CreateChildForm() {
 
           <CardContent className="px-6 sm:px-8 pb-8">
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-              {/* ----- Trường 1: Tên của trẻ (bắt buộc) ----- */}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+{/* ----- Trường 1: Tên của trẻ (bắt buộc) ----- */}
               <div className="space-y-2">
                 <Label
                   htmlFor="child-name"
@@ -538,31 +542,7 @@ export default function CreateChildForm() {
                   </p>
                 )}
               </div>
-
-              {/* ----- Trường 3: Địa chỉ (tùy chọn) ----- */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="child-address"
-                  className="text-sm font-semibold text-ink flex items-center gap-2"
-                >
-                  <span
-                    className="w-7 h-7 rounded-lg grid place-items-center"
-                    style={{ background: "var(--brand-mint-soft)" }}
-                  >
-                    <MapPin className="w-3.5 h-3.5" style={{ color: "#75D06A" }} />
-                  </span>
-                  Địa chỉ
-                </Label>
-                <Input
-                  id="child-address"
-                  type="text"
-                  placeholder="Ví dụ: 123 Đường ABC, Quận 1, TP.HCM"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange("address", e.target.value)}
-                  disabled={isLoading}
-                  className="h-12 rounded-xl bg-[var(--brand-mint-soft)]/30 border-2 border-transparent px-4 text-ink placeholder:text-ink/40 transition-all duration-200 focus:bg-white focus:border-[var(--brand-mint)] focus:shadow-[0_0_0_3px_rgba(168,230,207,0.25)]"
-                />
-              </div>
+</div>
 
               {/* ----- Trường 4: Tình trạng của trẻ (Dropdown Select) ----- */}
               <div className="space-y-2">
@@ -600,7 +580,8 @@ export default function CreateChildForm() {
                 </Select>
               </div>
 
-              {/* ----- Nút Submit ----- */}
+            
+  {/* ----- Nút Submit ----- */}
               <div className="pt-4">
                 <Button
                   type="submit"
