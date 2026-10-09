@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev --port 8082",
     "ingest": "tsx scripts/ingest.ts",
-    "build": "npx prisma generate && vite build && mkdir -p .vercel/output/functions/__server.func/node_modules && cp -RL node_modules/@prisma node_modules/.prisma node_modules/bcryptjs node_modules/nodemailer .vercel/output/functions/__server.func/node_modules/",
+    "build": "npx prisma generate && vite build && node -e \"const fs=require('fs'); const path=require('path'); const out=path.resolve('.vercel/output/functions/__server.func/node_modules'); fs.mkdirSync(out,{recursive:true}); const targets=['@prisma','.prisma','bcryptjs','nodemailer']; for (const target of targets) { const src=path.join('node_modules', target); const dest=path.join(out, target); if (fs.existsSync(src)) fs.cpSync(src, dest, { recursive: true, force: true }); }\"",
     "build:dev": "vite build --mode development",
     "postinstall": "npx prisma generate",
     "preview": "vite preview",
@@ -25,7 +25,7 @@
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-context-menu": "^2.2.16",
     "@radix-ui/react-dialog": "^1.1.15",
-    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-dropdown-menu": "^1.2.16",
     "@radix-ui/react-hover-card": "^1.1.15",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-menubar": "^1.1.16",

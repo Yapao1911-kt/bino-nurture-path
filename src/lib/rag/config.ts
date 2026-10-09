@@ -1,10 +1,9 @@
 import path from "node:path";
-import "dotenv/config";
 
 /**
- * Read a setting from process.env first, then Vite's import.meta.env.
- * LLM/embedding secrets are intentionally NOT VITE_-prefixed so they never
- * get inlined into the browser bundle.
+ * Vercel and the runtime environment already provide process.env for production.
+ * Loading dotenv at runtime is unnecessary here and can break when Nitro bundles
+ * the app into ESM output for serverless deployment.
  */
 function env(key: string, fallback = ""): string {
   const fromProcess = typeof process !== "undefined" ? process.env[key] : undefined;
