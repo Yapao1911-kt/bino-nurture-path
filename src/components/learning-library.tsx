@@ -102,8 +102,6 @@ const allResources: Resource[] = [
       "Kích thích giao tiếp sớm: Rèn phản xạ nhìn/nghe, kỹ năng 'bắt chước & lần lượt' (chơi ú oà, lăn bóng, chơi giả vờ), học từ vựng qua cặp thẻ tranh đối lập.",
     ],
   },
-,
-
   {
     id: "new-1",
     title: "Cách nhận biết bệnh down ở trẻ sơ sinh mà mẹ cần lưu ý",

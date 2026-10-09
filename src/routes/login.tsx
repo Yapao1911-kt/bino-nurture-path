@@ -58,7 +58,7 @@ function LoginPage() {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState<"parent" | "teacher">("parent");
 
-  // Xử lý đăng nhập thật bằng server function
+  // Xử lý đăng nhập thật bằng Supabase
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
@@ -76,12 +76,13 @@ function LoginPage() {
       localStorage.removeItem("bino_simulated_user");
       localStorage.removeItem("bino_simulated_email");
 
-      const { loginUser } = await import("@/lib/auth-rpc");
-      const res = await loginUser({ data: { email: email.trim(), password: password.trim() } });
-      if (res.user) {
-        localStorage.setItem("bino_simulated_role", res.user.role || "parent");
-        localStorage.setItem("bino_simulated_user", res.user.name || "Người dùng");
-        localStorage.setItem("bino_simulated_email", res.user.email || email.trim());
+      const { data, error: sbError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim(),
+      });
+
+      if (sbError) {
+        throw sbError;
       }
 
       setSuccess("Đăng nhập thành công! Đang chuyển hướng...");
@@ -90,13 +91,17 @@ function LoginPage() {
       }, 1000);
     } catch (err: any) {
       console.error("Login error:", err);
-      setError(err.message || "Email hoặc Mật khẩu không chính xác.");
+      const msg =
+        err?.message === "Invalid login credentials"
+          ? "Email hoặc Mật khẩu không chính xác."
+          : err?.message || "Email hoặc Mật khẩu không chính xác.";
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Xử lý đăng ký thật bằng server function
+  // Xử lý đăng ký thật bằng Supabase
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim() || !fullName.trim()) {
@@ -114,29 +119,66 @@ function LoginPage() {
     setSuccess(null);
 
     try {
-      const { registerUser } = await import("@/lib/auth-rpc");
-      const res = await registerUser({
-        data: {
-          email: email.trim(),
-          password: password.trim(),
-          fullName: fullName.trim(),
-          role: role,
-        }
+      const { data, error: sbError } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: password.trim(),
+        options: {
+          data: {
+            full_name: fullName.trim(),
+            role: role,
+          },
+        },
       });
 
-      setSuccess(res.message || "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác thực tài khoản.");
+      if (sbError) {
+        throw sbError;
+      }
+
+      setSuccess("Đăng ký thành công! Bạn có thể đăng nhập ngay.");
       setEmail("");
       setPassword("");
       setFullName("");
     } catch (err: any) {
       console.error("Register error:", err);
-      setError(err.message || "Có lỗi xảy ra trong quá trình đăng ký.");
+      setError(err?.message || "Có lỗi xảy ra trong quá trình đăng ký.");
     } finally {
       setIsLoading(false);
     }
   };
 
   // Đăng nhập giả lập để chạy thử nhanh (Offline/Demo Mode)
+  const handleSimulatedLogin = (simulatedRole: "parent" | "teacher") => {
+    setIsLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    setTimeout(async () => {
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        // Ignore
+      }
+
+      localStorage.setItem("bino_simulated_role", simulatedRole);
+      localStorage.setItem(
+        "bino_simulated_user",
+        simulatedRole === "parent" ? "Mẹ Bé Minh An (Demo)" : "Cô giáo Mai Anh (Demo)",
+      );
+      localStorage.setItem(
+        "bino_simulated_email",
+        simulatedRole === "parent" ? "parent.demo@bino.edu.vn" : "teacher.demo@bino.edu.vn",
+      );
+
+      setSuccess(
+        `Đăng nhập thành công ở chế độ Demo với vai trò ${simulatedRole === "parent" ? "Phụ huynh" : "Giáo viên"}!`,
+      );
+      setIsLoading(false);
+
+      setTimeout(() => {
+        navigate({ to: "/" });
+      }, 1000);
+    }, 600);
+  };
   
   return (
     <div
@@ -373,7 +415,37 @@ function LoginPage() {
               </form>
             )}
 
-                      </CardContent>
+            {/* Quick Demo Logins Section */}
+            <div className="relative my-6 text-center">
+              <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-slate-100"></span>
+              <span className="relative px-3 bg-white text-xs font-semibold text-slate-400">
+                HOẶC DÙNG THỬ NHANH
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => handleSimulatedLogin("parent")}
+                disabled={isLoading}
+                className="h-12 rounded-2xl border-2 border-slate-100 shadow-[2px_2px_0px_#eee] hover:border-[var(--brand-blue)] hover:bg-blue-50/20 text-xs font-bold flex flex-col items-center justify-center pt-2.5 pb-2"
+              >
+                <Baby className="w-4 h-4 text-blue-500 mb-0.5" />
+                <span>Bản Phụ huynh</span>
+              </Button>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => handleSimulatedLogin("teacher")}
+                disabled={isLoading}
+                className="h-12 rounded-2xl border-2 border-slate-100 shadow-[2px_2px_0px_#eee] hover:border-[var(--brand-mint)] hover:bg-emerald-50/20 text-xs font-bold flex flex-col items-center justify-center pt-2.5 pb-2"
+              >
+                <GraduationCap className="w-4 h-4 text-emerald-500 mb-0.5" />
+                <span>Bản Giáo viên</span>
+              </Button>
+            </div>
+          </CardContent>
         </Card>
       </div>
     </div>

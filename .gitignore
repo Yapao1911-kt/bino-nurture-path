@@ -1,0 +1,15 @@
+# Secrets — never commit real keys
+.env
+.env.local
+.env.*.local
+
+# RAG vector database (built by `npm run ingest`)
+vector_db/
+
+# WHO CST source PDFs (large binaries; keep local only)
+data/knowledge/who_cst/*.pdf
+
+# Dependencies / build output
+node_modules/
+dist/
+.vercel/

@@ -165,6 +165,7 @@ async function main() {
     create: {
       email: "free@example.com",
       name: "Free User",
+      passwordHash: "dummy-hash",
       subscription: "FREE",
     },
   });
@@ -175,6 +176,7 @@ async function main() {
     create: {
       email: "premium@example.com",
       name: "Premium User",
+      passwordHash: "dummy-hash",
       subscription: "PREMIUM",
     },
   });

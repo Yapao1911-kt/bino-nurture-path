@@ -9,7 +9,7 @@ export default async function render(url: string) {
   });
   router.update({
     history: memoryHistory,
-  });
+  } as any);
   await router.load();
 
   // Actually with @tanstack/react-start, we typically don't manually render like this, 

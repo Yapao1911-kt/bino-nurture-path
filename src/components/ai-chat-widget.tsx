@@ -12,10 +12,18 @@ export type AIChatProgressPoint = {
   words?: number;
 };
 
+type Source = {
+  document: string;
+  session: number | null;
+  section: string | null;
+  page: number | null;
+};
+
 type ChatMessage = {
   role: "user" | "assistant";
   text: string;
   loading?: boolean;
+  sources?: Source[];
 };
 
 type AIChatWidgetProps = {
@@ -26,30 +34,41 @@ type AIChatWidgetProps = {
 
 const MASCOT_SRC = "/bino-ai-mascot.png";
 
-const SYSTEM_PROMPT = `Bạn là Bino, một trợ lý AI thân thiện, ấm áp và chuyên nghiệp trong lĩnh vực giáo dục đặc biệt cho trẻ em có khó khăn về phát triển (chậm nói, tự kỷ, ADHD...).
-Bạn giúp phụ huynh/giáo viên phân tích tình huống, gợi ý hoạt động và định hướng can thiệp sớm phù hợp.
-Luôn trả lời bằng tiếng Việt, ngắn gọn (2-4 đoạn), dùng emoji phù hợp, giọng điệu nhẹ nhàng, khích lệ và chuyên nghiệp.
-Khi đưa lời khuyên, hãy cụ thể, dễ làm tại nhà, không gây áp lực và không thay thế chẩn đoán y khoa.`;
+type ChatResponse = { answer?: string; sources?: Source[]; error?: string };
 
-async function callOllama(
-  messages: { role: "user" | "assistant"; text: string }[],
-): Promise<string> {
-  const response = await fetch("/api/ollama-chat", {
+async function callChat(message: string): Promise<{ answer: string; sources: Source[] }> {
+  const response = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      messages,
-      systemPrompt: SYSTEM_PROMPT,
-    }),
+    body: JSON.stringify({ message }),
   });
 
-  const data = (await response.json()) as { reply?: string; message?: string };
-
-  if (!response.ok || !data.reply) {
-    throw new Error(data.message || "Ollama chưa có phản hồi.");
+  let data: ChatResponse | null = null;
+  try {
+    data = (await response.json()) as ChatResponse;
+  } catch {
+    data = null;
   }
 
-  return data.reply;
+  if (!response.ok) {
+    throw new Error(data?.error || `Bino gặp sự cố (mã ${response.status}). Vui lòng thử lại.`);
+  }
+
+  if (!data || typeof data.answer !== "string" || !data.answer.trim()) {
+    throw new Error("Phản hồi từ máy chủ không hợp lệ.");
+  }
+
+  return { answer: data.answer, sources: Array.isArray(data.sources) ? data.sources : [] };
+}
+
+function cleanPlainText(text: string): string {
+  if (!text) return "";
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\\?\*(.*?)\\?\*/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*{1,3}/g, "");
 }
 
 function MascotImage({ className = "w-full h-full" }: { className?: string }) {
@@ -61,30 +80,6 @@ function MascotImage({ className = "w-full h-full" }: { className?: string }) {
       draggable={false}
     />
   );
-}
-
-function buildContextText(
-  selectedChild: AIChatChild,
-  progressData: AIChatProgressPoint[] | undefined,
-  contextLabel: string,
-) {
-  const childText = `${selectedChild.name}${selectedChild.age ? `, ${selectedChild.age} tuổi` : ""}`;
-
-  if (progressData?.length) {
-    const latest = progressData[progressData.length - 1];
-    const scores = progressData
-      .map((item) => item.score)
-      .filter((score): score is number => typeof score === "number");
-    const scoreText = scores.length ? `Điểm tiến bộ: ${scores.join(", ")}.` : "";
-    const latestText =
-      typeof latest.score === "number" || typeof latest.words === "number"
-        ? `Tuần mới nhất: ${latest.score ?? "chưa có"} điểm, học ${latest.words ?? "chưa có"} từ mới.`
-        : "";
-
-    return `[Ngữ cảnh: ${contextLabel}. Đang hỗ trợ ${childText}. ${scoreText} ${latestText}]`;
-  }
-
-  return `[Ngữ cảnh: ${contextLabel}. Người dùng đang ở trang chính của Bino và có thể hỏi về lộ trình học, hoạt động can thiệp sớm, học liệu hoặc cách theo dõi tiến trình cho ${childText}.]`;
 }
 
 export function AIChatWidget({
@@ -128,26 +123,17 @@ export function AIChatWidget({
     setIsLoading(true);
 
     try {
-      const history = [...messages.filter((m) => !m.loading), userMsg].map((m) => ({
-        role: m.role,
-        text: m.text,
-      }));
-
-      history[0] = {
-        role: "user",
-        text: `${buildContextText(selectedChild, progressData, contextLabel)}\n\n${history[0].text}`,
-      };
-
-      const reply = await callOllama(history);
-      setMessages((prev) => [...prev.slice(0, -1), { role: "assistant", text: reply }]);
-    } catch {
+      const { answer, sources } = await callChat(text);
       setMessages((prev) => [
         ...prev.slice(0, -1),
-        {
-          role: "assistant",
-          text: "Ôi, Bino chưa kết nối được với Ollama trên máy bạn. Bạn kiểm tra Ollama đang chạy và model llama3 đã sẵn sàng rồi thử lại nhé.",
-        },
+        { role: "assistant", text: answer, sources },
       ]);
+    } catch (err) {
+      const friendly =
+        err instanceof Error && err.message
+          ? err.message
+          : "Ôi, Bino đang gặp sự cố kết nối. Bạn thử lại một chút nữa nhé.";
+      setMessages((prev) => [...prev.slice(0, -1), { role: "assistant", text: friendly }]);
     } finally {
       setIsLoading(false);
     }
@@ -284,6 +270,8 @@ export function AIChatWidget({
                       />
                     ))}
                   </div>
+                ) : msg.role === "assistant" ? (
+                  cleanPlainText(msg.text)
                 ) : (
                   msg.text
                 )}

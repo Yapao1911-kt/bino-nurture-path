@@ -5,4 +5,6 @@ import { getRouter } from "./router";
 
 const router = getRouter();
 
-hydrateRoot(document.getElementById("root") || document, <StartClient router={router} />);
+const Client = StartClient as any;
+
+hydrateRoot(document.getElementById("root") || document, <Client router={router} />);

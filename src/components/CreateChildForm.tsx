@@ -31,7 +31,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 interface ChildFormData {
   name: string;
   age: string; // Lưu dạng string để quản lý input, convert sang number khi submit
-  address: string;
+  address?: string;
   condition: string;
 }
 

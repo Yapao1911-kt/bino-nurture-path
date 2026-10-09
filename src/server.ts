@@ -2,6 +2,11 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { retrieveContext } from "./lib/rag/retriever";
+import { buildContext } from "./lib/rag/prompts";
+import { generateAnswer } from "./lib/rag/provider";
+import { VectorStoreNotReadyError } from "./lib/rag/vectorStore";
+import { NO_ANSWER_MESSAGE } from "./lib/rag/safety";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -16,6 +21,12 @@ type OllamaChatBody = {
   messages?: OllamaChatMessage[];
   systemPrompt?: string;
 };
+
+type ChatBody = {
+  message?: unknown;
+};
+
+const MAX_MESSAGE_LENGTH = 4000;
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
@@ -143,6 +154,57 @@ async function handleOllamaChat(request: Request, env: unknown): Promise<Respons
   }
 }
 
+async function handleChat(request: Request): Promise<Response> {
+  let body: ChatBody;
+  try {
+    body = (await request.json()) as ChatBody;
+  } catch {
+    return jsonResponse({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const message = body?.message;
+  if (typeof message !== "string" || !message.trim()) {
+    return jsonResponse({ error: "message is required" }, { status: 400 });
+  }
+  if (message.length > MAX_MESSAGE_LENGTH) {
+    return jsonResponse(
+      { error: `message is too long (max ${MAX_MESSAGE_LENGTH} characters)` },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const { chunks, sources } = await retrieveContext(message.trim());
+    const context = buildContext(chunks);
+    const answer = (await generateAnswer({ question: message.trim(), context })).trim();
+
+    return jsonResponse({
+      answer: answer || NO_ANSWER_MESSAGE,
+      // Only retrieval metadata is returned — never embeddings, raw chunks,
+      // scores, prompts, or internal configuration.
+      sources: sources.map((s) => ({
+        document: s.document,
+        session: s.session,
+        section: s.section,
+        page: s.page,
+      })),
+    });
+  } catch (error) {
+    if (error instanceof VectorStoreNotReadyError) {
+      return jsonResponse(
+        { error: "WHO CST knowledge base has not been built. Run npm run ingest." },
+        { status: 503 },
+      );
+    }
+    // Log details server-side only; return a safe, generic message to the client.
+    console.error("[/api/chat] error:", error);
+    return jsonResponse(
+      { error: "The assistant is temporarily unavailable. Please try again shortly." },
+      { status: 500 },
+    );
+  }
+}
+
 function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boolean {
   let payload: unknown;
   try {
@@ -188,6 +250,9 @@ export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const url = new URL(request.url);
+      if (url.pathname === "/api/chat" && request.method === "POST") {
+        return await handleChat(request);
+      }
       if (url.pathname === "/api/ollama-chat" && request.method === "POST") {
         return await handleOllamaChat(request, env);
       }
