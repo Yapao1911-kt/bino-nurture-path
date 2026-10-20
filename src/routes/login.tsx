@@ -2,20 +2,16 @@
 // Route: /login
 // File: src/routes/login.tsx
 // Mô tả: Trang đăng nhập & đăng ký thành viên cho Bino.
-//         Hỗ trợ cả đăng nhập thật bằng Supabase và đăng nhập
-//         giả lập (Demo Mode) tiện lợi.
+//         Hỗ trợ phân quyền rõ ràng giữa Phụ huynh và Giáo viên.
 // ============================================================
 
 import { useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import {
   Heart,
-  Sparkles,
-  Smile,
   Mail,
   Lock,
   User,
-  ArrowRight,
   Loader2,
   GraduationCap,
   Baby,
@@ -23,13 +19,13 @@ import {
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { loginUser, registerUser } from "@/lib/auth-rpc";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -58,7 +54,7 @@ function LoginPage() {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState<"parent" | "teacher">("parent");
 
-  // Xử lý đăng nhập thật bằng Supabase
+  // Xử lý đăng nhập thật
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
@@ -71,37 +67,49 @@ function LoginPage() {
     setSuccess(null);
 
     try {
-      // Clear simulation data first
-      localStorage.removeItem("bino_simulated_role");
-      localStorage.removeItem("bino_simulated_user");
-      localStorage.removeItem("bino_simulated_email");
-
-      const { data, error: sbError } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password: password.trim(),
+      const res = await loginUser({
+        data: {
+          email: email.trim(),
+          password: password.trim(),
+          role: role,
+        },
       });
 
-      if (sbError) {
-        throw sbError;
+      if (!res.success || !res.user) {
+        setError(res.error || "Email hoặc Mật khẩu không chính xác.");
+        return;
       }
 
-      setSuccess("Đăng nhập thành công! Đang chuyển hướng...");
+      // Lưu thông tin người dùng thật vào localStorage
+      const userRole = res.user.role || role;
+      const userName = res.user.name || "Người dùng";
+
+      localStorage.setItem("bino_user_role", userRole);
+      localStorage.setItem("bino_user_name", userName);
+      localStorage.setItem("bino_user_email", res.user.email);
+      localStorage.setItem("bino_user_id", res.user.id);
+
+      // Đồng bộ các key tương thích ngược
+      localStorage.setItem("bino_simulated_role", userRole);
+      localStorage.setItem("bino_simulated_user", userName);
+      localStorage.setItem("bino_simulated_email", res.user.email);
+
+      setSuccess(
+        `Đăng nhập thành công với vai trò ${userRole === "teacher" ? "Giáo viên" : "Phụ huynh"}! Đang chuyển hướng...`
+      );
+
       setTimeout(() => {
         navigate({ to: "/" });
-      }, 1000);
+      }, 800);
     } catch (err: any) {
       console.error("Login error:", err);
-      const msg =
-        err?.message === "Invalid login credentials"
-          ? "Email hoặc Mật khẩu không chính xác."
-          : err?.message || "Email hoặc Mật khẩu không chính xác.";
-      setError(msg);
+      setError(err?.message || "Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Xử lý đăng ký thật bằng Supabase
+  // Xử lý đăng ký thật
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim() || !fullName.trim()) {
@@ -119,25 +127,28 @@ function LoginPage() {
     setSuccess(null);
 
     try {
-      const { data, error: sbError } = await supabase.auth.signUp({
-        email: email.trim(),
-        password: password.trim(),
-        options: {
-          data: {
-            full_name: fullName.trim(),
-            role: role,
-          },
+      const res = await registerUser({
+        data: {
+          email: email.trim(),
+          password: password.trim(),
+          fullName: fullName.trim(),
+          role: role,
         },
       });
 
-      if (sbError) {
-        throw sbError;
+      if (!res.success) {
+        setError(res.error || "Có lỗi xảy ra trong quá trình đăng ký.");
+        return;
       }
 
-      setSuccess("Đăng ký thành công! Bạn có thể đăng nhập ngay.");
-      setEmail("");
-      setPassword("");
-      setFullName("");
+      setSuccess("Đăng ký tài khoản thành công! Đang chuyển sang màn hình đăng nhập...");
+      
+      // Giữ lại email đã nhập và chuyển sang tab đăng nhập
+      setTimeout(() => {
+        setActiveTab("login");
+        setError(null);
+        setSuccess("Tài khoản đã sẵn sàng! Vui lòng nhập mật khẩu để đăng nhập.");
+      }, 1200);
     } catch (err: any) {
       console.error("Register error:", err);
       setError(err?.message || "Có lỗi xảy ra trong quá trình đăng ký.");
@@ -146,40 +157,6 @@ function LoginPage() {
     }
   };
 
-  // Đăng nhập giả lập để chạy thử nhanh (Offline/Demo Mode)
-  const handleSimulatedLogin = (simulatedRole: "parent" | "teacher") => {
-    setIsLoading(true);
-    setError(null);
-    setSuccess(null);
-
-    setTimeout(async () => {
-      try {
-        await supabase.auth.signOut();
-      } catch (e) {
-        // Ignore
-      }
-
-      localStorage.setItem("bino_simulated_role", simulatedRole);
-      localStorage.setItem(
-        "bino_simulated_user",
-        simulatedRole === "parent" ? "Mẹ Bé Minh An (Demo)" : "Cô giáo Mai Anh (Demo)",
-      );
-      localStorage.setItem(
-        "bino_simulated_email",
-        simulatedRole === "parent" ? "parent.demo@bino.edu.vn" : "teacher.demo@bino.edu.vn",
-      );
-
-      setSuccess(
-        `Đăng nhập thành công ở chế độ Demo với vai trò ${simulatedRole === "parent" ? "Phụ huynh" : "Giáo viên"}!`,
-      );
-      setIsLoading(false);
-
-      setTimeout(() => {
-        navigate({ to: "/" });
-      }, 1000);
-    }, 600);
-  };
-  
   return (
     <div
       className="min-h-screen relative overflow-hidden flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
@@ -229,7 +206,7 @@ function LoginPage() {
         <Card className="rounded-[2.5rem] border-0 bg-white shadow-[12px_12px_0px_#f3f3f3]">
           <CardHeader className="pb-2 pt-6 px-6 sm:px-8">
             <Tabs
-              defaultValue="login"
+              value={activeTab}
               onValueChange={(val) => {
                 setActiveTab(val as "login" | "register");
                 setError(null);
@@ -258,7 +235,7 @@ function LoginPage() {
             {error && (
               <Alert variant="destructive" className="mb-4 rounded-2xl">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-sm">{error}</AlertDescription>
+                <AlertDescription className="text-sm font-medium">{error}</AlertDescription>
               </Alert>
             )}
 
@@ -269,6 +246,40 @@ function LoginPage() {
               </Alert>
             )}
 
+            {/* Mục chọn vai trò: Phụ huynh hoặc Giáo viên (áp dụng cho cả 2 tab) */}
+            <div className="mb-5 space-y-1.5">
+              <Label className="text-xs font-bold text-ink/80 flex items-center justify-between">
+                <span>Bạn là:</span>
+                <span className="text-[11px] font-semibold text-slate-400">
+                  {role === "parent" ? "Dành cho gia đình" : "Dành cho trường / trung tâm"}
+                </span>
+              </Label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setRole("parent")}
+                  className={`h-11 rounded-xl border-2 flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer ${
+                    role === "parent"
+                      ? "border-[var(--brand-blue)] bg-blue-50/50 text-blue-700 shadow-xs"
+                      : "border-slate-100 bg-slate-50 text-slate-500 hover:bg-slate-100"
+                  }`}
+                >
+                  <Baby className="w-4 h-4 text-blue-600" /> Phụ huynh
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole("teacher")}
+                  className={`h-11 rounded-xl border-2 flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer ${
+                    role === "teacher"
+                      ? "border-[var(--brand-mint)] bg-emerald-50/50 text-emerald-700 shadow-xs"
+                      : "border-slate-100 bg-slate-50 text-slate-500 hover:bg-slate-100"
+                  }`}
+                >
+                  <GraduationCap className="w-4 h-4 text-emerald-600" /> Giáo viên
+                </button>
+              </div>
+            </div>
+
             {/* TAB: Đăng nhập */}
             {activeTab === "login" ? (
               <form onSubmit={handleLogin} className="space-y-4">
@@ -277,15 +288,16 @@ function LoginPage() {
                     htmlFor="login-email"
                     className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
                   >
-                    <Mail className="w-3.5 h-3.5" /> Email
+                    <Mail className="w-3.5 h-3.5 text-slate-400" /> Email đăng nhập
                   </Label>
                   <Input
                     id="login-email"
                     type="email"
-                    placeholder="TenCuaBan@example.com"
+                    placeholder="ten.ban@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isLoading}
+                    required
                     className="h-11 rounded-xl bg-slate-50 border-0 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)]/50 focus-visible:border-[var(--brand-blue)]"
                   />
                 </div>
@@ -295,7 +307,7 @@ function LoginPage() {
                     htmlFor="login-password"
                     className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
                   >
-                    <Lock className="w-3.5 h-3.5" /> Mật khẩu
+                    <Lock className="w-3.5 h-3.5 text-slate-400" /> Mật khẩu
                   </Label>
                   <Input
                     id="login-password"
@@ -304,6 +316,7 @@ function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isLoading}
+                    required
                     className="h-11 rounded-xl bg-slate-50 border-0 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)]/50 focus-visible:border-[var(--brand-blue)]"
                   />
                 </div>
@@ -311,10 +324,17 @@ function LoginPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-11 rounded-2xl text-sm font-bold shadow-[4px_4px_0px_#6eb0db] transition-all hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_#6eb0db] active:translate-y-0 active:shadow-[2px_2px_0px_#6eb0db]"
-                  style={{ background: "var(--brand-blue)", color: "white" }}
+                  className="w-full h-11 rounded-2xl text-sm font-bold shadow-[4px_4px_0px_#6eb0db] transition-all hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_#6eb0db] active:translate-y-0 active:shadow-[2px_2px_0px_#6eb0db] cursor-pointer"
+                  style={{
+                    background: role === "teacher" ? "#3bb383" : "var(--brand-blue)",
+                    color: "white",
+                  }}
                 >
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Đăng nhập ngay"}
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    `Đăng nhập (${role === "teacher" ? "Giáo viên" : "Phụ huynh"})`
+                  )}
                 </Button>
               </form>
             ) : (
@@ -325,7 +345,7 @@ function LoginPage() {
                     htmlFor="reg-name"
                     className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
                   >
-                    <User className="w-3.5 h-3.5" /> Họ và tên của bạn
+                    <User className="w-3.5 h-3.5 text-slate-400" /> Họ và tên của bạn
                   </Label>
                   <Input
                     id="reg-name"
@@ -334,6 +354,7 @@ function LoginPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     disabled={isLoading}
+                    required
                     className="h-11 rounded-xl bg-slate-50 border-0 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)]/50 focus-visible:border-[var(--brand-blue)]"
                   />
                 </div>
@@ -343,7 +364,7 @@ function LoginPage() {
                     htmlFor="reg-email"
                     className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
                   >
-                    <Mail className="w-3.5 h-3.5" /> Địa chỉ Email
+                    <Mail className="w-3.5 h-3.5 text-slate-400" /> Địa chỉ Email
                   </Label>
                   <Input
                     id="reg-email"
@@ -352,6 +373,7 @@ function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isLoading}
+                    required
                     className="h-11 rounded-xl bg-slate-50 border-0 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)]/50 focus-visible:border-[var(--brand-blue)]"
                   />
                 </div>
@@ -361,7 +383,7 @@ function LoginPage() {
                     htmlFor="reg-password"
                     className="text-xs font-bold text-ink/80 flex items-center gap-1.5"
                   >
-                    <Lock className="w-3.5 h-3.5" /> Tạo mật khẩu
+                    <Lock className="w-3.5 h-3.5 text-slate-400" /> Tạo mật khẩu
                   </Label>
                   <Input
                     id="reg-password"
@@ -370,81 +392,28 @@ function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isLoading}
+                    required
                     className="h-11 rounded-xl bg-slate-50 border-0 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)]/50 focus-visible:border-[var(--brand-blue)]"
                   />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-bold text-ink/80">
-                    Bạn đăng ký với vai trò là:
-                  </Label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setRole("parent")}
-                      className={`h-11 rounded-xl border-2 flex items-center justify-center gap-2 text-xs font-bold transition-all ${
-                        role === "parent"
-                          ? "border-[var(--brand-blue)] bg-[var(--brand-blue-soft)]/20 text-blue-600"
-                          : "border-slate-100 bg-slate-50 text-slate-500 hover:bg-slate-100"
-                      }`}
-                    >
-                      <Baby className="w-4 h-4" /> Phụ huynh
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRole("teacher")}
-                      className={`h-11 rounded-xl border-2 flex items-center justify-center gap-2 text-xs font-bold transition-all ${
-                        role === "teacher"
-                          ? "border-[var(--brand-mint)] bg-[var(--brand-mint-soft)]/20 text-emerald-600"
-                          : "border-slate-100 bg-slate-50 text-slate-500 hover:bg-slate-100"
-                      }`}
-                    >
-                      <GraduationCap className="w-4 h-4" /> Giáo viên
-                    </button>
-                  </div>
                 </div>
 
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-11 rounded-2xl text-sm font-bold shadow-[4px_4px_0px_#3bb383] transition-all hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_#3bb383] active:translate-y-0 active:shadow-[2px_2px_0px_#3bb383]"
-                  style={{ background: "var(--brand-mint)", color: "white" }}
+                  className="w-full h-11 rounded-2xl text-sm font-bold shadow-[4px_4px_0px_#3bb383] transition-all hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_#3bb383] active:translate-y-0 active:shadow-[2px_2px_0px_#3bb383] cursor-pointer"
+                  style={{
+                    background: role === "teacher" ? "#3bb383" : "var(--brand-blue)",
+                    color: "white",
+                  }}
                 >
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Đăng ký tài khoản"}
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    `Đăng ký tài khoản (${role === "teacher" ? "Giáo viên" : "Phụ huynh"})`
+                  )}
                 </Button>
               </form>
             )}
-
-            {/* Quick Demo Logins Section */}
-            <div className="relative my-6 text-center">
-              <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-slate-100"></span>
-              <span className="relative px-3 bg-white text-xs font-semibold text-slate-400">
-                HOẶC DÙNG THỬ NHANH
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => handleSimulatedLogin("parent")}
-                disabled={isLoading}
-                className="h-12 rounded-2xl border-2 border-slate-100 shadow-[2px_2px_0px_#eee] hover:border-[var(--brand-blue)] hover:bg-blue-50/20 text-xs font-bold flex flex-col items-center justify-center pt-2.5 pb-2"
-              >
-                <Baby className="w-4 h-4 text-blue-500 mb-0.5" />
-                <span>Bản Phụ huynh</span>
-              </Button>
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => handleSimulatedLogin("teacher")}
-                disabled={isLoading}
-                className="h-12 rounded-2xl border-2 border-slate-100 shadow-[2px_2px_0px_#eee] hover:border-[var(--brand-mint)] hover:bg-emerald-50/20 text-xs font-bold flex flex-col items-center justify-center pt-2.5 pb-2"
-              >
-                <GraduationCap className="w-4 h-4 text-emerald-500 mb-0.5" />
-                <span>Bản Giáo viên</span>
-              </Button>
-            </div>
           </CardContent>
         </Card>
       </div>

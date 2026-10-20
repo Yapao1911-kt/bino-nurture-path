@@ -17,6 +17,8 @@ import {
   Palette,
   MessageCircle,
   GraduationCap,
+  Baby,
+  User,
   Compass,
   Star,
   Calendar,
@@ -148,19 +150,19 @@ function Navbar() {
   });
 
   useEffect(() => {
-    // 1. Kiểm tra tài khoản giả lập từ localStorage
-    const simulatedRole = localStorage.getItem("bino_simulated_role");
-    const simulatedUser = localStorage.getItem("bino_simulated_user");
-    if (simulatedRole) {
+    // 1. Kiểm tra tài khoản thật từ localStorage
+    const savedRole = localStorage.getItem("bino_user_role") || localStorage.getItem("bino_simulated_role");
+    const savedUser = localStorage.getItem("bino_user_name") || localStorage.getItem("bino_simulated_user");
+    if (savedUser && savedRole) {
       setAuth({
         isLoggedIn: true,
-        userName: simulatedUser || "Người dùng Demo",
-        role: simulatedRole,
+        userName: savedUser,
+        role: savedRole,
       });
       return;
     }
 
-    // 2. Nếu không có giả lập, kiểm tra Supabase Session thật
+    // 2. Kiểm tra Supabase Session nếu có
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setAuth({
@@ -175,14 +177,14 @@ function Navbar() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      const simRole = localStorage.getItem("bino_simulated_role");
-      const simUser = localStorage.getItem("bino_simulated_user");
+      const sRole = localStorage.getItem("bino_user_role") || localStorage.getItem("bino_simulated_role");
+      const sUser = localStorage.getItem("bino_user_name") || localStorage.getItem("bino_simulated_user");
 
-      if (simRole) {
+      if (sUser && sRole) {
         setAuth({
           isLoggedIn: true,
-          userName: simUser || "Người dùng Demo",
-          role: simRole,
+          userName: sUser,
+          role: sRole,
         });
       } else if (session?.user) {
         setAuth({
@@ -205,10 +207,18 @@ function Navbar() {
   }, []);
 
   const handleSignOut = async () => {
+    localStorage.removeItem("bino_user_role");
+    localStorage.removeItem("bino_user_name");
+    localStorage.removeItem("bino_user_email");
+    localStorage.removeItem("bino_user_id");
     localStorage.removeItem("bino_simulated_role");
     localStorage.removeItem("bino_simulated_user");
     localStorage.removeItem("bino_simulated_email");
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      // ignore
+    }
     setAuth({
       isLoggedIn: false,
       userName: null,
@@ -268,12 +278,33 @@ function Navbar() {
         </ul>
         <div className="hidden md:flex items-center gap-3">
           {auth.isLoggedIn ? (
-            <>
-              <div className="flex flex-col items-end mr-1 text-right">
-                <span className="text-sm font-extrabold text-slate-800">Chào, {auth.userName}</span>
-                <span className="text-[10px] uppercase tracking-wider font-bold text-[#7274ED]">
-                  {auth.role === "teacher" ? "Giáo viên" : "Phụ huynh"}
-                </span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl bg-white border border-slate-200/90 shadow-xs">
+                <div
+                  className={`w-8 h-8 rounded-xl grid place-items-center ${
+                    auth.role === "teacher"
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-blue-100 text-blue-700"
+                  }`}
+                >
+                  {auth.role === "teacher" ? (
+                    <GraduationCap className="w-4 h-4 text-emerald-700" />
+                  ) : (
+                    <Baby className="w-4 h-4 text-blue-700" />
+                  )}
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-xs font-extrabold text-slate-800 leading-tight">
+                    {auth.userName}
+                  </span>
+                  <span
+                    className={`inline-block text-[10px] font-black uppercase tracking-wider ${
+                      auth.role === "teacher" ? "text-emerald-600" : "text-blue-600"
+                    }`}
+                  >
+                    {auth.role === "teacher" ? "Giáo viên" : "Phụ huynh"}
+                  </span>
+                </div>
               </div>
               <Link
                 to="/create-child"
@@ -283,11 +314,11 @@ function Navbar() {
               </Link>
               <button
                 onClick={handleSignOut}
-                className="px-4 py-2 text-xs font-bold text-[#FF8B8B] hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
+                className="px-3.5 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
               >
                 Đăng xuất
               </button>
-            </>
+            </div>
           ) : (
             <>
               <Link
@@ -356,11 +387,30 @@ function Navbar() {
           <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
             {auth.isLoggedIn ? (
               <>
-                <div className="px-4 py-1.5 flex flex-col">
-                  <span className="text-sm font-bold text-slate-800">Chào, {auth.userName}</span>
-                  <span className="text-xs text-[#7274ED] font-semibold">
-                    Vai trò: {auth.role === "teacher" ? "Giáo viên" : "Phụ huynh"}
-                  </span>
+                <div className="px-3.5 py-2.5 flex items-center gap-3 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div
+                    className={`w-9 h-9 rounded-xl grid place-items-center ${
+                      auth.role === "teacher"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-blue-100 text-blue-700"
+                    }`}
+                  >
+                    {auth.role === "teacher" ? (
+                      <GraduationCap className="w-5 h-5 text-emerald-700" />
+                    ) : (
+                      <Baby className="w-5 h-5 text-blue-700" />
+                    )}
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-sm font-bold text-slate-800">{auth.userName}</span>
+                    <span
+                      className={`text-[11px] font-black uppercase tracking-wider ${
+                        auth.role === "teacher" ? "text-emerald-600" : "text-blue-600"
+                      }`}
+                    >
+                      {auth.role === "teacher" ? "Giáo viên" : "Phụ huynh"}
+                    </span>
+                  </div>
                 </div>
                 <Link
                   to="/create-child"
@@ -375,7 +425,7 @@ function Navbar() {
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="block w-full text-center px-4 py-2.5 rounded-2xl text-[#FF8B8B] hover:bg-rose-50 font-bold cursor-pointer"
+                  className="block w-full text-center px-4 py-2.5 rounded-2xl text-rose-500 hover:bg-rose-50 font-bold cursor-pointer"
                 >
                   Đăng xuất
                 </button>
