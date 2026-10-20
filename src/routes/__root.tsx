@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -132,6 +133,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yy6aw8c0f4");`,
+          }}
+        />
       </head>
       <body>
         {children}
@@ -143,6 +150,19 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !(window as any).clarity) {
+      (function (c: any, l: any, a: any, r: any, i: any) {
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+        const t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        const y = l.getElementsByTagName(r)[0];
+        y?.parentNode?.insertBefore(t, y);
+      })(window, document, "clarity", "script", "yy6aw8c0f4");
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
