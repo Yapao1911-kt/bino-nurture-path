@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "vite dev --port 8082",
     "ingest": "tsx scripts/ingest.ts",
-    "build": "npx prisma generate && vite build && node -e \"const fs=require('fs'); const path=require('path'); const out=path.resolve('.vercel/output/functions/__server.func/node_modules'); fs.mkdirSync(out,{recursive:true}); const targets=['@prisma','.prisma','bcryptjs','nodemailer']; for (const target of targets) { const src=path.join('node_modules', target); const dest=path.join(out, target); if (fs.existsSync(src)) fs.cpSync(src, dest, { recursive: true, force: true }); }\"",
+    "build": "(node node_modules/prisma/build/index.js generate || npx prisma generate) && vite build && node -e \"const fs=require('fs'); const path=require('path'); const out=path.resolve('.vercel/output/functions/__server.func/node_modules'); fs.mkdirSync(out,{recursive:true}); const targets=['@prisma','.prisma','bcryptjs','nodemailer']; for (const target of targets) { const src=path.join('node_modules', target); const dest=path.join(out, target); if (fs.existsSync(src)) fs.cpSync(src, dest, { recursive: true, force: true }); }\"",
     "build:dev": "vite build --mode development",
-    "postinstall": "npx prisma generate",
+    "postinstall": "node node_modules/prisma/build/index.js generate || npx prisma generate",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write ."
