@@ -9,9 +9,17 @@ export class AsyncLocalStorage<T = any> {
     const prev = this.store;
     this.store = store;
     try {
-      return callback(...args);
-    } finally {
+      const result = callback(...args);
+      if (result && typeof (result as any).then === "function") {
+        return (result as any).finally(() => {
+          this.store = prev;
+        });
+      }
       this.store = prev;
+      return result;
+    } catch (error) {
+      this.store = prev;
+      throw error;
     }
   }
 

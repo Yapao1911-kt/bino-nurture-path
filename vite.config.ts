@@ -41,10 +41,6 @@ export default defineConfig({
     resolve: {
       alias: [
         {
-          find: /^(node:)?async_hooks$/,
-          replacement: asyncHooksPolyfillPath,
-        },
-        {
           find: "#tanstack-router-entry",
           replacement: path.resolve(__dirname, "src/router.tsx"),
         },
@@ -81,7 +77,7 @@ export default defineConfig({
       },
     },
     ssr: {
-      external: ["@prisma/client", "bcryptjs", "nodemailer", "prisma"],
+      external: ["@prisma/client", "bcryptjs", "nodemailer", "prisma", "node:async_hooks", "async_hooks"],
     },
     build: {
       rollupOptions: {

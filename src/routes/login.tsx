@@ -103,7 +103,9 @@ function LoginPage() {
       }, 800);
     } catch (err: any) {
       console.error("Login error:", err);
-      setError(err?.message || "Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.");
+      const msg = err?.message || "";
+      const isHtml = typeof msg === "string" && (msg.includes("<!doctype") || msg.includes("<html"));
+      setError(isHtml ? "Máy chủ đang khởi động hoặc gặp sự cố tạm thời. Vui lòng thử lại sau giây lát." : (msg || "Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại."));
     } finally {
       setIsLoading(false);
     }
@@ -151,7 +153,9 @@ function LoginPage() {
       }, 1200);
     } catch (err: any) {
       console.error("Register error:", err);
-      setError(err?.message || "Có lỗi xảy ra trong quá trình đăng ký.");
+      const msg = err?.message || "";
+      const isHtml = typeof msg === "string" && (msg.includes("<!doctype") || msg.includes("<html"));
+      setError(isHtml ? "Máy chủ đang khởi động hoặc gặp sự cố tạm thời. Vui lòng thử lại sau giây lát." : (msg || "Có lỗi xảy ra trong quá trình đăng ký. Vui lòng thử lại."));
     } finally {
       setIsLoading(false);
     }
