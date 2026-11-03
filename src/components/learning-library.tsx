@@ -28,6 +28,25 @@ export interface Resource {
 
 const allResources: Resource[] = [
   {
+    id: "k-video-can-thiep-som-bino",
+    title: "Video hướng dẫn thực hành can thiệp sớm cho bé",
+    description:
+      "Video tài liệu trực quan hướng dẫn phụ huynh và giáo viên các kỹ thuật tương tác, trò chơi phát triển kỹ năng giao tiếp và chú ý chung cho trẻ.",
+    category: "Kiến thức",
+    ageGroup: ["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ", "Rối loạn phổ tự kỷ (ASD)", "Tăng động giảm chú ý (ADHD)"],
+    format: "Video",
+    accessLevel: "BASIC",
+    imageUrl: "/language-delay-1.png",
+    videoUrl: "/videos/video-thuc-hanh-can-thiep-som.mp4",
+    sourceName: "Chương trình can thiệp sớm Bino",
+    keyPoints: [
+      "Kỹ thuật tương tác và thu hút sự chú ý chung (Joint Attention) qua trò chơi tự nhiên.",
+      "Cách làm mẫu ngôn ngữ, nói chậm rõ ràng và tạo khoảng dừng để trẻ chủ động phản hồi.",
+      "Rèn luyện kỹ năng vận động và tương tác tích cực không gây áp lực cho bé.",
+    ],
+  },
+  {
     id: "k1",
     title: "Video kể chuyện tương tác cho bé",
     description:

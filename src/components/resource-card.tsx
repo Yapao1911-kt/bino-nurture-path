@@ -204,6 +204,7 @@ export function ResourceCard({ resource, userType }: ResourceCardProps) {
                   src={resource.videoUrl}
                   poster={imageSrc}
                   controls
+                  playsInline
                   preload="metadata"
                   className="w-full max-h-[60vh] bg-black rounded-lg"
                 />
