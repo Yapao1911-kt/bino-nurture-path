@@ -18,7 +18,7 @@ function env(key: string, fallback = ""): string {
 
 const ROOT = typeof process !== "undefined" ? process.cwd() : ".";
 
-const provider = env("LLM_PROVIDER", "openai").toLowerCase();
+const provider = env("LLM_PROVIDER", "gemini").toLowerCase();
 const isGemini = provider === "gemini";
 
 // One active provider => one resolved key. Generic LLM_API_KEY wins, then the

@@ -174,7 +174,16 @@ async function handleChat(request: Request): Promise<Response> {
   }
 
   try {
-    const { chunks, sources } = await retrieveContext(message.trim());
+    let chunks: any[] = [];
+    let sources: any[] = [];
+    try {
+      const retrieval = await retrieveContext(message.trim());
+      chunks = retrieval.chunks;
+      sources = retrieval.sources;
+    } catch (retrievalError) {
+      console.warn("[/api/chat] Retrieval error, proceeding with direct LLM:", retrievalError);
+    }
+
     const context = buildContext(chunks);
     const answer = (await generateAnswer({ question: message.trim(), context })).trim();
 
@@ -190,16 +199,10 @@ async function handleChat(request: Request): Promise<Response> {
       })),
     });
   } catch (error) {
-    if (error instanceof VectorStoreNotReadyError) {
-      return jsonResponse(
-        { error: "WHO CST knowledge base has not been built. Run npm run ingest." },
-        { status: 503 },
-      );
-    }
-    // Log details server-side only; return a safe, generic message to the client.
+    // Log details server-side only; return a friendly message to the client.
     console.error("[/api/chat] error:", error);
     return jsonResponse(
-      { error: "The assistant is temporarily unavailable. Please try again shortly." },
+      { error: "Bino hiện đang bận hoặc gặp sự cố kết nối. Bạn vui lòng thử lại sau giây lát nhé!" },
       { status: 500 },
     );
   }
