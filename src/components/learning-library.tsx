@@ -28,22 +28,39 @@ export interface Resource {
 
 const allResources: Resource[] = [
   {
-    id: "k-video-can-thiep-som-bino",
-    title: "Video hướng dẫn thực hành can thiệp sớm cho bé",
+    id: "k-video-cau-chuyen-meo-con",
+    title: "Video Câu chuyện của Mèo Con",
     description:
-      "Video tài liệu trực quan hướng dẫn phụ huynh và giáo viên các kỹ thuật tương tác, trò chơi phát triển kỹ năng giao tiếp và chú ý chung cho trẻ.",
+      "Video kể chuyện sinh động giúp bé phát triển khả năng lắng nghe, nhận biết tình huống và tăng cường vốn từ giao tiếp tự nhiên.",
     category: "Kiến thức",
     ageGroup: ["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"],
     difficulty: ["Chậm nói / Chậm ngôn ngữ", "Rối loạn phổ tự kỷ (ASD)", "Tăng động giảm chú ý (ADHD)"],
     format: "Video",
     accessLevel: "BASIC",
-    imageUrl: "/language-delay-1.png",
-    videoUrl: "/videos/video-thuc-hanh-can-thiep-som.mp4",
-    sourceName: "Chương trình can thiệp sớm Bino",
+    imageUrl: "/images/thumb-cau-chuyen-meo-con.png",
+    videoUrl: "/videos/video-cau-chuyen-meo-con.mp4",
     keyPoints: [
-      "Kỹ thuật tương tác và thu hút sự chú ý chung (Joint Attention) qua trò chơi tự nhiên.",
+      "Kỹ thuật tương tác và thu hút sự chú ý chung (Joint Attention) qua câu chuyện gần gũi.",
       "Cách làm mẫu ngôn ngữ, nói chậm rõ ràng và tạo khoảng dừng để trẻ chủ động phản hồi.",
-      "Rèn luyện kỹ năng vận động và tương tác tích cực không gây áp lực cho bé.",
+      "Khơi gợi hứng thú giao tiếp và cảm xúc tích cực cho trẻ.",
+    ],
+  },
+  {
+    id: "k-video-chu-gau-di-tim-tieng-noi",
+    title: "Chú gấu đi tìm tiếng nói",
+    description:
+      "Video hoạt hình trực quan 'Chú gấu đi tìm tiếng nói' khơi gợi phản xạ bắt chước âm thanh, kích thích bật âm và làm giàu ngôn ngữ cho bé.",
+    category: "Kiến thức",
+    ageGroup: ["0-3 tuổi", "3-6 tuổi"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ", "Rối loạn phổ tự kỷ (ASD)"],
+    format: "Video",
+    accessLevel: "BASIC",
+    imageUrl: "/images/thumb-chu-gau-di-tim-tieng-noi.png",
+    videoUrl: "/videos/video-chu-gau-di-tim-tieng-noi.mp4",
+    keyPoints: [
+      "Khơi dậy phản xạ lắng nghe và bắt chước các ngữ điệu phát âm vui nhộn.",
+      "Tập trung rèn luyện cử động môi - miệng và sự kết nối mắt với người chăm sóc.",
+      "Nội dung giáo dục nhẹ nhàng, gần gũi và hấp dẫn với trẻ nhỏ.",
     ],
   },
   {
