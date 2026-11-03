@@ -17,8 +17,26 @@ model User {
   isEmailVerified   Boolean  @default(false)
   verificationToken String?  @db.Text
   subscription      String   @default("FREE") // FREE or PREMIUM
+  children          Child[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+model Child {
+  id                      String    @id @default(cuid())
+  userId                  String
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                    String
+  age                     Int
+  dateOfBirth             DateTime?
+  condition               String?
+  developmentalChallenges String[]
+  communicationLevel      String?   @default("Bình thường")
+  avatar                  String    @default("🌻")
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  @@index([userId])
 }
 
 model Resource {

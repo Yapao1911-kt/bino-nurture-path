@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   Sparkles,
@@ -13,7 +13,26 @@ import {
   ArrowLeft,
   CheckCircle2,
   Baby,
+  Plus,
 } from "lucide-react";
+import {
+  fetchAndSyncChildren,
+  getActiveChild,
+  setActiveChild,
+  type ChildData,
+} from "@/lib/child-storage";
+
+const defaultFallbackChild: ChildData = {
+  id: "default",
+  userId: "",
+  name: "Bé",
+  age: 4,
+  avatar: "🌻",
+  condition: "Phát triển bình thường",
+  developmentalChallenges: ["Phát triển bình thường"],
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
 
 /* ===================================================================
    Mock Data — Lộ trình AI mẫu cho Trạng thái 3
@@ -72,15 +91,6 @@ const mockRoadmapData = {
     },
   ],
 };
-
-/* ===================================================================
-   Mock child profiles
-   =================================================================== */
-const childProfiles = [
-  { id: "1", name: "Bé Cà Chua", age: 4, avatar: "🍅" },
-  { id: "2", name: "Bé Minh An", age: 5, avatar: "🌻" },
-  { id: "3", name: "Bé Bí Ngô", age: 3, avatar: "🎃" },
-];
 
 /* ===================================================================
    Route Definition
@@ -160,12 +170,28 @@ function CuteStarSmall({
 type UIState = "idle" | "loading" | "result";
 
 function AIAssistantPage() {
+  const navigate = useNavigate();
+  const [children, setChildren] = useState<ChildData[]>([]);
+  const [selectedChild, setSelectedChild] = useState<ChildData>(defaultFallbackChild);
   const [uiState, setUiState] = useState<UIState>("idle");
-  const [selectedChild, setSelectedChild] = useState(childProfiles[0]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [behaviorText, setBehaviorText] = useState("");
   const [goalText, setGoalText] = useState("");
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    async function load() {
+      const list = await fetchAndSyncChildren();
+      setChildren(list);
+      const active = getActiveChild();
+      if (active && list.some((c) => c.id === active.id)) {
+        setSelectedChild(active);
+      } else if (list.length > 0) {
+        setSelectedChild(list[0]);
+      }
+    }
+    load();
+  }, []);
 
   const handleSubmit = () => {
     if (!behaviorText.trim() || !goalText.trim()) return;
@@ -278,29 +304,50 @@ function AIAssistantPage() {
                     />
                   </button>
                   {dropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-100 shadow-[0_8px_24px_rgba(0,0,0,0.06)] overflow-hidden z-20 animate-fade-in">
-                      {childProfiles.map((child) => (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-100 shadow-[0_8px_24px_rgba(0,0,0,0.06)] overflow-hidden z-20 animate-fade-in p-1.5 space-y-1">
+                      {children.length > 0 ? (
+                        children.map((child) => (
+                          <button
+                            key={child.id}
+                            onClick={() => {
+                              setSelectedChild(child);
+                              setActiveChild(child);
+                              setDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 transition-colors cursor-pointer ${
+                              selectedChild.id === child.id ? "bg-slate-50 font-bold" : ""
+                            }`}
+                          >
+                            <span className="text-xl">{child.avatar || "🌻"}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-ink text-sm truncate">{child.name}</p>
+                              <p className="text-xs text-ink/50">{child.age} tuổi · {child.condition || "Bình thường"}</p>
+                            </div>
+                            {selectedChild.id === child.id && (
+                              <CheckCircle2
+                                className="w-4 h-4 ml-auto"
+                                style={{ color: "var(--brand-mint)" }}
+                              />
+                            )}
+                          </button>
+                        ))
+                      ) : (
+                        <div className="p-3 text-center text-xs text-slate-500">
+                          Chưa có hồ sơ trẻ trong tài khoản
+                        </div>
+                      )}
+                      <div className="border-t border-slate-100 pt-1 mt-1">
                         <button
-                          key={child.id}
                           onClick={() => {
-                            setSelectedChild(child);
                             setDropdownOpen(false);
+                            navigate({ to: "/create-child" });
                           }}
-                          className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 transition-colors ${selectedChild.id === child.id ? "bg-slate-50" : ""}`}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#1FA7E1] hover:bg-blue-50 rounded-xl transition-colors cursor-pointer"
                         >
-                          <span className="text-xl">{child.avatar}</span>
-                          <div>
-                            <p className="font-semibold text-ink text-sm">{child.name}</p>
-                            <p className="text-xs text-ink/50">{child.age} tuổi</p>
-                          </div>
-                          {selectedChild.id === child.id && (
-                            <CheckCircle2
-                              className="w-4 h-4 ml-auto"
-                              style={{ color: "var(--brand-mint)" }}
-                            />
-                          )}
+                          <Plus className="w-3.5 h-3.5" />
+                          Tạo thêm hồ sơ bé mới
                         </button>
-                      ))}
+                      </div>
                     </div>
                   )}
                 </div>

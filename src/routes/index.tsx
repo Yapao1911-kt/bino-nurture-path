@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { AIChatWidget } from "@/components/ai-chat-widget";
+import { getActiveChild, type ChildData } from "@/lib/child-storage";
 import {
   Heart,
   Sparkles,
@@ -214,6 +215,8 @@ function Navbar() {
     localStorage.removeItem("bino_simulated_role");
     localStorage.removeItem("bino_simulated_user");
     localStorage.removeItem("bino_simulated_email");
+    localStorage.removeItem("bino_user_children");
+    localStorage.removeItem("bino_active_child");
     try {
       await supabase.auth.signOut();
     } catch (e) {
@@ -476,7 +479,7 @@ function FloatingShape({
   );
 }
 
-function Hero() {
+function Hero({ activeChild }: { activeChild?: ChildData | null }) {
   return (
     <section id="home" className="relative overflow-hidden">
       {/* Ambient background using Summer Sky, Texas Rose, Downy */}
@@ -611,8 +614,12 @@ function Hero() {
                     <Smile className="w-6 h-6" style={{ color: "#1FA7E1" }} />
                   </div>
                   <div>
-                    <p className="font-extrabold text-slate-800">Bé Minh An</p>
-                    <p className="text-xs font-medium text-slate-500">Lộ trình tuần này</p>
+                    <p className="font-extrabold text-slate-800">{activeChild ? activeChild.name : "Bé Minh An"}</p>
+                    <p className="text-xs font-medium text-slate-500">
+                      {activeChild
+                        ? `${activeChild.age} tuổi · ${activeChild.condition || "Lộ trình riêng"}`
+                        : "Lộ trình tuần này"}
+                    </p>
                   </div>
                 </div>
                 <span
@@ -1414,17 +1421,29 @@ function FloatingMascot() {
 /* ---------- Page ---------- */
 
 function Index() {
+  const [activeChild, setActiveChild] = useState<ChildData | null>(null);
+
+  useEffect(() => {
+    setActiveChild(getActiveChild());
+    const handler = () => setActiveChild(getActiveChild());
+    window.addEventListener("bino_child_changed", handler);
+    return () => window.removeEventListener("bino_child_changed", handler);
+  }, []);
+
   return (
     <main className="min-h-screen bg-background font-sans text-ink antialiased">
       <Navbar />
-      <Hero />
+      <Hero activeChild={activeChild} />
       <Problems />
       <Features />
       <HowItWorks />
       <Community />
       <Pricing />
       <Footer />
-      <AIChatWidget contextLabel="Trang chính Bino" />
+      <AIChatWidget
+        selectedChild={activeChild ? { name: activeChild.name } : { name: "bé" }}
+        contextLabel="Trang chính Bino"
+      />
     </main>
   );
 }
