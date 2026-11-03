@@ -45,6 +45,26 @@ const allResources: Resource[] = [
       "Khơi gợi hứng thú giao tiếp và cảm xúc tích cực cho trẻ.",
     ],
   },
+
+  {
+    id: "k-video-chu-meo-tim-ban",
+    title: "Video Chú mèo đi tìm bạn",
+    description:
+      "Video kể chuyện sinh động giúp bé phát triển khả năng lắng nghe, nhận biết tình huống và tăng cường vốn từ giao tiếp tự nhiên.",
+    category: "Kiến thức",
+    ageGroup: ["0-3 tuổi", "3-6 tuổi", "6-12 tuổi"],
+    difficulty: ["Chậm nói / Chậm ngôn ngữ", "Rối loạn phổ tự kỷ (ASD)", "Tăng động giảm chú ý (ADHD)"],
+    format: "Video",
+    accessLevel: "BASIC",
+    imageUrl: "/images/chu-meo-tim-ban.png",
+    videoUrl: "/videos/chu-meo-tim-ban.mp4",
+    keyPoints: [
+      "Kỹ thuật tương tác và thu hút sự chú ý chung (Joint Attention) qua câu chuyện gần gũi.",
+      "Cách làm mẫu ngôn ngữ, nói chậm rõ ràng và tạo khoảng dừng để trẻ chủ động phản hồi.",
+      "Khơi gợi hứng thú giao tiếp và cảm xúc tích cực cho trẻ.",
+    ],
+  },
+
   {
     id: "k-video-chu-gau-di-tim-tieng-noi",
     title: "Chú gấu đi tìm tiếng nói",
