@@ -64,7 +64,7 @@ const geminiProvider: LLMProvider = {
       model: config.llmModel,
       systemInstruction: SYSTEM_RULES + (outputJson ? "\nChế độ dữ liệu có cấu trúc: trả JSON thuần đúng schema người dùng yêu cầu; quy tắc định dạng văn bản thường không áp dụng, các giới hạn an toàn vẫn áp dụng." : ""),
       generationConfig: { temperature: 0.4, ...(outputJson ? {responseMimeType:"application/json"} : {}) },
-    });
+    }, { timeout: 25000 });
 
     const chat = model.startChat({
       history: history.slice(-6).map((m) => ({
@@ -94,6 +94,11 @@ export function getProvider(): LLMProvider {
 }
 
 /** Convenience wrapper matching the required generateAnswer({ question, context }) shape. */
-export function generateAnswer(input: GenerateAnswerInput): Promise<string> {
-  return getProvider().generateAnswer(input);
+export async function generateAnswer(input: GenerateAnswerInput): Promise<string> {
+  try { return await getProvider().generateAnswer(input); }
+  catch (error: any) {
+    const message=String(error?.message || error).replaceAll(config.apiKey || "__NO_KEY__", "[redacted]").replace(/https?:\/\/\S+/g,"[provider-url]");
+    console.error("[Bino AI]", {provider:config.provider, model:config.llmModel,status:error?.status,message:message.slice(0,1000)});
+    throw new Error("Dịch vụ AI chưa phản hồi thành công. Vui lòng thử lại sau.");
+  }
 }

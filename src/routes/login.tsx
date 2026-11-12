@@ -120,8 +120,8 @@ function LoginPage() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("Mật khẩu phải chứa ít nhất 6 ký tự.");
+    if (password.length < 8) {
+      setError("Mật khẩu phải chứa ít nhất 8 ký tự.");
       return;
     }
 
@@ -144,13 +144,13 @@ function LoginPage() {
         return;
       }
 
-      setSuccess("Đăng ký tài khoản thành công! Đang chuyển sang màn hình đăng nhập...");
+      setSuccess(res.message || "Hãy kiểm tra email xác thực.");
       
       // Giữ lại email đã nhập và chuyển sang tab đăng nhập
       setTimeout(() => {
         setActiveTab("login");
         setError(null);
-        setSuccess("Tài khoản đã sẵn sàng! Vui lòng nhập mật khẩu để đăng nhập.");
+        setSuccess("Hãy mở liên kết xác thực trong email, sau đó đăng nhập bằng mật khẩu đã đăng ký.");
       }, 1200);
     } catch (err: any) {
       console.error("Register error:", err);
