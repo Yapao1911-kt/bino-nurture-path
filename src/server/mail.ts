@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  // Configured to use ethereal or a real SMTP if provided in .env
+  if(!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS || !process.env.APP_URL) throw new Error("SMTP and APP_URL must be configured.");
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.ethereal.email",
     port: Number(process.env.SMTP_PORT) || 587,
@@ -14,7 +14,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   const verificationUrl = `${process.env.APP_URL || "http://localhost:8082"}/verify?token=${token}`;
 
   const mailOptions = {
-    from: '"Bino Nurture Path" <noreply@bino.edu.vn>',
+    from: process.env.SMTP_FROM || process.env.SMTP_USER,
     to: email,
     subject: "Xác thực tài khoản Bino",
     html: `

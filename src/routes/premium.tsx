@@ -1,3 +1,5 @@
+import {useState,useEffect} from "react";
+import {subscriptionStatus,startTrial} from "@/lib/subscription-rpc";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Check, Star, Zap, Crown, ArrowRight, ShieldCheck } from "lucide-react";
@@ -8,13 +10,16 @@ export const Route = createFileRoute("/premium")({
 });
 
 function PremiumPage() {
+ const [status,setStatus]=useState<any>(null),[error,setError]=useState(""),[busy,setBusy]=useState(false);
+ useEffect(()=>{subscriptionStatus().then(setStatus).catch(()=>setError("Đăng nhập để xem gói và bắt đầu dùng thử."));},[]);
+ async function trial(){setBusy(true);setError("");try{setStatus(await startTrial());}catch{setError("Chưa kích hoạt được. Vui lòng đăng nhập và thử lại.");}finally{setBusy(false);}}
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       {/* Hero Section */}
       <div className="bg-white border-b relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-50 via-white to-white pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-          <div className="text-center max-w-3xl mx-auto space-y-6">
+          <div className="text-center max-w-3xl mx-auto space-y-6">{error && <p role="alert">{error}</p>}{status?.trialEndsAt && <p>Dùng thử đến {new Date(status.trialEndsAt).toLocaleString("vi-VN")} · {status.premium ? "Đang hoạt động" : "Đã hết hạn"}</p>}
             <div className="inline-flex items-center justify-center p-3 bg-amber-100 rounded-full mb-4 shadow-sm">
               <Crown className="w-8 h-8 text-amber-600" />
             </div>
@@ -36,7 +41,7 @@ function PremiumPage() {
           <Card className="p-8 border-slate-200 bg-white shadow-sm flex flex-col relative">
             <div className="absolute top-0 right-0 p-4">
               <div className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full">
-                Gói hiện tại
+                {status?.premium ? "Gói Premium đang hoạt động" : "Gói Cơ bản"}
               </div>
             </div>
             <div className="space-y-2 mb-6">
@@ -106,7 +111,7 @@ function PremiumPage() {
                 variant="outline"
                 className="w-full border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800" 
                 size="lg"
-                onClick={() => alert("Đã kích hoạt dùng thử 14 ngày!")}
+                disabled={busy || !!status?.trialStartedAt || !!status?.premium} onClick={trial}
               >
                 Dùng thử 14 ngày
               </Button>
@@ -134,7 +139,7 @@ function PremiumPage() {
         <p className="text-slate-600 mb-6">
           Nếu bạn cần tư vấn thêm về gói Premium, đừng ngần ngại liên hệ với đội ngũ hỗ trợ của Bino.
         </p>
-        <Button variant="outline" onClick={() => alert("Mở form liên hệ hỗ trợ")}>
+        <Button variant="outline" onClick={() => window.location.assign("/experts")}>
           Liên hệ hỗ trợ
         </Button>
       </div>

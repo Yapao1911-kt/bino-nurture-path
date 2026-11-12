@@ -1,3 +1,7 @@
+import {readSession} from "./session";
+import {getRequest} from "@tanstack/react-start/server";
+import {prisma} from "./db";
+import {hasPremium} from "./subscription-rpc";
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { mockResources } from "./mock-data";
@@ -54,17 +58,9 @@ export const getResourcesFn = createServerFn({ method: "GET" })
 
       // Lấy thông tin user từ Supabase
       let userType = "free";
-      if (userEmail) {
-        const { data: user } = await supabase
-          .from("users")
-          .select("subscription")
-          .eq("email", userEmail)
-          .maybeSingle();
-
-        if (user?.subscription === "PREMIUM") {
-          userType = "premium";
-        }
-      }
+      const sessionId=readSession(getRequest());
+      const account=sessionId?await prisma.user.findUnique({where:{id:sessionId}}):null;
+      userType=hasPremium(account)?"premium":"free";
 
       return {
         resources: (resources || []).map((res: any) => ({

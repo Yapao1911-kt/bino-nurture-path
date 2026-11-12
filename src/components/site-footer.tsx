@@ -5,10 +5,10 @@ export function SiteFooter() {
     {
       title: "Sản phẩm",
       links: [
-        { name: "Tính năng", url: "#features" },
+        { name: "Tính năng", url: "/#features" },
         { name: "Học liệu", url: "/library" },
         { name: "Lesson Builder", url: "/lesson-builder" },
-        { name: "Bảng giá", url: "#pricing" },
+        { name: "Bảng giá", url: "/#pricing" },
       ],
     },
     {
@@ -16,17 +16,17 @@ export function SiteFooter() {
       links: [
         { name: "Nhóm phụ huynh", url: "https://www.facebook.com/share/g/1CFpEpPmEq/" },
         { name: "Chuyên gia", url: "/experts" },
-        { name: "Thử thách 7 ngày", url: "#" },
-        { name: "Sự kiện", url: "#" },
+        { name: "Thử thách 7 ngày", url: "/#community" },
+
       ],
     },
     {
       title: "Công ty",
       links: [
-        { name: "Về Bino", url: "#" },
-        { name: "Sứ mệnh", url: "#" },
-        { name: "Tuyển dụng", url: "#" },
-        { name: "Liên hệ", url: "#" },
+        { name: "Về Bino", url: "/about" },
+
+
+        { name: "Quyền riêng tư", url: "/privacy" },
       ],
     },
   ];

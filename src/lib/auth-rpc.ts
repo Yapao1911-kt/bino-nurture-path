@@ -1,3 +1,6 @@
+import {randomBytes} from "node:crypto";
+import { getRequest, setCookie } from "@tanstack/react-start/server";
+import { signSession, readSession, SESSION_COOKIE } from "./session";
 import { createServerFn } from "@tanstack/react-start";
 import bcrypt from "bcryptjs";
 import { prisma } from "./db";
@@ -12,8 +15,8 @@ export const registerUser = createServerFn({ method: "POST" })
       return { success: false, error: "Vui lòng điền đầy đủ tất cả các trường." };
     }
 
-    if (password.length < 6) {
-      return { success: false, error: "Mật khẩu phải chứa ít nhất 6 ký tự." };
+    if (password.length < 8) {
+      return { success: false, error: "Mật khẩu phải chứa ít nhất 8 ký tự." };
     }
 
     const cleanEmail = email.toLowerCase().trim();
@@ -24,7 +27,7 @@ export const registerUser = createServerFn({ method: "POST" })
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password.trim(), salt);
-    const verificationToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const verificationToken = randomBytes(32).toString("hex");
 
     const user = await prisma.user.create({
       data: {
@@ -33,20 +36,21 @@ export const registerUser = createServerFn({ method: "POST" })
         name: fullName.trim(),
         role: role === "teacher" ? "teacher" : "parent",
         verificationToken,
-        isEmailVerified: true, // Auto verify tài khoản thật ngay lập tức
+        isEmailVerified: false,
+        verificationExpiresAt: new Date(Date.now()+86400000),
       },
     });
 
     try {
       await sendVerificationEmail(user.email, verificationToken);
     } catch (err) {
-      // Bỏ qua nếu chưa cấu hình SMTP, tài khoản vẫn dùng bình thường
-      console.warn("SMTP not configured or failed to send email, proceeding with auto-verify:", err);
+      console.error("Verification mail failed");
+      return {success:false,error:"Tài khoản đã tạo nhưng chưa gửi được email xác thực. Vui lòng liên hệ hỗ trợ để gửi lại email."};
     }
 
     return {
       success: true,
-      message: "Đăng ký thành công! Bạn có thể đăng nhập ngay.",
+      message: "Đã đăng ký. Vui lòng xác thực qua email trước khi đăng nhập.",
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
     };
   });
@@ -72,13 +76,7 @@ export const loginUser = createServerFn({ method: "POST" })
       return { success: false, error: "Email hoặc mật khẩu không chính xác." };
     }
 
-    // Tự động kích hoạt tài khoản nếu chưa kích hoạt
-    if (!user.isEmailVerified) {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { isEmailVerified: true },
-      });
-    }
+    if(!user.isEmailVerified) return {success:false,error:"Vui lòng xác thực email trước khi đăng nhập."};
 
     // Cập nhật vai trò nếu người dùng chọn vai trò cụ thể khi đăng nhập
     let effectiveRole = user.role || role || "parent";
@@ -90,6 +88,7 @@ export const loginUser = createServerFn({ method: "POST" })
       effectiveRole = role;
     }
 
+    setCookie(SESSION_COOKIE, signSession(user.id), { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 43200 });
     return {
       success: true,
       user: {
@@ -112,7 +111,7 @@ export const verifyEmail = createServerFn({ method: "GET" })
       where: { verificationToken: token },
     });
 
-    if (!user) {
+    if (!user || !user.verificationExpiresAt || user.verificationExpiresAt.getTime() < Date.now()) {
       throw new Error("Token không hợp lệ hoặc đã hết hạn.");
     }
 
@@ -121,6 +120,7 @@ export const verifyEmail = createServerFn({ method: "GET" })
       data: {
         isEmailVerified: true,
         verificationToken: null,
+        verificationExpiresAt: null,
       },
     });
 
@@ -129,11 +129,12 @@ export const verifyEmail = createServerFn({ method: "GET" })
 
 export const logoutUser = createServerFn({ method: "POST" })
   .handler(async () => {
+    setCookie(SESSION_COOKIE, "", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 0 });
     return { success: true };
   });
 
 export const getSessionUser = createServerFn({ method: "GET" })
   .handler(async () => {
-    // Session is handled via localStorage on client now
-    return null;
+    const id = readSession(getRequest());
+    return id ? prisma.user.findUnique({ where: { id }, select: { id: true, email: true, name: true, role: true, subscription: true } }) : null;
   });

@@ -1,4 +1,4 @@
-# Secrets — never commit real keys
+# Secrets â€” never commit real keys
 .env
 .env.local
 .env.*.local
@@ -13,3 +13,8 @@ data/knowledge/who_cst/*.pdf
 node_modules/
 dist/
 .vercel/
+
+generated/
+.output/
+
+work/

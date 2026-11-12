@@ -1,3 +1,4 @@
+import { generateRoadmap, saveRoadmap, getRoadmaps } from "@/lib/care-rpc";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
@@ -37,61 +38,6 @@ const defaultFallbackChild: ChildData = {
 /* ===================================================================
    Mock Data — Lộ trình AI mẫu cho Trạng thái 3
    =================================================================== */
-const mockRoadmapData = {
-  encouragement: "Bé đang làm rất tốt, bạn cũng vậy! 💛 Dưới đây là gợi ý cho tuần này...",
-  weeklyGoal: "Tăng cường giao tiếp xã hội và nhận diện cảm xúc qua trò chơi tương tác.",
-  activities: [
-    {
-      id: 1,
-      name: "Trò chơi 'Ai đang vui?'",
-      description:
-        "Dùng thẻ hình ảnh các khuôn mặt cảm xúc. Bé chọn thẻ khớp với biểu cảm của bạn hoặc búp bê.",
-      duration: "15 phút",
-      color: "brand-yellow-soft",
-      accentColor: "#FFB365",
-      icon: Smile,
-    },
-    {
-      id: 2,
-      name: "Nhận diện đồ vật qua chạm",
-      description:
-        "Đặt 3 đồ vật quen thuộc trước mặt bé. Hướng dẫn bé chạm vào đồ vật theo yêu cầu.",
-      duration: "20 phút",
-      color: "brand-mint-soft",
-      accentColor: "#6ED1CF",
-      icon: Star,
-    },
-    {
-      id: 3,
-      name: "Kể chuyện 'Con cá nhỏ'",
-      description:
-        "Đọc to truyện tranh, chỉ tay vào từng hình minh họa. Khuyến khích bé lặp lại từ khóa.",
-      duration: "15 phút",
-      color: "brand-pink-soft",
-      accentColor: "#FF8B8B",
-      icon: Heart,
-    },
-    {
-      id: 4,
-      name: "Bài hát 'Vỗ tay'",
-      description: "Hát cùng bé bài có điệp khúc đơn giản. Khuyến khích bé vỗ tay theo nhịp.",
-      duration: "10 phút",
-      color: "brand-blue-soft",
-      accentColor: "#1FA7E1",
-      icon: Lightbulb,
-    },
-    {
-      id: 5,
-      name: "Vẽ cùng mẹ",
-      description: "Cho bé cầm bút chì màu, vẽ theo nét ngang dọc đơn giản. Khen ngợi mỗi nỗ lực.",
-      duration: "20 phút",
-      color: "brand-peach-soft",
-      accentColor: "#9956DE",
-      icon: Sparkles,
-    },
-  ],
-};
-
 /* ===================================================================
    Route Definition
    =================================================================== */
@@ -171,8 +117,13 @@ type UIState = "idle" | "loading" | "result";
 
 function AIAssistantPage() {
   const navigate = useNavigate();
+  const [roadmap, setRoadmap] = useState<any>(null);
+  const [error, setError] = useState("");
+  const [history, setHistory] = useState<any[]>([]);
+
   const [children, setChildren] = useState<ChildData[]>([]);
   const [selectedChild, setSelectedChild] = useState<ChildData>(defaultFallbackChild);
+  useEffect(() => { if(selectedChild.id !== "default") getRoadmaps({data:{childId:selectedChild.id}}).then(setHistory).catch(() => setHistory([])); }, [selectedChild.id]);
   const [uiState, setUiState] = useState<UIState>("idle");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [behaviorText, setBehaviorText] = useState("");
@@ -193,27 +144,18 @@ function AIAssistantPage() {
     load();
   }, []);
 
-  const handleSubmit = () => {
-    if (!behaviorText.trim() || !goalText.trim()) return;
+  const handleSubmit = async () => {
+    setError(""); setSaved(false);
+    if(selectedChild.id === "default") { setError("Hãy tạo hồ sơ và đăng nhập trước khi lập lộ trình."); return; }
     setUiState("loading");
+    try { setRoadmap(await generateRoadmap({data:{childId:selectedChild.id,behavior:behaviorText,goal:goalText}})); setUiState("result"); }
+    catch { setError("Chưa thể tạo lộ trình. Kiểm tra đăng nhập và cấu hình AI, sau đó thử lại."); setUiState("idle"); }
   };
-
-  /* Auto-transition loading -> result after 3s */
-  useEffect(() => {
-    if (uiState === "loading") {
-      const timer = setTimeout(() => setUiState("result"), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [uiState]);
-
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+  const handleSave = async () => {
+    try { await saveRoadmap({data:{childId:selectedChild.id,goal:goalText,content:roadmap}}); setSaved(true); }
+    catch { setError("Chưa lưu được lộ trình. Vui lòng thử lại."); }
   };
-
-  const handleRegenerate = () => {
-    setUiState("loading");
-  };
+  const handleRegenerate = handleSubmit;
 
   const handleBack = () => {
     setUiState("idle");
@@ -263,6 +205,9 @@ function AIAssistantPage() {
           </div>
         </div>
 
+        {error && <p role="alert" className="p-4 bg-red-50 text-red-800">{error}</p>}
+        <p className="p-3 text-sm">Gợi ý AI hỗ trợ hoạt động tại nhà, cần người lớn giám sát; không thay thế đánh giá chuyên môn.</p>
+        {uiState === "idle" && history.map(item => <button key={item.id} className="block p-3 underline" onClick={() => {setRoadmap(item.content);setGoalText(item.goal);setUiState("result");}}>Mở lộ trình đã lưu: {item.goal}</button>)}
         {/* State 1: Idle — Input Form */}
         {uiState === "idle" && (
           <div className="animate-fade-in">
@@ -491,7 +436,7 @@ function AIAssistantPage() {
                   </span>
                 </div>
                 <p className="text-lg sm:text-xl font-bold text-ink leading-relaxed">
-                  {mockRoadmapData.encouragement}
+                  {roadmap.encouragement}
                 </p>
               </div>
             </div>
@@ -510,7 +455,7 @@ function AIAssistantPage() {
                 </span>
               </div>
               <p className="text-lg sm:text-xl font-extrabold text-ink leading-snug">
-                {mockRoadmapData.weeklyGoal}
+                {roadmap.weeklyGoal}
               </p>
             </div>
 
@@ -527,8 +472,8 @@ function AIAssistantPage() {
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
-                {mockRoadmapData.activities.map((activity, index) => {
-                  const Icon = activity.icon;
+                {roadmap.activities.map((activity: any, index: number) => {
+                  const Icon = Sparkles;
                   const tilts = ["-rotate-1", "rotate-1", "rotate-0.5", "-rotate-0.5", "rotate-1"];
                   return (
                     <div

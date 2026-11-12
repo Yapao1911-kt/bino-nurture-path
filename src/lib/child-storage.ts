@@ -79,7 +79,7 @@ export async function fetchAndSyncChildren(): Promise<ChildData[]> {
 
   // Nếu không có user đăng nhập, đọc local
   if (!userId && !userEmail) {
-    return getLocalChildren();
+    return [];
   }
 
   try {
@@ -101,7 +101,7 @@ export async function fetchAndSyncChildren(): Promise<ChildData[]> {
     console.warn("[child-storage] Sync children with server failed, fallback to local:", err);
   }
 
-  return getLocalChildren();
+  return [];
 }
 
 export async function saveNewChild(data: {
@@ -141,24 +141,7 @@ export async function saveNewChild(data: {
     }
   } catch (err: any) {
     console.error("[child-storage] saveNewChild error:", err);
-    // Nếu có lỗi mạng hoặc offline, lưu tạm vào localStorage
-    const localChild: ChildData = {
-      id: "local_" + Date.now().toString(36),
-      userId: userId || "local_user",
-      name: data.name,
-      age: data.age,
-      condition: data.condition || "Phát triển bình thường",
-      developmentalChallenges: data.developmentalChallenges || [data.condition || "Phát triển bình thường"],
-      communicationLevel: data.communicationLevel || "Bình thường",
-      avatar: data.avatar || "🌻",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    const currentList = getLocalChildren();
-    currentList.unshift(localChild);
-    localStorage.setItem(STORAGE_CHILDREN_KEY, JSON.stringify(currentList));
-    setActiveChild(localChild);
-    return { success: true, child: localChild };
+    return { success: false, error: "Chưa lưu được hồ sơ vào máy chủ. Vui lòng đăng nhập và thử lại." };
   }
 }
 
@@ -166,9 +149,11 @@ export async function deleteChild(childId: string): Promise<boolean> {
   const userId = typeof window !== "undefined" ? localStorage.getItem("bino_user_id") || undefined : undefined;
 
   try {
-    await deleteChildProfile({ data: { childId, userId } });
+    const result = await deleteChildProfile({ data: { childId, userId } });
+    if (!result.success) return false;
   } catch (err) {
     console.warn("[child-storage] Remote delete failed:", err);
+    return false;
   }
 
   // Luôn xoá ở local

@@ -87,6 +87,7 @@ function LoginPage() {
       localStorage.setItem("bino_user_role", userRole);
       localStorage.setItem("bino_user_name", userName);
       localStorage.setItem("bino_user_email", res.user.email);
+      for (const key of ["bino_user_children", "bino_active_child", "bino_local_children"]) localStorage.removeItem(key);
       localStorage.setItem("bino_user_id", res.user.id);
 
       // Đồng bộ các key tương thích ngược

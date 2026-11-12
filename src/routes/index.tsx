@@ -1,3 +1,4 @@
+import {logoutUser,getSessionUser} from "@/lib/auth-rpc";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
@@ -151,63 +152,11 @@ function Navbar() {
   });
 
   useEffect(() => {
-    // 1. Kiểm tra tài khoản thật từ localStorage
-    const savedRole = localStorage.getItem("bino_user_role") || localStorage.getItem("bino_simulated_role");
-    const savedUser = localStorage.getItem("bino_user_name") || localStorage.getItem("bino_simulated_user");
-    if (savedUser && savedRole) {
-      setAuth({
-        isLoggedIn: true,
-        userName: savedUser,
-        role: savedRole,
-      });
-      return;
-    }
-
-    // 2. Kiểm tra Supabase Session nếu có
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setAuth({
-          isLoggedIn: true,
-          userName: session.user.user_metadata?.full_name || session.user.email || "Thành viên",
-          role: session.user.user_metadata?.role || "parent",
-        });
-      }
-    });
-
-    // Đăng ký thay đổi trạng thái
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      const sRole = localStorage.getItem("bino_user_role") || localStorage.getItem("bino_simulated_role");
-      const sUser = localStorage.getItem("bino_user_name") || localStorage.getItem("bino_simulated_user");
-
-      if (sUser && sRole) {
-        setAuth({
-          isLoggedIn: true,
-          userName: sUser,
-          role: sRole,
-        });
-      } else if (session?.user) {
-        setAuth({
-          isLoggedIn: true,
-          userName: session.user.user_metadata?.full_name || session.user.email || "Thành viên",
-          role: session.user.user_metadata?.role || "parent",
-        });
-      } else {
-        setAuth({
-          isLoggedIn: false,
-          userName: null,
-          role: null,
-        });
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    getSessionUser().then(user => setAuth(user ? {isLoggedIn:true,userName:user.name || user.email,role:user.role} : {isLoggedIn:false,userName:null,role:null})).catch(() => setAuth({isLoggedIn:false,userName:null,role:null}));
   }, []);
 
   const handleSignOut = async () => {
+    await logoutUser();
     localStorage.removeItem("bino_user_role");
     localStorage.removeItem("bino_user_name");
     localStorage.removeItem("bino_user_email");
@@ -1103,15 +1052,15 @@ function Community() {
               {[
                 {
                   icon: Users,
-                  v: "12.4k+",
-                  l: "Cha mẹ đồng hành",
+                  v: "Gia đình",
+                  l: "Đồng hành mỗi ngày",
                   c: "#7274ED",
                   shadow: "#595BCF",
                 },
                 {
                   icon: GraduationCap,
-                  v: "280+",
-                  l: "Chuyên gia kiểm định",
+                  v: "Kết nối",
+                  l: "Gửi yêu cầu tư vấn",
                   c: "#75D06A",
                   shadow: "#59B84E",
                   offset: true,
@@ -1125,8 +1074,8 @@ function Community() {
                 },
                 {
                   icon: BookOpen,
-                  v: "1.500+",
-                  l: "Học liệu chuyên biệt",
+                  v: "Học liệu",
+                  l: "Tra cứu và thực hành",
                   c: "#FF8B8B",
                   shadow: "#E06D6D",
                   offset: true,
@@ -1288,7 +1237,7 @@ function Footer() {
       title: "Sản phẩm",
       links: [
         { label: "Tính năng", href: "#features" },
-        { label: "Học liệu", href: "#" },
+        { label: "Học liệu", href: "/library" },
         { label: "Lesson Builder", href: "/lesson-builder" },
         { label: "Bảng giá", href: "#pricing" },
       ],
@@ -1299,16 +1248,16 @@ function Footer() {
         { label: "Nhóm phụ huynh", href: "https://www.facebook.com/share/g/1CFpEpPmEq/" },
         { label: "Chuyên gia", href: "/experts" },
         { label: "Thử thách 7 ngày", href: "#community" },
-        { label: "Sự kiện", href: "#" },
+
       ],
     },
     {
       title: "Công ty",
       links: [
-        { label: "Về Bino", href: "#" },
-        { label: "Sứ mệnh", href: "#" },
-        { label: "Tuyển dụng", href: "#" },
-        { label: "Liên hệ", href: "#" },
+        { label: "Về Bino", href: "/about" },
+
+
+        { label: "Quyền riêng tư", href: "/privacy" },
       ],
     },
   ];

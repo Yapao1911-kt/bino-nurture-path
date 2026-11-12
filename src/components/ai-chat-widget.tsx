@@ -1,3 +1,4 @@
+import {getActiveChild} from "@/lib/child-storage";
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { RefreshCw, Send, X } from "lucide-react";
@@ -40,7 +41,7 @@ async function callChat(message: string): Promise<{ answer: string; sources: Sou
   const response = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ message, childId: getActiveChild()?.id }),
   });
 
   let data: ChatResponse | null = null;

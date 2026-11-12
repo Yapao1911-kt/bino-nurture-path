@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AiAssistantRouteImport } from './routes/ai-assistant'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CreateChildRouteImport } from './routes/create-child'
@@ -17,7 +18,9 @@ import { Route as ExpertsRouteImport } from './routes/experts'
 import { Route as LessonBuilderRouteImport } from './routes/lesson-builder'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as PremiumRouteImport } from './routes/premium'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProgressTrackerRouteImport } from './routes/progress-tracker'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as ApiChildrenRouteImport } from './routes/api/children'
@@ -27,6 +30,11 @@ import { Route as LibraryFlashcardsRouteImport } from './routes/library.flashcar
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiAssistantRoute = AiAssistantRouteImport.update({
@@ -64,9 +72,19 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OperationsRoute = OperationsRouteImport.update({
+  id: '/operations',
+  path: '/operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PremiumRoute = PremiumRouteImport.update({
   id: '/premium',
   path: '/premium',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProgressTrackerRoute = ProgressTrackerRouteImport.update({
@@ -97,6 +115,7 @@ const LibraryFlashcardsRoute = LibraryFlashcardsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/ai-assistant': typeof AiAssistantRoute
   '/checkout': typeof CheckoutRoute
   '/create-child': typeof CreateChildRoute
@@ -104,7 +123,9 @@ export interface FileRoutesByFullPath {
   '/lesson-builder': typeof LessonBuilderRoute
   '/library': typeof LibraryRouteWithChildren
   '/login': typeof LoginRoute
+  '/operations': typeof OperationsRoute
   '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
   '/progress-tracker': typeof ProgressTrackerRoute
   '/verify': typeof VerifyRoute
   '/api/children': typeof ApiChildrenRoute
@@ -113,13 +134,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/ai-assistant': typeof AiAssistantRoute
   '/checkout': typeof CheckoutRoute
   '/create-child': typeof CreateChildRoute
   '/experts': typeof ExpertsRoute
   '/lesson-builder': typeof LessonBuilderRoute
   '/login': typeof LoginRoute
+  '/operations': typeof OperationsRoute
   '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
   '/progress-tracker': typeof ProgressTrackerRoute
   '/verify': typeof VerifyRoute
   '/api/children': typeof ApiChildrenRoute
@@ -129,6 +153,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/ai-assistant': typeof AiAssistantRoute
   '/checkout': typeof CheckoutRoute
   '/create-child': typeof CreateChildRoute
@@ -136,7 +161,9 @@ export interface FileRoutesById {
   '/lesson-builder': typeof LessonBuilderRoute
   '/library': typeof LibraryRouteWithChildren
   '/login': typeof LoginRoute
+  '/operations': typeof OperationsRoute
   '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
   '/progress-tracker': typeof ProgressTrackerRoute
   '/verify': typeof VerifyRoute
   '/api/children': typeof ApiChildrenRoute
@@ -147,6 +174,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/ai-assistant'
     | '/checkout'
     | '/create-child'
@@ -154,7 +182,9 @@ export interface FileRouteTypes {
     | '/lesson-builder'
     | '/library'
     | '/login'
+    | '/operations'
     | '/premium'
+    | '/privacy'
     | '/progress-tracker'
     | '/verify'
     | '/api/children'
@@ -163,13 +193,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/ai-assistant'
     | '/checkout'
     | '/create-child'
     | '/experts'
     | '/lesson-builder'
     | '/login'
+    | '/operations'
     | '/premium'
+    | '/privacy'
     | '/progress-tracker'
     | '/verify'
     | '/api/children'
@@ -178,6 +211,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/ai-assistant'
     | '/checkout'
     | '/create-child'
@@ -185,7 +219,9 @@ export interface FileRouteTypes {
     | '/lesson-builder'
     | '/library'
     | '/login'
+    | '/operations'
     | '/premium'
+    | '/privacy'
     | '/progress-tracker'
     | '/verify'
     | '/api/children'
@@ -195,6 +231,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AiAssistantRoute: typeof AiAssistantRoute
   CheckoutRoute: typeof CheckoutRoute
   CreateChildRoute: typeof CreateChildRoute
@@ -202,7 +239,9 @@ export interface RootRouteChildren {
   LessonBuilderRoute: typeof LessonBuilderRoute
   LibraryRoute: typeof LibraryRouteWithChildren
   LoginRoute: typeof LoginRoute
+  OperationsRoute: typeof OperationsRoute
   PremiumRoute: typeof PremiumRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProgressTrackerRoute: typeof ProgressTrackerRoute
   VerifyRoute: typeof VerifyRoute
   ApiChildrenRoute: typeof ApiChildrenRoute
@@ -215,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-assistant': {
@@ -266,11 +312,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/operations': {
+      id: '/operations'
+      path: '/operations'
+      fullPath: '/operations'
+      preLoaderRoute: typeof OperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/premium': {
       id: '/premium'
       path: '/premium'
       fullPath: '/premium'
       preLoaderRoute: typeof PremiumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/progress-tracker': {
@@ -326,6 +386,7 @@ const LibraryRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AiAssistantRoute: AiAssistantRoute,
   CheckoutRoute: CheckoutRoute,
   CreateChildRoute: CreateChildRoute,
@@ -333,7 +394,9 @@ const rootRouteChildren: RootRouteChildren = {
   LessonBuilderRoute: LessonBuilderRoute,
   LibraryRoute: LibraryRouteWithChildren,
   LoginRoute: LoginRoute,
+  OperationsRoute: OperationsRoute,
   PremiumRoute: PremiumRoute,
+  PrivacyRoute: PrivacyRoute,
   ProgressTrackerRoute: ProgressTrackerRoute,
   VerifyRoute: VerifyRoute,
   ApiChildrenRoute: ApiChildrenRoute,

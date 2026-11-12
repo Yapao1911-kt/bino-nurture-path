@@ -1,3 +1,5 @@
+import { getRequest } from "@tanstack/react-start/server";
+import { requireSession } from "./session";
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "./db";
 
@@ -36,31 +38,11 @@ export const saveChildProfile = createServerFn({ method: "POST" })
         return { success: false, error: "Vui lòng nhập tên của trẻ." };
       }
 
-      if (age === undefined || age === null || isNaN(age) || age < 0 || age > 18) {
+      if (age === undefined || age === null || !Number.isInteger(age) || age < 0 || age > 18) {
         return { success: false, error: "Tuổi của trẻ phải từ 0 đến 18 tuổi." };
       }
 
-      // Tìm user trong database
-      let targetUser = null;
-      if (userId) {
-        targetUser = await prisma.user.findUnique({ where: { id: userId } });
-      }
-      if (!targetUser && userEmail) {
-        targetUser = await prisma.user.findUnique({ where: { email: userEmail.toLowerCase().trim() } });
-      }
-
-      if (!targetUser) {
-        // Lấy user đầu tiên hoặc tạo hồ sơ dự phòng nếu chưa có ID
-        const firstUser = await prisma.user.findFirst();
-        if (firstUser) {
-          targetUser = firstUser;
-        } else {
-          return {
-            success: false,
-            error: "Không tìm thấy thông tin tài khoản đăng nhập. Vui lòng đăng nhập lại.",
-          };
-        }
-      }
+      const targetUser = { id: requireSession(getRequest()) };
 
       const challenges = developmentalChallenges && developmentalChallenges.length > 0
         ? developmentalChallenges
@@ -116,15 +98,7 @@ export const getUserChildren = createServerFn({ method: "POST" })
     try {
       const { userId, userEmail } = data;
 
-      let targetUserId = userId;
-      if (!targetUserId && userEmail) {
-        const u = await prisma.user.findUnique({ where: { email: userEmail.toLowerCase().trim() } });
-        if (u) targetUserId = u.id;
-      }
-
-      if (!targetUserId) {
-        return { success: true, children: [] };
-      }
+      const targetUserId = requireSession(getRequest());
 
       const children = await prisma.child.findMany({
         where: { userId: targetUserId },
@@ -160,15 +134,7 @@ export const deleteChildProfile = createServerFn({ method: "POST" })
       const { childId, userId } = data;
       if (!childId) return { success: false, error: "Thiếu mã hồ sơ bé." };
 
-      if (userId) {
-        await prisma.child.deleteMany({
-          where: { id: childId, userId: userId },
-        });
-      } else {
-        await prisma.child.delete({
-          where: { id: childId },
-        });
-      }
+      await prisma.child.deleteMany({ where: { id: childId, userId: requireSession(getRequest()) } });
 
       return { success: true };
     } catch (err: any) {

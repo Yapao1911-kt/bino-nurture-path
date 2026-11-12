@@ -1,0 +1,2 @@
+import {createFileRoute,Link} from "@tanstack/react-router";
+export const Route=createFileRoute("/about")({head:()=>({meta:[{title:"Về Bino — Bino"}]}),component:()=> <main className="max-w-3xl mx-auto p-8 space-y-5"><Link to="/">← Trang chủ</Link><h1 className="text-3xl font-bold">Về Bino</h1><p className="leading-8">Bino hỗ trợ phụ huynh tổ chức hoạt động tại nhà, ghi nhận quan sát và chuẩn bị thông tin trao đổi với chuyên gia. Gợi ý AI không thay thế đánh giá chuyên môn. Các hoạt động cần người lớn giám sát và điều chỉnh theo phản ứng của trẻ.</p></main>});

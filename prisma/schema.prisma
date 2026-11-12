@@ -16,7 +16,9 @@ model User {
   role              String   @default("parent") // parent or teacher
   isEmailVerified   Boolean  @default(false)
   verificationToken String?  @db.Text
+  verificationExpiresAt DateTime?
   subscription      String   @default("FREE") // FREE or PREMIUM
+  trialStartedAt    DateTime?
   children          Child[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -24,6 +26,9 @@ model User {
 
 model Child {
   id                      String    @id @default(cuid())
+  activityEntries         ActivityEntry[]
+  roadmaps                Roadmap[]
+  appointments            Appointment[]
   userId                  String
   user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   name                    String
@@ -51,4 +56,36 @@ model Resource {
   imageUrl    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model ActivityEntry {
+  id String @id @default(cuid())
+  childId String
+  child Child @relation(fields: [childId], references: [id], onDelete: Cascade)
+  title String
+  notes String
+  minutes Int
+  words Int @default(0)
+  createdAt DateTime @default(now())
+  @@index([childId, createdAt])
+}
+model Roadmap {
+  id String @id @default(cuid())
+  childId String
+  child Child @relation(fields: [childId], references: [id], onDelete: Cascade)
+  goal String
+  content Json
+  createdAt DateTime @default(now())
+  @@index([childId, createdAt])
+}
+
+model Appointment {
+ id String @id @default(cuid())
+ childId String
+ child Child @relation(fields:[childId],references:[id],onDelete:Cascade)
+ requestedAt DateTime
+ topic String
+ status String @default("PENDING")
+ createdAt DateTime @default(now())
+ @@index([childId,createdAt])
 }
