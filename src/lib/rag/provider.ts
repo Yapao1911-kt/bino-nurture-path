@@ -8,6 +8,7 @@ export interface GenerateAnswerInput {
   question: string;
   context: string;
   history?: ChatTurn[];
+  outputJson?: boolean;
 }
 
 /**
@@ -33,11 +34,12 @@ function getOpenAI(): OpenAI {
 
 const openaiProvider: LLMProvider = {
   name: "openai",
-  async generateAnswer({ question, context, history = [] }) {
+  async generateAnswer({ question, context, history = [], outputJson = false }) {
     const openai = getOpenAI();
     const res = await openai.chat.completions.create({
       model: config.llmModel,
       temperature: 0.4,
+      ...(outputJson ? {response_format: {type: "json_object" as const}} : {}),
       messages: buildMessages(question, context, history),
     });
     return (res.choices[0]?.message?.content ?? "").trim();
@@ -57,11 +59,11 @@ function getGenAI(): GoogleGenerativeAI {
 
 const geminiProvider: LLMProvider = {
   name: "gemini",
-  async generateAnswer({ question, context, history = [] }) {
+  async generateAnswer({ question, context, history = [], outputJson = false }) {
     const model = getGenAI().getGenerativeModel({
       model: config.llmModel,
-      systemInstruction: SYSTEM_RULES,
-      generationConfig: { temperature: 0.4 },
+      systemInstruction: SYSTEM_RULES + (outputJson ? "\nChế độ dữ liệu có cấu trúc: trả JSON thuần đúng schema người dùng yêu cầu; quy tắc định dạng văn bản thường không áp dụng, các giới hạn an toàn vẫn áp dụng." : ""),
+      generationConfig: { temperature: 0.4, ...(outputJson ? {responseMimeType:"application/json"} : {}) },
     });
 
     const chat = model.startChat({
@@ -71,7 +73,7 @@ const geminiProvider: LLMProvider = {
       })),
     });
 
-    const res = await chat.sendMessage(buildUserPrompt(question, context));
+    const res = await chat.sendMessage(outputJson ? JSON.stringify({context,request:question}) : buildUserPrompt(question, context));
     return (res.response.text() ?? "").trim();
   },
 };
