@@ -22,6 +22,13 @@ export const registerUser = createServerFn({ method: "POST" })
     const cleanEmail = email.toLowerCase().trim();
     const existingUser = await prisma.user.findUnique({ where: { email: cleanEmail } });
     if (existingUser) {
+      if (!existingUser.isEmailVerified) {
+        const token = randomBytes(32).toString("hex");
+        await prisma.user.update({where:{id:existingUser.id},data:{verificationToken:token,verificationExpiresAt:new Date(Date.now()+86400000)}});
+        try { await sendVerificationEmail(existingUser.email,token); }
+        catch { return {success:false,error:"Chưa gửi được email xác thực. Vui lòng thử lại sau."}; }
+        return {success:true,message:"Đã gửi lại email xác thực. Hãy mở liên kết trong hộp thư rồi đăng nhập bằng mật khẩu đã đăng ký."};
+      }
       return { success: false, error: "Email này đã được sử dụng. Vui lòng đăng nhập hoặc dùng email khác." };
     }
 
