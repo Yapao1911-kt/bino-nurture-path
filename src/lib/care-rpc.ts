@@ -1,3 +1,4 @@
+import { hasPremium } from "./premium-plan";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { prisma } from "./db";
@@ -49,7 +50,7 @@ export const getRoadmaps = createServerFn({ method: "POST" })
     return prisma.roadmap.findMany({
       where: { childId: data.childId },
       orderBy: { createdAt: "desc" },
-      take: 20,
+      take: 100,
     });
   });
 export const generateRoadmap = createServerFn({ method: "POST" })
@@ -107,8 +108,17 @@ export const saveRoadmap = createServerFn({ method: "POST" })
     return data;
   })
   .handler(async ({ data }) => {
-    await ownedChild(data.childId);
-    return prisma.roadmap.create({ data });
+    const child = await ownedChild(data.childId);
+    return prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT "id" FROM "Child" WHERE "id" = ${child.id} FOR UPDATE`;
+      const account = await tx.user.findUnique({ where: { id: child.userId } });
+      const limit = hasPremium(account) ? 100 : 3;
+      if ((await tx.roadmap.count({ where: { childId: child.id } })) >= limit)
+        throw new Error(
+          `Gói hiện tại lưu tối đa ${limit} lộ trình mỗi hồ sơ. Nâng cấp Premium để lưu đến 100 lộ trình.`,
+        );
+      return tx.roadmap.create({ data });
+    });
   });
 
 export const requestAppointment = createServerFn({ method: "POST" })
@@ -137,7 +147,7 @@ export const listAppointments = createServerFn({ method: "POST" })
     return prisma.appointment.findMany({
       where: { childId: data.childId },
       orderBy: { createdAt: "desc" },
-      take: 50,
+      take: 100,
     });
   });
 export const cancelAppointment = createServerFn({ method: "POST" })

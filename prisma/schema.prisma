@@ -19,9 +19,31 @@ model User {
   verificationExpiresAt DateTime?
   subscription      String   @default("FREE") // FREE or PREMIUM
   trialStartedAt    DateTime?
+  premiumEndsAt     DateTime?
+  premiumOrders     PremiumOrder[]
   children          Child[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+model PremiumOrder {
+  id String @id @default(cuid())
+  code String @unique
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount Int
+  days Int
+  status String @default("PENDING")
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  submittedAt DateTime?
+  reviewedAt DateTime?
+  reviewedBy String?
+  bankReference String? @unique
+  reviewNote String?
+  grantedUntil DateTime?
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
 }
 
 model Child {

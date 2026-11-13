@@ -1,148 +1,166 @@
-import {useState,useEffect} from "react";
-import {subscriptionStatus,startTrial} from "@/lib/subscription-rpc";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Crown, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Check, Star, Zap, Crown, ArrowRight, ShieldCheck } from "lucide-react";
-import { Card } from "@/components/ui/card";
-
-export const Route = createFileRoute("/premium")({
-  component: PremiumPage,
-});
-
+import { SiteFooter } from "@/components/site-footer";
+import { subscriptionStatus, startTrial } from "@/lib/subscription-rpc";
+export const Route = createFileRoute("/premium")({ component: PremiumPage });
+type Status = Awaited<ReturnType<typeof subscriptionStatus>>;
 function PremiumPage() {
- const [status,setStatus]=useState<any>(null),[error,setError]=useState(""),[busy,setBusy]=useState(false);
- useEffect(()=>{subscriptionStatus().then(setStatus).catch(()=>setError("Đăng nhập để xem gói và bắt đầu dùng thử."));},[]);
- async function trial(){setBusy(true);setError("");try{setStatus(await startTrial());}catch{setError("Chưa kích hoạt được. Vui lòng đăng nhập và thử lại.");}finally{setBusy(false);}}
+  const [status, setStatus] = useState<Status | null>(null),
+    [loading, setLoading] = useState(true),
+    [error, setError] = useState(""),
+    [busy, setBusy] = useState(false);
+  useEffect(() => {
+    let active = true;
+    subscriptionStatus()
+      .then((s) => {
+        if (active) setStatus(s);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  async function trial() {
+    setBusy(true);
+    setError("");
+    try {
+      setStatus(await startTrial());
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Chưa kích hoạt được dùng thử.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  const end = status?.premiumEndsAt || (status?.premium ? status.trialEndsAt : null);
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
-      {/* Hero Section */}
-      <div className="bg-white border-b relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-50 via-white to-white pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-          <div className="text-center max-w-3xl mx-auto space-y-6">{error && <p role="alert">{error}</p>}{status?.trialEndsAt && <p>Dùng thử đến {new Date(status.trialEndsAt).toLocaleString("vi-VN")} · {status.premium ? "Đang hoạt động" : "Đã hết hạn"}</p>}
-            <div className="inline-flex items-center justify-center p-3 bg-amber-100 rounded-full mb-4 shadow-sm">
-              <Crown className="w-8 h-8 text-amber-600" />
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
-              Nâng cấp Bino Premium
-            </h1>
-            <p className="text-lg text-slate-600">
-              Mở khóa toàn bộ kho học liệu, các công cụ đánh giá chuyên sâu và trợ lý ảo thông minh không giới hạn để đồng hành cùng con tốt nhất.
+    <>
+      <main className="min-h-screen bg-[#faf9f6] px-4 py-12">
+        <div className="max-w-5xl mx-auto space-y-8">
+          <Link to="/">← Về trang chủ</Link>
+          <header className="text-center max-w-2xl mx-auto space-y-4">
+            <Crown className="mx-auto text-amber-500" size={48} />
+            <p className="font-semibold text-amber-700">BINO PREMIUM</p>
+            <h1 className="text-3xl sm:text-5xl font-bold">Thêm công cụ, cùng con tiến bộ</h1>
+            <p className="text-muted-foreground">
+              Chuyển khoản một lần, xác nhận bởi đội ngũ Bino, không tự động gia hạn.
             </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Pricing Section */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          
-          {/* Basic Plan (Current) */}
-          <Card className="p-8 border-slate-200 bg-white shadow-sm flex flex-col relative">
-            <div className="absolute top-0 right-0 p-4">
-              <div className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full">
-                {status?.premium ? "Gói Premium đang hoạt động" : "Gói Cơ bản"}
-              </div>
-            </div>
-            <div className="space-y-2 mb-6">
-              <h3 className="text-2xl font-bold text-slate-900">Bino Cơ bản</h3>
-              <p className="text-slate-500">Khám phá và trải nghiệm các tính năng cốt lõi.</p>
-            </div>
-            <div className="mb-6">
-              <span className="text-4xl font-bold text-slate-900">Miễn phí</span>
-            </div>
-            
-            <div className="space-y-4 mb-8 flex-1">
-              {[
-                "Truy cập một phần kho học liệu",
-                "Đánh giá sàng lọc cơ bản",
-                "Theo dõi tiến độ đơn giản",
-                "Tương tác trợ lý AI có giới hạn",
-                "Tham gia cộng đồng phụ huynh",
-              ].map((feature, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
-                  <span className="text-slate-600">{feature}</span>
-                </div>
-              ))}
-            </div>
-            
-            <Button variant="outline" className="w-full" disabled>
-              Đang sử dụng
-            </Button>
-          </Card>
-
-          {/* Premium Plan */}
-          <Card className="p-8 border-amber-200 bg-gradient-to-b from-amber-50/50 to-white shadow-xl shadow-amber-900/5 flex flex-col relative overflow-hidden transform md:-translate-y-4">
-            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-400 to-orange-500" />
-            <div className="absolute top-0 right-0 p-4">
-              <div className="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-semibold rounded-full flex items-center gap-1 shadow-sm">
-                <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> 
-                Phổ biến nhất
-              </div>
-            </div>
-            <div className="space-y-2 mb-6 mt-2">
-              <h3 className="text-2xl font-bold text-slate-900">Bino Premium</h3>
-              <p className="text-slate-500">Toàn bộ công cụ và tài nguyên cho hành trình can thiệp.</p>
-            </div>
-            <div className="mb-6 flex items-baseline gap-2">
-              <span className="text-4xl font-bold text-slate-900">180.000đ</span>
-              <span className="text-slate-500 font-medium">/ tháng</span>
-            </div>
-            
-            <div className="space-y-4 mb-8 flex-1">
-              {[
-                "Mở khóa 100% video, bài viết và học liệu",
-                "Tải xuống PDF không giới hạn",
-                "Hệ thống tạo bài giảng, flashcard tự động",
-                "Đánh giá chuyên sâu và biểu đồ tiến độ chi tiết",
-                "Trợ lý AI không giới hạn số câu hỏi",
-                "Hỗ trợ ưu tiên từ chuyên gia",
-              ].map((feature, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <Zap className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-                  <span className="text-slate-800 font-medium">{feature}</span>
-                </div>
-              ))}
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                variant="outline"
-                className="w-full border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800" 
-                size="lg"
-                disabled={busy || !!status?.trialStartedAt || !!status?.premium} onClick={trial}
-              >
-                Dùng thử 14 ngày
-              </Button>
-              <Button 
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-md" 
-                size="lg"
-                asChild
-              >
-                <Link to="/checkout">
-                  Nâng cấp ngay
-                  <ArrowRight className="w-4 h-4 ml-2" />
+          </header>
+          {loading ? (
+            <p role="status">Đang kiểm tra gói…</p>
+          ) : (
+            status && (
+              <section className="rounded-3xl border bg-white p-6 space-y-2">
+                <h2 className="font-bold">
+                  {status.premium ? "Premium đang hoạt động" : "Bạn đang dùng gói Cơ bản"}
+                </h2>
+                <p>
+                  {end
+                    ? `Quyền Premium đến ${new Date(end).toLocaleString("vi-VN")}`
+                    : status.premium
+                      ? "Premium không thời hạn"
+                      : status.trialStartedAt
+                        ? "Bạn đã sử dụng thời gian dùng thử."
+                        : "Bạn có thể dùng thử miễn phí 14 ngày."}
+                </p>
+                <Link to="/checkout" className="text-amber-700 underline">
+                  Quản lý đơn hàng →
                 </Link>
-              </Button>
-            </div>
-            <p className="text-xs text-center text-slate-400 mt-4 flex items-center justify-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> Thanh toán an toàn và bảo mật
+              </section>
+            )
+          )}
+          {error && (
+            <p role="alert" className="bg-red-50 p-4 rounded-xl text-red-700">
+              {error}
             </p>
-          </Card>
+          )}
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              {
+                name: "Bino Cơ bản",
+                price: "Miễn phí",
+                features: [
+                  "Hồ sơ và nhật ký hoạt động của con",
+                  "Biểu đồ theo dõi tiến độ",
+                  "Học liệu cơ bản và công cụ sàng lọc",
+                  "Lưu tối đa 3 lộ trình mỗi hồ sơ",
+                ],
+                premium: false,
+              },
+              {
+                name: "Bino Premium",
+                price: "180.000đ",
+                features: [
+                  "Lưu đến 100 lộ trình AI cho mỗi hồ sơ",
+                  "Tiếp tục sử dụng hồ sơ, nhật ký và biểu đồ",
+                  "Lộ trình AI cá nhân hóa khi dịch vụ khả dụng",
+                ],
+                premium: true,
+              },
+            ].map((plan) => (
+              <section
+                key={plan.name}
+                className={`rounded-3xl border p-8 bg-white flex flex-col gap-6 ${plan.premium ? "border-amber-300 shadow-lg shadow-amber-100" : ""}`}
+              >
+                <h2 className="text-2xl font-bold">{plan.name}</h2>
+                <p>
+                  <strong className="text-4xl">{plan.price}</strong>
+                  {plan.premium && " / 30 ngày"}
+                </p>
+                <ul className="space-y-4 flex-1">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex gap-3">
+                      <Check className="shrink-0 text-green-600" size={20} />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                {plan.premium ? (
+                  <>
+                    <Button asChild className="bg-amber-500 hover:bg-amber-600 text-black">
+                      <Link to={status ? "/checkout" : "/login"}>
+                        {status?.premium ? "Gia hạn Premium" : "Nâng cấp Premium"}
+                      </Link>
+                    </Button>
+                    {status && !status.trialStartedAt && !status.premium && (
+                      <Button variant="outline" disabled={busy || loading} onClick={trial}>
+                        {busy ? "Đang kích hoạt…" : "Dùng thử 14 ngày miễn phí"}
+                      </Button>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      AI có giới hạn theo năng lực hệ thống và quota nhà cung cấp. Gói không bao gồm
+                      phí tư vấn chuyên gia.
+                    </p>
+                  </>
+                ) : (
+                  <Button variant="outline" asChild>
+                    <Link to="/progress-tracker">Mở nhật ký của con</Link>
+                  </Button>
+                )}
+              </section>
+            ))}
+          </div>
+          <section className="rounded-3xl bg-green-50 p-7 space-y-3">
+            <h2 className="font-bold">Kích hoạt sau khi đối soát</h2>
+            <p>
+              Tạo đơn, quét QR và chuyển đúng số tiền cùng nội dung. Người vận hành xác nhận tiền
+              nhận được để mở Premium 30 ngày. Gia hạn được cộng tiếp thời gian còn lại.
+            </p>
+            <p>
+              Cần hỗ trợ giao dịch? Liên hệ{" "}
+              <a className="underline" href="mailto:baotg.ce190584@gmail.com">
+                baotg.ce190584@gmail.com
+              </a>{" "}
+              kèm mã đơn.
+            </p>
+          </section>
         </div>
-      </div>
-      
-      {/* FAQ or Extra info */}
-      <div className="max-w-3xl mx-auto px-4 mt-20 text-center">
-        <h3 className="text-xl font-bold text-slate-900 mb-4">Bạn có câu hỏi?</h3>
-        <p className="text-slate-600 mb-6">
-          Nếu bạn cần tư vấn thêm về gói Premium, đừng ngần ngại liên hệ với đội ngũ hỗ trợ của Bino.
-        </p>
-        <Button variant="outline" onClick={() => window.location.assign("/experts")}>
-          Liên hệ hỗ trợ
-        </Button>
-      </div>
-    </div>
+      </main>
+      <SiteFooter />
+    </>
   );
 }
