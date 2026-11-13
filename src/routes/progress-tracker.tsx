@@ -43,7 +43,9 @@ function Progress() {
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [profilesLoading, setProfilesLoading] = useState(true);
+  const [entriesLoading, setEntriesLoading] = useState(false);
+  const loading = profilesLoading || entriesLoading;
   const [days, setDays] = useState<7 | 30>(7);
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(10);
@@ -68,7 +70,7 @@ function Progress() {
         if (active) setError("Chưa tải được hồ sơ. Bạn hãy thử lại nhé.");
       })
       .finally(() => {
-        if (active) setLoading(false);
+        if (active) setProfilesLoading(false);
       });
     return () => {
       active = false;
@@ -79,9 +81,12 @@ function Progress() {
     setEntries([]);
     setSaved(false);
     setExpanded(null);
-    if (!child) return;
+    if (!child) {
+      setEntriesLoading(false);
+      return;
+    }
     let active = true;
-    setLoading(true);
+    setEntriesLoading(true);
     setError("");
     getActivityEntries({ data: { childId: child } })
       .then((rows) => {
@@ -91,7 +96,7 @@ function Progress() {
         if (active) setError("Chưa tải được nhật ký. Hãy kiểm tra đăng nhập và thử lại.");
       })
       .finally(() => {
-        if (active) setLoading(false);
+        if (active) setEntriesLoading(false);
       });
     return () => {
       active = false;
@@ -106,7 +111,7 @@ function Progress() {
     setError("");
     setSaved(false);
     try {
-      await recordActivity({
+      const created = await recordActivity({
         data: {
           childId: child,
           title: String(data.get("title")),
@@ -115,7 +120,7 @@ function Progress() {
           words: Number(data.get("words")),
         },
       });
-      setEntries(await getActivityEntries({ data: { childId: child } }));
+      setEntries((current) => [created, ...current].slice(0, 500));
       form.reset();
       setSaved(true);
     } catch {

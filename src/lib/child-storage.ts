@@ -1,4 +1,9 @@
-import { saveChildProfile, getUserChildren, deleteChildProfile, type ChildData } from "./children-rpc";
+import {
+  saveChildProfile,
+  getUserChildren,
+  deleteChildProfile,
+  type ChildData,
+} from "./children-rpc";
 
 export type { ChildData };
 
@@ -112,8 +117,12 @@ export async function saveNewChild(data: {
   communicationLevel?: string;
   avatar?: string;
 }): Promise<{ success: boolean; child?: ChildData; error?: string }> {
-  const userId = typeof window !== "undefined" ? localStorage.getItem("bino_user_id") || undefined : undefined;
-  const userEmail = typeof window !== "undefined" ? localStorage.getItem("bino_user_email") || undefined : undefined;
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("bino_user_id") || undefined : undefined;
+  const userEmail =
+    typeof window !== "undefined"
+      ? localStorage.getItem("bino_user_email") || undefined
+      : undefined;
 
   try {
     const res = await saveChildProfile({
@@ -141,12 +150,16 @@ export async function saveNewChild(data: {
     }
   } catch (err: any) {
     console.error("[child-storage] saveNewChild error:", err);
-    return { success: false, error: "Chưa lưu được hồ sơ vào máy chủ. Vui lòng đăng nhập và thử lại." };
+    return {
+      success: false,
+      error: "Chưa lưu được hồ sơ vào máy chủ. Vui lòng đăng nhập và thử lại.",
+    };
   }
 }
 
 export async function deleteChild(childId: string): Promise<boolean> {
-  const userId = typeof window !== "undefined" ? localStorage.getItem("bino_user_id") || undefined : undefined;
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("bino_user_id") || undefined : undefined;
 
   try {
     const result = await deleteChildProfile({ data: { childId, userId } });
