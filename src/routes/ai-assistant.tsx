@@ -129,6 +129,7 @@ function AIAssistantPage() {
   const [behaviorText, setBehaviorText] = useState("");
   const [goalText, setGoalText] = useState("");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -152,8 +153,11 @@ function AIAssistantPage() {
     catch { setError("Chưa thể tạo lộ trình. Kiểm tra đăng nhập và cấu hình AI, sau đó thử lại."); setUiState("idle"); }
   };
   const handleSave = async () => {
-    try { await saveRoadmap({data:{childId:selectedChild.id,goal:goalText,content:roadmap}}); setSaved(true); }
-    catch { setError("Chưa lưu được lộ trình. Vui lòng thử lại."); }
+    if (saving || saved) return;
+    setSaving(true); setError("");
+    try { await saveRoadmap({data:{childId:selectedChild.id,goal:goalText,content:roadmap}}); setSaved(true); setHistory(await getRoadmaps({data:{childId:selectedChild.id}})); }
+    catch (e) { setError(e instanceof Error ? e.message : "Chưa lưu được lộ trình. Vui lòng thử lại."); }
+    finally { setSaving(false); }
   };
   const handleRegenerate = handleSubmit;
 
@@ -205,7 +209,7 @@ function AIAssistantPage() {
           </div>
         </div>
 
-        {error && <p role="alert" className="p-4 bg-red-50 text-red-800">{error}</p>}
+        {error && <p role="alert" className="p-4 bg-red-50 text-red-800">{error} <Link to="/premium" className="underline">Xem gói Premium</Link></p>}
         <p className="p-3 text-sm">Gợi ý AI hỗ trợ hoạt động tại nhà, cần người lớn giám sát; không thay thế đánh giá chuyên môn.</p>
         {uiState === "idle" && history.map(item => <button key={item.id} className="block p-3 underline" onClick={() => {setRoadmap(item.content);setGoalText(item.goal);setUiState("result");}}>Mở lộ trình đã lưu: {item.goal}</button>)}
         {/* State 1: Idle — Input Form */}
@@ -520,6 +524,7 @@ function AIAssistantPage() {
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <button
                 onClick={handleSave}
+                disabled={saving || saved}
                 className="flex-1 flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl text-white font-bold text-sm shadow-[5px_5px_0px_#6eb0db] -rotate-0.5 hover:rotate-0 active:scale-[0.98] transition-all"
                 style={{ background: "var(--brand-blue)" }}
               >
@@ -531,7 +536,7 @@ function AIAssistantPage() {
                 ) : (
                   <>
                     <Save className="w-5 h-5" />
-                    Lưu lộ trình này
+                    {saving ? "Đang lưu…" : "Lưu lộ trình này"}
                   </>
                 )}
               </button>
