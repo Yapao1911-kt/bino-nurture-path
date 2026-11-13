@@ -1,14 +1,13 @@
+import { useEffect, useState } from "react";
+import { subscriptionStatus } from "@/lib/subscription-rpc";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { LearningLibrary } from "../components/learning-library";
 import { SiteFooter } from "../components/site-footer";
 
-const mockUser = {
-  isPremium: true,
-};
-
 export const Route = createFileRoute("/library/")({
+  head: () => ({ meta: [{ title: "Thư viện học liệu — Bino" }] }),
   validateSearch: (search: Record<string, unknown>) => ({
     tab: search.tab === "materials" ? "materials" : undefined,
   }),
@@ -17,6 +16,20 @@ export const Route = createFileRoute("/library/")({
 
 function LibraryPage() {
   const { tab } = Route.useSearch();
+  const [isPremium, setIsPremium] = useState(false);
+  useEffect(() => {
+    let active = true;
+    subscriptionStatus()
+      .then((status) => {
+        if (active) setIsPremium(status.premium);
+      })
+      .catch(() => {
+        if (active) setIsPremium(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -30,10 +43,10 @@ function LibraryPage() {
               </Button>
             </Link>
             <div className="text-xs text-muted-foreground">
-              {mockUser.isPremium ? (
+              {isPremium ? (
                 <span className="text-[#75D06A] font-bold">👑 Premium</span>
               ) : (
-                <span className="text-[#FFB365] font-bold">⭐ Free User</span>
+                <span className="text-[#FFB365] font-bold">⭐ Cơ bản</span>
               )}
             </div>
           </div>
@@ -53,7 +66,7 @@ function LibraryPage() {
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <LearningLibrary
           initialTab={tab === "materials" ? "Học liệu" : "Kiến thức"}
-          userType={mockUser.isPremium ? "premium" : "free"}
+          userType={isPremium ? "premium" : "free"}
         />
       </div>
 
